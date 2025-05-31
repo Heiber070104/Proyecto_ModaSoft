@@ -1,0 +1,79 @@
+/* Estilo base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #1e1e2f;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Contenedor del formulario */
+.register-container {
+  background-color: #2c2c3e;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  width: 400px;
+  text-align: center;
+}
+
+.register-container h2 {
+  margin-bottom: 25px;
+  color: #ffffff;
+  font-size: 26px;
+}
+
+/* Inputs */
+.register-container input[type="text"],
+.register-container input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: #3c3c50;
+  color: #fff;
+  font-size: 15px;
+}
+
+.register-container input::placeholder {
+  color: #aaa;
+}
+
+/* Botón */
+.register-container button {
+  background-color: #3e64ff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.register-container button:hover {
+  background-color: #2748d9;
+}
+
+/* Enlace a login */
+.register-container .login-link {
+  margin-top: 15px;
+  display: block;
+  color: #aaa;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.register-container .login-link:hover {
+  color: #fff;
+}
