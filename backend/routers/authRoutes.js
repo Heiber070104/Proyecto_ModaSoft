@@ -1,6 +1,5 @@
 const express = require('express'); 
 const router = express.Router();
-const {consultaProductos} = require('../controllers/productoController')
 const { registerUser, loginUser } = require('../controllers/authController');
 
 // Ruta de prueba
