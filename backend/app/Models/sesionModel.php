@@ -14,13 +14,13 @@ class sesionModel extends Model
     public $primaryKey = 'id_sesion';
     public $fillable = [
         'id_sesion',
-        'id_usuario',
         'nombre_usuario',
-        'fecha_inicio_sesion',
-        'activo'
+        'primer_inicio_sesion',
+        'ultimo_inicio_sesion',
+        'conectado'
     ];
 
     public function usuario(){
-        return $this->hasOne('App\Models\Usuario', 'id_usuario', 'id_usuario');
+        return $this->hasOne('App\Models\Usuario', 'nombre_usuario', 'nombre_usuario');
     } 
 }

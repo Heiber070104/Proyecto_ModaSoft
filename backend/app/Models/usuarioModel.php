@@ -13,8 +13,8 @@ class usuarioModel extends Model
     public $table = 'usuario';
     public $primaryKey = 'id_usuario';
     public $fillable = [
-        'nombre',
-        'descripcion',
+        'nombre_usuario',
+        'nombre_personal',
         'correo',
         'rol',
         'password',   
@@ -22,7 +22,7 @@ class usuarioModel extends Model
     ];
 
     public function sesion(){
-        return $this->hasOne('App\Models\Sesion', 'id_usuario', 'id_usuario');  
+        return $this->hasMany('App\Models\Sesion', 'nombre_cuenta', 'nombre_cuenta');  
     }
 
 }

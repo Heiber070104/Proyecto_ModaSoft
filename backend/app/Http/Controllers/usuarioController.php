@@ -32,7 +32,8 @@ class usuarioController extends Controller
         try{
 
             $data = $request->validate([
-                'nombre' => 'required|string|max:255',
+                'nombre_usuario' => 'required|string|regex:/^[^ ]+$/|max:25',
+                'nombre_personal' => 'required|string|max:255',
                 'correo' => 'required|email|unique:usuario,correo',
                 'rol' => 'required|string|max:50',
                 'password' => 'required|string|min:3',
