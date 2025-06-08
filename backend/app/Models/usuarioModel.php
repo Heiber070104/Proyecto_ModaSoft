@@ -25,12 +25,4 @@ class usuarioModel extends Model
         return $this->hasOne('App\Models\Sesion', 'id_usuario', 'id_usuario');  
     }
 
-    // public function consultar(){
-    //     return $this->all();
-    // }
-
-    // public function buscar($valor)
-    // {
-    //     return $this->where('id_usuario', $valor);
-    // }
 }

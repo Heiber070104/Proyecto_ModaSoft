@@ -27,39 +27,6 @@ class usuarioController extends Controller
         }
     }
 
-    public function iniciarSesion(Request $request)
-    {
-        try {
-            $data = $request->validate([
-                'usuario' => 'required|string|max:255',
-                'password' => 'required|string|min:3'
-            ]);
-
-            $usuario = usuarioModel::where('nombre', $data['usuario'])->first();
-   
-            if ($usuario && password_verify($data['password'], $usuario->password)) {
-
-                // try{
-                    $sesion = new \App\Models\sesionModel();
-                    $sesion->id_usuario = $usuario->id_usuario;
-                    $sesion->nombre_usuario = $usuario->nombre;
-                    $sesion->fecha_inicio_sesion = now();
-                    $sesion->activo = 1;
-                    $sesion->save();
-                // }catch (\Exception $e) {
-                //     throw new Exception($e, 1);
-                // }
-
-                return response()->json(['message' => 'Inicio de sesión exitoso', 'usuario' => $usuario->nombre], 201);
-
-            } else {
-                return response()->json(['message' => 'Credenciales incorrectas'], 401);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        }
-    }
-
     public function crearUsuario(Request $request){
 
         try{
@@ -88,4 +55,5 @@ class usuarioController extends Controller
         }
 
     }
+
 }
