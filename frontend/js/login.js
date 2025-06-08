@@ -26,9 +26,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         usuario: data.usuario,
         rol: data.rol
       })
-      alert('Bienvenido ' + data.usuario);  
+      alert('Bienvenido ' + data.nombre);  
       window.location.href = '../pages/dashboard.html'; // Aquí se redirige si login fue exitoso
     } else {
+      console.log(data.message);
       alert(data.message);
     }
   } catch (err) {

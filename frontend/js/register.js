@@ -1,10 +1,11 @@
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const nombre = document.getElementById('nombre').value;
+  const nombre_usuario = document.getElementById('nombre_usuario').value;
   const correo = document.getElementById('correo').value;
   const rol = document.getElementById('rol').value;
   const password = document.getElementById('contraseña').value;
+  const nombre_personal = document.getElementById('nombre_personal').value;
 
   try {
     const res = await fetch('http://localhost:8000/usuarios', {
@@ -12,7 +13,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ nombre, correo, rol, password, estado: 1})
+      body: JSON.stringify({ nombre_usuario, nombre_personal, correo, rol, password, estado: 1})
     });
 
     const data = await res.json();
