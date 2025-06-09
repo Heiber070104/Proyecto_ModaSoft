@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario de Ropa</title>
-    <!-- <script src="../js/inventario.js" defer></script> -->
+    <script src="../js/inventario.js" defer></script>
 </head>
 <body>
+
+    <h1>Inventario</h1>
+
+    <a href="addpages/añadir_producto.html"><button>Nuevo producto</button></a>
 
     <table id="tabla">
 
@@ -16,6 +20,8 @@
             <th>Precio C/U</th>
             <th>Categoria</th>
             <th>Talla</th>
+            <th>Disponibles</th>
+            <th>Opciones</th>
         </thead>
 
         <tbody id="datos">
@@ -26,47 +32,3 @@
     
 </body>
 </html>
-
-<script>
-
-const actualizarTabla = async () => {
-
-    try{
-        const res = await fetch("http://localhost:3000/api/productos/consultaProductos", {
-            method: "GET",
-            headers: {
-              'Content-Type': 'application/json'
-            }
-        })
-
-        const consulta = await res.json();
-        
-        if(res.ok){
-      
-          let datos = consulta.datos;
-          let html = ""; 
-            
-          Object.values(datos).forEach(producto => {
-            
-            html += `<tr>
-                        <td>${producto.nombre}</td>
-                        <td>${producto.descripcion}</td>
-                        <td>${producto.precio_unitario}</td>
-                        <td>${producto.categoria}</td>
-                        <td>${producto.talla}</td>
-                    </tr>
-            `
-          })
-
-          document.getElementById("datos").innerHTML = html;
-
-        }
-    }catch(error){
-        console.log(error)
-    }
-
-}
-
-document.addEventListener('DOMContentLoaded', actualizarTabla)
-
-</script>

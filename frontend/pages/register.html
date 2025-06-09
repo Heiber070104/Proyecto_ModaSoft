@@ -4,27 +4,27 @@
   <meta charset="UTF-8" />
   <title>Registro - ModaSoft</title>
   <link rel="stylesheet" href="../css/login.css" />
-  <script src="../js/register.js" defer></script>
+  <script src="../js/register.js" type="module" defer></script>
 </head>
 <body>
   <div class="login-container">
     <h1>Registro en ModaSoft</h1>
     <form id="registerForm">
-      <label for="nombre">Nombre</label>
-      <input type="text" id="nombre" name="nombre" required />
+      <label for="nombre">Nombre Personal</label>
+      <input type="text" id="nombre_personal" name="nombre_personal" required />
 
       <label for="correo">Correo</label>
       <input type="email" id="correo" name="correo" required />
 
       <label for="rol">Rol</label>
       <select id="rol" name="rol" required>
-        <option value="admin">Administrador</option>
-        <option value="vendedor">Vendedor</option>
-        <option value="contador">Contador</option>
+        <option value="Administrador">Administrador</option>
+        <option value="Vendedor">Vendedor</option>
+        <option value="Contador">Contador</option>
       </select>
 
-      <label for="usuario">Usuario</label>
-      <input type="text" id="usuario" name="usuario" required />
+      <label for="usuario">Nombre de usuario</label>
+      <input type="text" id="nombre_usuario" name="nombre_usuario" required />
 
       <label for="contraseña">Contraseña</label>
       <input type="password" id="contraseña" name="contraseña" required />
