@@ -16,7 +16,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
 
     try{
 
-        const res = await fetch("http://localhost:3000/api/productos/nuevoProducto", {
+        const res = await fetch("http://localhost:8000/productos", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -24,7 +24,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
             body: JSON.stringify({
                 nombre: nombre,
                 descripcion: descripcion,
-                precio_unitario: precio,
+                precio: precio,
                 id_categoria: id_categoria,
                 id_talla: id_talla,
                 cantidad: cantidad
@@ -39,35 +39,35 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
             document.getElementById("categoria").value = 1;
             document.getElementById("talla").value = 1;
             document.getElementById("cantidad").value = 0;
+        }else{
+            console.log("Error al registrar el producto: " + res.message);
+            alert("Error al registrar el producto, intente nuevamente" + res.message);  
         }
 
     }catch(error){
         console.log(error)
+        alert("Error al registrar el producto, intente nuevamente" + res.message); 
     }
 
 })
 
-const cargarSelect = async (select,direccion) => {
+const cargarSelect = async (direccion) => {
 
     try{
 
-       const res = await fetch(`http://localhost:3000/api/productos/${direccion}`, {
-        method: "GET",
-        headers:{
-            "Content-Type": "application/json"
-        }
+       const res = await fetch(`http://localhost:8000/productos/${direccion}`, {
+            method: "GET",
        })
 
        const consulta = await res.json();
 
        if(res.ok){
 
-            let datos = consulta.datos;
             let html = "";
 
-            Object.values(datos).forEach(dato => {
+            Object.values(consulta).forEach(datos => {
 
-                let arrayDatos = Object.values(dato);
+                let arrayDatos = Object.values(datos);
 
                 html += `
                     <option value="${arrayDatos[0]}">
@@ -76,7 +76,7 @@ const cargarSelect = async (select,direccion) => {
                 `
             })
 
-            document.getElementById(select).innerHTML = html;
+            document.getElementById(direccion).innerHTML = html;
 
        }
 
@@ -86,6 +86,6 @@ const cargarSelect = async (select,direccion) => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    cargarSelect("categoria","consultaCategorias"); 
-    cargarSelect("talla","consultaTallas");
+    cargarSelect("categoria"); 
+    cargarSelect("talla");
 })

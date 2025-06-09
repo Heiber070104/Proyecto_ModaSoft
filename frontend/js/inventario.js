@@ -1,7 +1,7 @@
 const actualizarTabla = async () => {
 
     try{
-        const res = await fetch("http://localhost:3000/api/productos/consultaProductos", {
+        const res = await fetch("http://localhost:8000/productos", {
             method: "GET",
             headers: {
               'Content-Type': 'application/json'
@@ -12,10 +12,9 @@ const actualizarTabla = async () => {
         
         if(res.ok){
       
-          let datos = consulta.datos;
           let html = ""; 
             
-          Object.values(datos).forEach(producto => {
+          Object.values(consulta).forEach(producto => {
             
             html += `<tr>
                         <td>${producto.nombre}</td>
@@ -55,13 +54,15 @@ const eliminar = async (id, nombre) => {
 
         try{
 
-            const res = await fetch(`http://localhost:3000/api/productos/eliminarProducto?id=${id}`, {
+            const res = await fetch(`http://localhost:8000/productos/${id}`, {
                 method: "DELETE"
             })
 
             if(res.ok){
                 alert("Producto eliminado de la base de datos")
                 window.location.reload();
+            }else{
+                console.log("Error al eliminar el producto"+ res.message);
             }
 
         }catch(error){

@@ -33,7 +33,7 @@ class sesionController extends Controller
 
                     $sesion = sesionModel::create([
                         'id_usuario' => $usuario->id_usuario,
-                        'ultimo_inicio_sesion' => now(),
+                        'fecha_ultimo_acceso' => now(),
                         'conectado' => 1
                     ]);
                 }

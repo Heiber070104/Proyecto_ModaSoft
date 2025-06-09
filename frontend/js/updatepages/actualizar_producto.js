@@ -18,16 +18,16 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
 
     try {
         
-        const res = await fetch("http://localhost:3000/api/productos/actualizarProducto",{
+        const res = await fetch(`http://localhost:8000/productos/${id}`,{
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
-                id: id,
                 nombre: nombre,
                 descripcion: descripcion,
-                precio_unitario: precio,
+                precio: precio,
                 id_categoria: id_categoria,
                 id_talla: id_talla,
                 cantidad: cantidad
@@ -44,27 +44,23 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     }
 })
 
-const cargarSelect = async (select,direccion) => {
+const cargarSelect = async (direccion) => {
 
     try{
 
-       const res = await fetch(`http://localhost:3000/api/productos/${direccion}`, {
-        method: "GET",
-        headers:{
-            "Content-Type": "application/json"
-        }
+       const res = await fetch(`http://localhost:8000/productos/${direccion}`, {
+            method: "GET"
        })
 
        const consulta = await res.json();
 
        if(res.ok){
-
-            let datos = consulta.datos;
+;
             let html = "";
 
-            Object.values(datos).forEach(dato => {
+            Object.values(consulta).forEach(datos => {
 
-                let arrayDatos = Object.values(dato);
+                let arrayDatos = Object.values(datos);
 
                 html += `
                     <option value="${arrayDatos[0]}">
@@ -73,7 +69,7 @@ const cargarSelect = async (select,direccion) => {
                 `
             })
 
-            document.getElementById(select).innerHTML = html;
+            document.getElementById(direccion).innerHTML = html;
 
        }
 
@@ -84,27 +80,25 @@ const cargarSelect = async (select,direccion) => {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    await cargarSelect("categoria","consultaCategorias"); 
-    await cargarSelect("talla","consultaTallas");
+    await cargarSelect("categoria"); 
+    await cargarSelect("talla");
 
     try {
          
-        const res = await fetch(`http://localhost:3000/api/productos/consultaProductos?id=${id}`)
+        const res = await fetch(`http://localhost:8000/productos/${id}`)
         const consulta = await res.json()
+
+        console.log(consulta)
 
         if(res.ok){
 
-            const datos = consulta.datos;
-            Object.values(datos).forEach(producto => {
+            document.getElementById("nombre").value = consulta.nombre;
+            document.getElementById("descripcion").value = consulta.descripcion;
+            document.getElementById("precio").value = consulta.precio_unitario;
+            document.getElementById("categoria").value = consulta.id_categoria;
+            document.getElementById("talla").value = consulta.id_talla;
+            document.getElementById("cantidad").value = consulta.cantidad;
 
-                document.getElementById("nombre").value = producto.nombre;
-                document.getElementById("descripcion").value = producto.descripcion;
-                document.getElementById("precio").value = producto.precio_unitario;
-                document.getElementById("categoria").value = producto.id_categoria;
-                document.getElementById("talla").value = producto.id_talla;
-                document.getElementById("cantidad").value = producto.cantidad;
-
-            })
         }
             
     }catch(error){

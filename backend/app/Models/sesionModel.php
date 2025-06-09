@@ -20,6 +20,6 @@ class sesionModel extends Model
     ];
 
     public function usuario(){
-        return $this->hasOne('App\Models\Usuario', 'nombre_usuario', 'nombre_usuario');
+        return $this->hasOne('App\Models\usuarioModel', 'id_usuario', 'id_usuario');
     } 
 }

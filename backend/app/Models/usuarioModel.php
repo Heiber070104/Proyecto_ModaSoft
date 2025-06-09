@@ -22,7 +22,7 @@ class usuarioModel extends Model
     ];
 
     public function sesion(){
-        return $this->hasMany('App\Models\Sesion', 'nombre_cuenta', 'nombre_cuenta');  
+        return $this->hasMany('App\Models\sesionModel', 'id_usuario', 'id_usuario');  
     }
 
 }
