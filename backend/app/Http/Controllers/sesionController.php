@@ -21,41 +21,32 @@ class sesionController extends Controller
    
             if ($usuario && password_verify($data['password'], $usuario->password)) {
 
-                $sesionExistente = sesionModel::where('nombre_usuario', $usuario->nombre_usuario)->first();
+                $sesion = sesionModel::where('id_usuario', $usuario->id_usuario)->first();
 
-                if($sesionExistente) {
+                if($sesion) {
                     // Si ya existe una sesión activa, actualizamos la fecha de inicio
-                    $sesionExistente->ultimo_inicio_sesion = now();
-                    $sesionExistente->conectado = 1; // Marcar como conectado
-                    $sesionExistente->save();
-                    return response()->json([
-                        'message' => 'Sesión actualizada exitosamente',
-                        "id_sesion" => $sesionExistente->id_sesion,
-                        'usuario' => $usuario->nombre_usuario,
-                        'nombre' => $usuario->nombre_personal, // Cambiado de 'nombre' a 'nombre_personal'
-                        'rol' => $usuario->rol], 
-                        200
-                    );
+                    $sesion->fecha_ultimo_acceso= now();
+                    $sesion->conectado = 1; // Marcar como conectado
+                    $sesion->save();
 
                 }else{
 
                     $sesion = sesionModel::create([
-                        'nombre_usuario' => $usuario->nombre_usuario,
-                        'primer_inicio_sesion' => now(),
+                        'id_usuario' => $usuario->id_usuario,
                         'ultimo_inicio_sesion' => now(),
                         'conectado' => 1
                     ]);
-
-                    return response()->json([
-                        'message' => 'Inicio de sesión exitoso',
-                        "id_sesion" => $sesion->id_sesion,
-                        'usuario' => $usuario->nombre_usuario,
-                        'nombre' => $usuario->nombre_personal, // Cambiado de 'nombre' a 'nombre_personal'
-                        'rol' => $usuario->rol], 
-                        201
-                    );
-
                 }
+
+                return response()->json([
+                    'message' => 'Inicio de sesión exitoso',
+                    "id_sesion" => $sesion->id_sesion,
+                    'usuario' => $usuario->nombre_usuario,
+                    'nombre' => $usuario->nombre_personal, // Cambiado de 'nombre' a 'nombre_personal'
+                    'rol' => $usuario->rol], 
+                    201
+                );
+
  
             } else {
                 return response()->json(['message' => 'Credenciales incorrectas'], 401);

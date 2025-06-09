@@ -18,7 +18,7 @@ class usuarioModel extends Model
         'correo',
         'rol',
         'password',   
-        'estado'
+        'activo'
     ];
 
     public function sesion(){

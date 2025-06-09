@@ -14,9 +14,8 @@ class sesionModel extends Model
     public $primaryKey = 'id_sesion';
     public $fillable = [
         'id_sesion',
-        'nombre_usuario',
-        'primer_inicio_sesion',
-        'ultimo_inicio_sesion',
+        'id_usuario',
+        'fecha_ultimo_acceso',
         'conectado'
     ];
 
