@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario de Ropa</title>
+    <script src="{{ asset('js/inventario.js')}}" defer></script>
+</head>
+<body>
+
+    <h1>Inventario</h1>
+
+    <a href="{{ route('view.inventario') }}"><button>Nuevo producto</button></a>
+
+    <table id="tabla">
+
+        <thead>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio C/U</th>
+            <th>Categoria</th>
+            <th>Talla</th>
+            <th>Disponibles</th>
+            <th>Opciones</th>
+        </thead>
+
+        <tbody id="datos">
+
+        </tbody>
+
+    </table>
+    
+</body>
+</html>

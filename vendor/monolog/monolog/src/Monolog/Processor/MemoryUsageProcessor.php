@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,6 +11,8 @@
 
 namespace Monolog\Processor;
 
+use Monolog\LogRecord;
+
 /**
  * Injects memory_get_usage in all records
  *
@@ -20,20 +22,17 @@ namespace Monolog\Processor;
 class MemoryUsageProcessor extends MemoryProcessor
 {
     /**
-     * @param array $record
-     * @return array
+     * @inheritDoc
      */
-    public function __invoke(array $record)
+    public function __invoke(LogRecord $record): LogRecord
     {
-        $bytes = memory_get_usage($this->realUsage);
-        $formatted = self::formatBytes($bytes);
+        $usage = memory_get_usage($this->realUsage);
 
-        $record['extra'] = array_merge(
-            $record['extra'],
-            array(
-                'memory_usage' => $formatted,
-            )
-        );
+        if ($this->useFormatting) {
+            $usage = $this->formatBytes($usage);
+        }
+
+        $record->extra['memory_usage'] = $usage;
 
         return $record;
     }
