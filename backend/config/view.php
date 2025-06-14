@@ -15,6 +15,7 @@ return [
 
     'paths' => [
         resource_path('views'),
+        base_path('../frontend/pages'), // Custom path for frontend pages
     ],
 
     /*

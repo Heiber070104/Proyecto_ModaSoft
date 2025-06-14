@@ -23,5 +23,5 @@ Route::get('/api', function () {
 
 require __DIR__.'/usuarioRoutes.php';
 require __DIR__.'/productoRoutes.php';
-// Route::get('/api/usuarios', [Usuario::class, "consultarTodo"]);
-// route::get('/api/usuarios/{id}', [Usuario::class, "buscarUsuario"]);
+require __DIR__.'/categoriaRoutes.php';
+require __DIR__.'/tallaRoutes.php';

@@ -8,8 +8,6 @@ use App\Http\Controllers\tallaController as Talla;
 Route::prefix("productos")->group(function () {
     // Rutas para el controlador de productos
     Route::get("/", [Producto::class, "consultarTodo"]);
-    Route::get("/categoria", [Categoria::class, "consultarCategoria"]);
-    Route::get("/talla", [Talla::class, "consultarTalla"]);
     Route::get("/{id}", [Producto::class, "buscarProducto"]);
    
 
