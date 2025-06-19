@@ -25,7 +25,7 @@ class sesionController extends Controller
 
                 if($sesion) {
                     // Si ya existe una sesión activa, actualizamos la fecha de inicio
-                    $sesion->fecha_ultimo_acceso= now();
+                    $sesion->fecha_ultimo_acceso = now();
                     $sesion->conectado = 1; // Marcar como conectado
                     $sesion->save();
 
