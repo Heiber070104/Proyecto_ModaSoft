@@ -21,7 +21,9 @@ Route::get('/api', function () {
     ]);
 });
 
+require __DIR__.'/viewRoutes.php';
 require __DIR__.'/usuarioRoutes.php';
 require __DIR__.'/productoRoutes.php';
 require __DIR__.'/categoriaRoutes.php';
 require __DIR__.'/tallaRoutes.php';
+require __DIR__.'/proveedorRoutes.php';

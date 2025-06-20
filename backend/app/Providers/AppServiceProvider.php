@@ -20,6 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::addLocation(base_path("../frontend/pages"));
+        //
     }
 }

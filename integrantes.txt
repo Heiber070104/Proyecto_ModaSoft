@@ -1,0 +1,6 @@
+Integrantes:
+Gerardo Jimenez 5to "A"
+Heiber Moran 5to "A"
+Juliet Escalona 5to "B"
+
+Modulo: Gestion de productos y tallas

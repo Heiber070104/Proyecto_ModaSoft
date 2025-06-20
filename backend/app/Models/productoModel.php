@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\compraModel;
 
 class productoModel extends Model
 {
@@ -33,6 +34,12 @@ class productoModel extends Model
     public function inventario()
     {
         return $this->hasOne('App\Models\inventarioModel', 'id_producto', 'id_producto');
+    }
+
+    public function compras()
+    {
+        return $this->belongsToMany(compraModel::class, 'detalle_compra', 'id_producto', 'id_compra')
+                    ->withPivot('cantidad', 'precio_compra');
     }
   
 }
