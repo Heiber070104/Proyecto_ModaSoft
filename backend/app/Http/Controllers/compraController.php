@@ -6,9 +6,24 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\compraModel;
 use App\Models\inventarioModel;
+use App\Models\productoModel;
 
 class compraController extends Controller
 {
+
+   public function consultarTodo(){
+
+        try{
+
+            $compras = compraModel::with("proveedor")->with("producto")->get();
+            return response()->json($compras, 200);
+        
+        }catch(Exception $e){
+            return response()->json(['error' => 'Error en la consulta: ' . $e->getMessage()], 500);
+        }
+
+   } 
+
    public function crearCompra(Request $request)
    {
         try{
