@@ -7,8 +7,8 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     const nombre = document.getElementById("nombre").value;
     const descripcion = document.getElementById("descripcion").value;
     const precio = document.getElementById("precio").value;
-    const id_categoria = document.getElementById("categoria").value;
-    const id_talla = document.getElementById("talla").value;
+    const id_categoria = document.getElementById("categorias").value;
+    const id_talla = document.getElementById("tallas").value;
     const cantidad = document.getElementById("cantidad").value;
 
     if(!id || !nombre || !descripcion || !precio || !id_categoria || !id_talla || !cantidad){
@@ -48,7 +48,7 @@ const cargarSelect = async (direccion) => {
 
     try{
 
-       const res = await fetch(`http://localhost:8000/productos/${direccion}`, {
+       const res = await fetch(`http://localhost:8000/${direccion}`, {
             method: "GET"
        })
 
@@ -80,8 +80,8 @@ const cargarSelect = async (direccion) => {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    await cargarSelect("categoria"); 
-    await cargarSelect("talla");
+    await cargarSelect("categorias"); 
+    await cargarSelect("tallas");
 
     try {
          
@@ -95,8 +95,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("nombre").value = consulta.nombre;
             document.getElementById("descripcion").value = consulta.descripcion;
             document.getElementById("precio").value = consulta.precio_unitario;
-            document.getElementById("categoria").value = consulta.id_categoria;
-            document.getElementById("talla").value = consulta.id_talla;
+            document.getElementById("categorias").value = consulta.id_categoria;
+            document.getElementById("tallas").value = consulta.id_talla;
             document.getElementById("cantidad").value = consulta.cantidad;
 
         }
