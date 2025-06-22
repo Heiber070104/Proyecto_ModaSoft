@@ -27,7 +27,7 @@ class compraModel extends Model
     }
 
     public function producto (){
-        return $this->belongsToMany(productoModel::class, "detalle_compra", 'id_compra', 'id_compra')
+        return $this->belongsToMany(productoModel::class, "detalle_compra", 'id_compra', 'id_producto')
                     ->withPivot('cantidad', 'precio_compra');
     }
 

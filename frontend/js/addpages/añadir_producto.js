@@ -7,9 +7,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     const precio = document.getElementById("precio").value;
     const id_categoria = document.getElementById("categoria").value;
     const id_talla = document.getElementById("talla").value;
-    const cantidad = document.getElementById("cantidad").value;
 
-    if(!nombre || !descripcion || !precio || !id_categoria || !id_talla || !cantidad){
+
+    if(!nombre || !descripcion || !precio || !id_categoria || !id_talla){
         alert("Rellene todos los campos");
         return false;
     }
@@ -24,21 +24,21 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
             body: JSON.stringify({
                 nombre: nombre,
                 descripcion: descripcion,
-                precio: precio,
+                precio_unitario: precio_unitario,
                 id_categoria: id_categoria,
                 id_talla: id_talla,
-                cantidad: cantidad
             })
         })
 
         if(res.ok){
             alert("Producto registrado con éxito")
-            document.getElementById("nombre").value = "";
-            document.getElementById("descripcion").value = "";
-            document.getElementById("precio").value = 0;
-            document.getElementById("categoria").value = 1;
-            document.getElementById("talla").value = 1;
-            document.getElementById("cantidad").value = 0;
+document.getElementById("nombre").value = "";
+document.getElementById("descripcion").value = "";
+document.getElementById("precio").value = 0;
+document.getElementById("categoria").value = 1;
+document.getElementById("talla").value = 1;
+
+
         }else{
             console.log("Error al registrar el producto: " + res.message);
             alert("Error al registrar el producto, intente nuevamente" + res.message);  

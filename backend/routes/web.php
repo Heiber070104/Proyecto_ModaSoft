@@ -21,6 +21,7 @@ Route::get('/api', function () {
     ]);
 });
 
+require __DIR__.'/compraRoutes.php';
 require __DIR__.'/usuarioRoutes.php';
 require __DIR__.'/productoRoutes.php';
 require __DIR__.'/categoriaRoutes.php';

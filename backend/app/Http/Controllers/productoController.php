@@ -14,7 +14,8 @@ class productoController extends Controller
         try {
             $productos = productoModel::join("categoria", "producto.id_categoria", "=", "categoria.id_categoria")
                 ->join("talla", "producto.id_talla", "=", "talla.id_talla")
-                ->join("inventario", "producto.id_producto", "=", "inventario.id_producto")    
+                ->join("inventario", "producto.id_producto", "=", "inventario.id_producto") 
+                 ->whereNull("producto.deleted_at")  //softdelete
                 ->select("producto.*", "categoria.nombre as categoria", "talla.descripcion as talla", "inventario.cantidad_disponible as cantidad")
             ->get();
 
@@ -31,6 +32,7 @@ class productoController extends Controller
             $producto = productoModel::join("categoria", "producto.id_categoria", "=", "categoria.id_categoria")
                 ->join("talla", "producto.id_talla", "=", "talla.id_talla")
                 ->join("inventario", "producto.id_producto", "=", "inventario.id_producto")
+                ->whereNull("producto.deleted_at") //softdelete
                 ->select("producto.*", "categoria.nombre as categoria", "talla.descripcion as talla", "inventario.cantidad_disponible as cantidad")
                 ->where('producto.id_producto', $id)
             ->first();
@@ -118,19 +120,25 @@ class productoController extends Controller
         }
     }
 
-    public function eliminarProducto(Request $request, $id)
-    {
-        // Lógica para eliminar un producto por ID
-        try {
+public function eliminarProducto(Request $request, $id)
+{
+    try {
+        $producto = productoModel::findOrFail($id);
 
-            $producto = productoModel::findOrFail($id);
-            $producto->delete();
+        // Aplicamos SoftDelete (borrado lógico)
+        $producto->delete();
 
-            // Eliminar el inventario asociado
-
-            return response()->json(['message' => 'Producto eliminado exitosamente'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al eliminar producto: ' . $e->getMessage()], 500);
+        return response()->json(['message' => 'Producto eliminado exitosamente.'], 200);
+        /*
+        // Si en el futuro se desea restaurar:
+        if ($producto->trashed()) {
+            $producto->restore();
         }
+        */
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al eliminar producto: ' . $e->getMessage()], 500);
     }
+}
+
+
 }

@@ -3,31 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>ModaSoft - Dashboard</title>
-  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/topbar_menu.css">
   <script src="../js/sesiones.js"></script>
+  <script src="../js/componentes/menu.js" defer></script>
+  <script src="../js/componentes/topbar.js" defer></script>
   <script src="../js/dashboard.js" defer></script>
 </head>
 <body>
   <div class="container">
-    <aside class="sidebar">
-       <img src="../public/logo_modasoft.png" alt="Logo de ModaSoft" />
-      <ul>
-        <li><span>🛍️</span> Productos y Tallas</li>
-        <li><span>📦</span> Inventario y Compras</li>
-        <li><span>💲</span> Cuentas por Pagar/ Cobrar</li>
-        <li><span>🧾</span> Ventas y Devoluciones</li>
-        <li><span>📚</span> Libro Diario/Mayor</li>
-        <li><span>📄</span> Registro Contable</li>
-        <li><span>📊</span> Reportes</li>
-      </ul>
-    </aside>
-
+    <aside class="sidebar"></aside> <!-- Aquí se insertará el menú -->
+    
     <main class="main-content">
-      <header class="topbar">
-        <span class="user">Usuario: <strong id="userRole">Admin</strong></span>
-        <button id="logout" title="Cerrar sesión">⏻</button>
-      </header>
-
+      <header class="topbar"></header> <!-- Aquí se insertará el topbar -->
+      
       <section class="welcome">
         <h1>Bienvenido al sistema <br> <strong>ModaSoft</strong></h1>
         <div class="actions">
@@ -38,6 +26,12 @@
       </section>
     </main>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      new MenuComponent().mount();
+      new TopbarComponent().mount();
+    });
+  </script>
 </body>
 </html>
-
