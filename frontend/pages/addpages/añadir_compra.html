@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Compra</title>
+    <script src="../../js/addpages/añadir_compra.js"></script>
+</head>
+<body>
+
+    <h1>Nueva Compa</h1>
+
+    <form id="formulario" action="">
+
+        <label>Seleccione fecha</label>
+        <input type="date" id="fecha"><br>
+
+        <label for="">Seleccione proveedor</label>
+        <select id="proveedores"></select><br>
+
+        <label for="">Seleccione estado de compra</label>
+        <select id="estado">
+            <option value="pendiente">Pendiente</option>
+            <option value="pagada">Pagada</option>
+        </select><br>
+
+        <label for="">Seleccion productos</label>
+        <table id="tabla">
+        
+            <thead>
+                <th>Productos</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Opciones</th>
+            </thead>
+
+            <tbody id="cont-productos">
+
+                <tr>
+                    <td>
+                        <select class="productos" indice="1"></select>
+                    </td>
+                    <td>
+                        <input id="cantidad" type="number" value="0" indice="1" disabled>
+                    </td>
+                    <td>
+                        <input id="precio" type="number" value="0" indice="1" disabled>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </form>
+
+    <button onclick="agregarFila()"><span>➕</span></button>
+    
+</body>
+</html>
