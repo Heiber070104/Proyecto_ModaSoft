@@ -5,8 +5,8 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     const nombre = document.getElementById("nombre").value;
     const descripcion = document.getElementById("descripcion").value;
     const precio = document.getElementById("precio").value;
-    const id_categoria = document.getElementById("categoria").value;
-    const id_talla = document.getElementById("talla").value;
+    const id_categoria = document.getElementById("categorias").value;
+    const id_talla = document.getElementById("tallas").value;
     const cantidad = document.getElementById("cantidad").value;
 
     if(!nombre || !descripcion || !precio || !id_categoria || !id_talla || !cantidad){

@@ -25,6 +25,9 @@
         </select><br>
 
         <label for="">Seleccion productos</label>
+
+        <label>Cantidad total: <div id="total-general">0.00</div></label>
+        
         <table id="tabla">
         
             <thead>
@@ -34,17 +37,20 @@
                 <th>Opciones</th>
             </thead>
 
-            <tbody id="cont-productos">
+            <tbody class="cont-productos">
 
-                <tr>
+                <tr class="producto">
                     <td>
-                        <select class="productos" indice="1"></select>
+                        <select class="select-productos" data-precio></select>
                     </td>
                     <td>
-                        <input id="cantidad" type="number" value="0" indice="1" disabled>
+                        <input class="cantidad" type="number" value="1" min="1">
                     </td>
                     <td>
-                        <input id="precio" type="number" value="0" indice="1" disabled>
+                       <div class="subtotal">0.00</div>
+                    </td>
+                    <td>
+                        <button class="eliminar" disabled>🗑</button>
                     </td>
                 </tr>
 
@@ -54,7 +60,11 @@
 
     </form>
 
-    <button onclick="agregarFila()"><span>➕</span></button>
-    
+    <button id="agregar-producto"><span>➕</span></button><br>
+
+    <button id="btn-registrar">Registrar</button><br>
+
+    <a href="../compras.html"><button>Atrás</button></a>
+
 </body>
 </html>
