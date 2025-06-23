@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\compraModel;
 use App\Models\inventarioModel;
+
 use App\Models\productoModel;
 
 class compraController extends Controller
@@ -24,16 +25,20 @@ class compraController extends Controller
 
    } 
 
+
    public function crearCompra(Request $request)
    {
         try{
          // Validar los datos de la solicitud
             $data = $request->validate([
+
                 'fecha' => 'required|date',
+
                 'id_proveedor' => 'required|integer',
                 'total' => 'required|numeric',
                 'estado' => 'required|string',
             ]);
+
 
             $compra = compraModel::create([
                 'fecha' => $data["fecha"],

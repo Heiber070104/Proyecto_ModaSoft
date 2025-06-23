@@ -4,15 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes; //para borrado logico
+
 use App\Models\compraModel;
 
 class productoModel extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public $timestamps = false;
     public $table = 'producto';
     public $primaryKey = 'id_producto';
+
+    protected $dates = ['deleted_at']; //para borrado logico
     public $fillable = [
         'nombre',
         'descripcion',

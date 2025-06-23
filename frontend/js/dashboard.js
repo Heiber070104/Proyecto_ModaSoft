@@ -22,7 +22,7 @@ document.getElementById("logout").addEventListener("click", async (e) => {
     if(res.ok){
       alert(respuesta.message);
       Sesion.cerrarSesion();
-      window.location.href = 'login.html';
+      window.location.href = '../pages/login.html';
     }else{
       alert(respuesta.message || 'Error al cerrar sesión');
     }
@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (sesion.id === null || sesion.nombre === null || sesion.rol === null) {
     alert('Por favor, inicia sesión para acceder al dashboard.');
-    window.location.href = 'login.html';
+    window.location.href = '../pages/login.html';
     return;
   }else{
     console.log("sesion activa");

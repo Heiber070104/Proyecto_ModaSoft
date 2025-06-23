@@ -1,0 +1,29 @@
+.devolucion-search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.devolucion-search-box input {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 250px;
+}
+
+.devolucion-search-box button {
+  padding: 8px 12px;
+  font-size: 16px;
+  background-color: #3366ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.devolucion-search-box button:hover {
+  background-color: #274bcc;
+}
