@@ -29,13 +29,14 @@ class compraController extends Controller
         try{
          // Validar los datos de la solicitud
             $data = $request->validate([
+                'fecha' => 'required|date',
                 'id_proveedor' => 'required|integer',
                 'total' => 'required|numeric',
                 'estado' => 'required|string',
             ]);
 
             $compra = compraModel::create([
-                'fecha' => now(),
+                'fecha' => $data["fecha"],
                 'id_proveedor' => $data['id_proveedor'],
                 'total' => $data['total'],
                 'estado' => $data['estado'],
