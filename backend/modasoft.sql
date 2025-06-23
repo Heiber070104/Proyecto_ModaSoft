@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 09, 2025 at 05:49 PM
+-- Generation Time: Jun 23, 2025 at 03:33 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -69,6 +69,16 @@ CREATE TABLE `compra` (
   `estado` enum('pendiente','pagada','cancelada') COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `compra`
+--
+
+INSERT INTO `compra` (`id_compra`, `fecha`, `id_proveedor`, `total`, `estado`) VALUES
+(1, '2025-06-21', 1, '45.00', 'pendiente'),
+(2, '2025-06-21', 1, '60.00', 'pagada'),
+(4, '2025-06-22', 2, '95.00', 'pagada'),
+(5, '2025-06-22', 2, '65.00', 'pendiente');
+
 -- --------------------------------------------------------
 
 --
@@ -110,6 +120,20 @@ CREATE TABLE `detalle_compra` (
   `cantidad` int DEFAULT NULL,
   `precio_compra` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `detalle_compra`
+--
+
+INSERT INTO `detalle_compra` (`id_detalle_compra`, `id_compra`, `id_producto`, `cantidad`, `precio_compra`) VALUES
+(1, 1, 1, 2, '30.00'),
+(2, 1, 2, 3, '15.00'),
+(3, 2, 1, 3, '45.00'),
+(4, 2, 2, 3, '15.00'),
+(5, 4, 3, 5, '50.00'),
+(6, 4, 1, 3, '45.00'),
+(7, 5, 1, 3, '45.00'),
+(8, 5, 3, 2, '20.00');
 
 -- --------------------------------------------------------
 
@@ -155,8 +179,9 @@ CREATE TABLE `inventario` (
 --
 
 INSERT INTO `inventario` (`id_inventario`, `id_producto`, `cantidad_disponible`) VALUES
-(1, 1, 3),
-(2, 2, 5);
+(1, 1, 14),
+(2, 2, 11),
+(3, 3, 8);
 
 -- --------------------------------------------------------
 
@@ -197,7 +222,8 @@ CREATE TABLE `producto` (
 
 INSERT INTO `producto` (`id_producto`, `nombre`, `descripcion`, `precio_unitario`, `id_categoria`, `id_talla`) VALUES
 (1, 'Pantalon grande', 'Grande', '15.00', 2, 1),
-(2, 'Camisa Pequeña', 'Pequeña', '5.00', 1, 2);
+(2, 'Camisa Pequeña', 'Pequeña', '5.00', 1, 2),
+(3, 'Zapato RS21', 'You can fly', '10.00', 3, 2);
 
 -- --------------------------------------------------------
 
@@ -212,6 +238,14 @@ CREATE TABLE `proveedor` (
   `telefono` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `correo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `proveedor`
+--
+
+INSERT INTO `proveedor` (`id_proveedor`, `nombre`, `direccion`, `telefono`, `correo`) VALUES
+(1, 'La Poderosa, C.A', 'Calle 15', '04125003452', 'poderosa@gmail.com'),
+(2, 'Gallo Cotorrero, C.A', 'Calle 12', '04123453234', 'cotorra@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -232,7 +266,7 @@ CREATE TABLE `sesiones` (
 
 INSERT INTO `sesiones` (`id_sesion`, `id_usuario`, `fecha_ultimo_acceso`, `conectado`) VALUES
 (2, 2, '2025-06-09 00:12:14', 0),
-(4, 4, '2025-06-09 00:42:34', 1);
+(4, 4, '2025-06-22 22:14:59', 1);
 
 -- --------------------------------------------------------
 
@@ -431,7 +465,7 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT for table `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `id_compra` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_compra` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `cuentas_cobrar`
@@ -449,7 +483,7 @@ ALTER TABLE `cuentas_pagar`
 -- AUTO_INCREMENT for table `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
-  MODIFY `id_detalle_compra` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detalle_compra` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `detalle_venta`
@@ -467,7 +501,7 @@ ALTER TABLE `devolucion`
 -- AUTO_INCREMENT for table `inventario`
 --
 ALTER TABLE `inventario`
-  MODIFY `id_inventario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_inventario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `libro_contable`
@@ -479,13 +513,13 @@ ALTER TABLE `libro_contable`
 -- AUTO_INCREMENT for table `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_producto` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `id_proveedor` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_proveedor` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sesiones`
