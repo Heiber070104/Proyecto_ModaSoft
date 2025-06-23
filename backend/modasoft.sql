@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Jun 09, 2025 at 05:49 PM
--- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 23-06-2025 a las 01:18:55
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,22 +18,22 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `modasoft`
+-- Base de datos: `modasoft`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `categoria`
+-- Estructura de tabla para la tabla `categoria`
 --
 
 CREATE TABLE `categoria` (
-  `id_categoria` int NOT NULL,
-  `nombre` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id_categoria` int(11) NOT NULL,
+  `nombre` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `categoria`
+-- Volcado de datos para la tabla `categoria`
 --
 
 INSERT INTO `categoria` (`id_categoria`, `nombre`) VALUES
@@ -44,209 +44,224 @@ INSERT INTO `categoria` (`id_categoria`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cliente`
+-- Estructura de tabla para la tabla `cliente`
 --
 
 CREATE TABLE `cliente` (
-  `id_cliente` int NOT NULL,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `direccion` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `telefono` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `correo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id_cliente` int(11) NOT NULL,
+  `cedula` int(10) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `direccion` varchar(200) NOT NULL,
+  `telefono` varchar(20) NOT NULL,
+  `correo` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cliente`
+--
+
+INSERT INTO `cliente` (`id_cliente`, `cedula`, `nombre`, `direccion`, `telefono`, `correo`) VALUES
+(1, 30324605, 'Juliet Escalona', 'Calle 23', '04145539006', 'julietescalona04@gmail.com');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `compra`
+-- Estructura de tabla para la tabla `compra`
 --
 
 CREATE TABLE `compra` (
-  `id_compra` int NOT NULL,
+  `id_compra` int(11) NOT NULL,
   `fecha` date DEFAULT NULL,
-  `id_proveedor` int DEFAULT NULL,
+  `id_proveedor` int(11) DEFAULT NULL,
   `total` decimal(12,2) DEFAULT NULL,
-  `estado` enum('pendiente','pagada','cancelada') COLLATE utf8mb4_general_ci DEFAULT NULL
+  `estado` enum('pendiente','pagada','cancelada') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cuentas_cobrar`
+-- Estructura de tabla para la tabla `cuentas_cobrar`
 --
 
 CREATE TABLE `cuentas_cobrar` (
-  `id_cuenta_cobrar` int NOT NULL,
-  `id_venta` int DEFAULT NULL,
+  `id_cuenta_cobrar` int(11) NOT NULL,
+  `id_venta` int(11) DEFAULT NULL,
   `monto` decimal(12,2) DEFAULT NULL,
   `fecha_vencimiento` date DEFAULT NULL,
-  `estado` enum('pendiente','cobrado') COLLATE utf8mb4_general_ci DEFAULT NULL
+  `estado` enum('pendiente','cobrado') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cuentas_pagar`
+-- Estructura de tabla para la tabla `cuentas_pagar`
 --
 
 CREATE TABLE `cuentas_pagar` (
-  `id_cuenta_pagar` int NOT NULL,
-  `id_compra` int DEFAULT NULL,
+  `id_cuenta_pagar` int(11) NOT NULL,
+  `id_compra` int(11) DEFAULT NULL,
   `monto` decimal(12,2) DEFAULT NULL,
   `fecha_vencimiento` date DEFAULT NULL,
-  `estado` enum('pendiente','pagado') COLLATE utf8mb4_general_ci DEFAULT NULL
+  `estado` enum('pendiente','pagado') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalle_compra`
+-- Estructura de tabla para la tabla `detalle_compra`
 --
 
 CREATE TABLE `detalle_compra` (
-  `id_detalle_compra` int NOT NULL,
-  `id_compra` int DEFAULT NULL,
-  `id_producto` int DEFAULT NULL,
-  `cantidad` int DEFAULT NULL,
+  `id_detalle_compra` int(11) NOT NULL,
+  `id_compra` int(11) DEFAULT NULL,
+  `id_producto` int(11) DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL,
   `precio_compra` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalle_venta`
+-- Estructura de tabla para la tabla `detalle_venta`
 --
 
 CREATE TABLE `detalle_venta` (
-  `id_detalle_venta` int NOT NULL,
-  `id_venta` int DEFAULT NULL,
-  `id_producto` int DEFAULT NULL,
-  `cantidad` int DEFAULT NULL,
+  `id_detalle_venta` int(11) NOT NULL,
+  `id_venta` int(11) DEFAULT NULL,
+  `id_producto` int(11) DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL,
   `precio_venta` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `devolucion`
+-- Estructura de tabla para la tabla `devolucion`
 --
 
 CREATE TABLE `devolucion` (
-  `id_devolucion` int NOT NULL,
-  `id_venta` int DEFAULT NULL,
+  `id_devolucion` int(11) NOT NULL,
+  `id_venta` int(11) DEFAULT NULL,
   `fecha` date DEFAULT NULL,
-  `motivo` text COLLATE utf8mb4_general_ci
+  `motivo` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inventario`
+-- Estructura de tabla para la tabla `inventario`
 --
 
 CREATE TABLE `inventario` (
-  `id_inventario` int NOT NULL,
-  `id_producto` int DEFAULT NULL,
-  `cantidad_disponible` int DEFAULT NULL
+  `id_inventario` int(11) NOT NULL,
+  `id_producto` int(11) DEFAULT NULL,
+  `cantidad_disponible` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `inventario`
+-- Volcado de datos para la tabla `inventario`
 --
 
 INSERT INTO `inventario` (`id_inventario`, `id_producto`, `cantidad_disponible`) VALUES
 (1, 1, 3),
-(2, 2, 5);
+(2, 2, 5),
+(3, 18, 10),
+(4, 19, 1),
+(5, 20, 15);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `libro_contable`
+-- Estructura de tabla para la tabla `libro_contable`
 --
 
 CREATE TABLE `libro_contable` (
-  `id_libro` int NOT NULL,
+  `id_libro` int(11) NOT NULL,
   `fecha` date NOT NULL,
-  `tipo` enum('diario','mayor') COLLATE utf8mb4_general_ci NOT NULL,
-  `descripcion` text COLLATE utf8mb4_general_ci,
+  `tipo` enum('diario','mayor') NOT NULL,
+  `descripcion` text DEFAULT NULL,
   `monto` decimal(12,2) NOT NULL,
-  `id_compra` int DEFAULT NULL,
-  `id_venta` int DEFAULT NULL,
-  `id_devolucion` int DEFAULT NULL,
-  `id_usuario` int NOT NULL
+  `id_compra` int(11) DEFAULT NULL,
+  `id_venta` int(11) DEFAULT NULL,
+  `id_devolucion` int(11) DEFAULT NULL,
+  `id_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto`
+-- Estructura de tabla para la tabla `producto`
 --
 
 CREATE TABLE `producto` (
-  `id_producto` int NOT NULL,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `descripcion` text COLLATE utf8mb4_general_ci,
+  `id_producto` int(11) NOT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
   `precio_unitario` decimal(10,2) DEFAULT NULL,
-  `id_categoria` int DEFAULT NULL,
-  `id_talla` int DEFAULT NULL
+  `id_categoria` int(11) DEFAULT NULL,
+  `id_talla` int(11) DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `producto`
+-- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`id_producto`, `nombre`, `descripcion`, `precio_unitario`, `id_categoria`, `id_talla`) VALUES
-(1, 'Pantalon grande', 'Grande', '15.00', 2, 1),
-(2, 'Camisa Pequeña', 'Pequeña', '5.00', 1, 2);
+INSERT INTO `producto` (`id_producto`, `nombre`, `descripcion`, `precio_unitario`, `id_categoria`, `id_talla`, `deleted_at`) VALUES
+(1, 'Pantalon grande', 'Grande', 15.00, 2, 1, '2025-06-22 04:25:34'),
+(2, 'Camisa Pequeña', 'Pequeña', 5.00, 1, 2, '2025-06-21 00:40:08'),
+(18, 'Pantalón jeans', 'Pantalón de mezclilla para hombre', 20.00, 1, 2, NULL),
+(19, 'Camisa formal', 'Camisa de manga larga', 25.00, 2, 1, NULL),
+(20, 'Chaqueta acolchada', 'Ideal para invierno', 60.00, 3, 3, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `proveedor`
+-- Estructura de tabla para la tabla `proveedor`
 --
 
 CREATE TABLE `proveedor` (
-  `id_proveedor` int NOT NULL,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `direccion` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `telefono` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `correo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id_proveedor` int(11) NOT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
+  `direccion` varchar(200) DEFAULT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `correo` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sesiones`
+-- Estructura de tabla para la tabla `sesiones`
 --
 
 CREATE TABLE `sesiones` (
-  `id_sesion` int NOT NULL,
-  `id_usuario` int DEFAULT NULL,
-  `fecha_ultimo_acceso` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `conectado` tinyint DEFAULT NULL
+  `id_sesion` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `fecha_ultimo_acceso` varchar(20) DEFAULT NULL,
+  `conectado` tinyint(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `sesiones`
+-- Volcado de datos para la tabla `sesiones`
 --
 
 INSERT INTO `sesiones` (`id_sesion`, `id_usuario`, `fecha_ultimo_acceso`, `conectado`) VALUES
 (2, 2, '2025-06-09 00:12:14', 0),
-(4, 4, '2025-06-09 00:42:34', 1);
+(4, 4, '2025-06-22 04:17:41', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `talla`
+-- Estructura de tabla para la tabla `talla`
 --
 
 CREATE TABLE `talla` (
-  `id_talla` int NOT NULL,
-  `descripcion` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id_talla` int(11) NOT NULL,
+  `descripcion` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `talla`
+-- Volcado de datos para la tabla `talla`
 --
 
 INSERT INTO `talla` (`id_talla`, `descripcion`) VALUES
@@ -257,21 +272,21 @@ INSERT INTO `talla` (`id_talla`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuario`
+-- Estructura de tabla para la tabla `usuario`
 --
 
 CREATE TABLE `usuario` (
-  `id_usuario` int NOT NULL,
-  `nombre_usuario` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nombre_personal` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
-  `correo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `rol` enum('Administrador','Vendedor','Contador') COLLATE utf8mb4_general_ci DEFAULT 'Vendedor',
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `activo` tinyint(1) DEFAULT '1'
+  `id_usuario` int(11) NOT NULL,
+  `nombre_usuario` varchar(25) DEFAULT NULL,
+  `nombre_personal` varchar(30) NOT NULL,
+  `correo` varchar(100) DEFAULT NULL,
+  `rol` enum('Administrador','Vendedor','Contador') DEFAULT 'Vendedor',
+  `password` varchar(255) DEFAULT NULL,
+  `activo` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `usuario`
+-- Volcado de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `nombre_personal`, `correo`, `rol`, `password`, `activo`) VALUES
@@ -281,56 +296,57 @@ INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `nombre_personal`, `corre
 -- --------------------------------------------------------
 
 --
--- Table structure for table `venta`
+-- Estructura de tabla para la tabla `venta`
 --
 
 CREATE TABLE `venta` (
-  `id_venta` int NOT NULL,
+  `id_venta` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
   `fecha` date DEFAULT NULL,
-  `id_cliente` int DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
   `total` decimal(12,2) DEFAULT NULL,
-  `estado` enum('en_proceso','completada','cancelada') COLLATE utf8mb4_general_ci DEFAULT NULL
+  `estado` enum('en_proceso','completada','cancelada') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `categoria`
+-- Indices de la tabla `categoria`
 --
 ALTER TABLE `categoria`
   ADD PRIMARY KEY (`id_categoria`);
 
 --
--- Indexes for table `cliente`
+-- Indices de la tabla `cliente`
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`id_cliente`);
 
 --
--- Indexes for table `compra`
+-- Indices de la tabla `compra`
 --
 ALTER TABLE `compra`
   ADD PRIMARY KEY (`id_compra`),
   ADD KEY `id_proveedor` (`id_proveedor`);
 
 --
--- Indexes for table `cuentas_cobrar`
+-- Indices de la tabla `cuentas_cobrar`
 --
 ALTER TABLE `cuentas_cobrar`
   ADD PRIMARY KEY (`id_cuenta_cobrar`),
   ADD KEY `id_venta` (`id_venta`);
 
 --
--- Indexes for table `cuentas_pagar`
+-- Indices de la tabla `cuentas_pagar`
 --
 ALTER TABLE `cuentas_pagar`
   ADD PRIMARY KEY (`id_cuenta_pagar`),
   ADD KEY `id_compra` (`id_compra`);
 
 --
--- Indexes for table `detalle_compra`
+-- Indices de la tabla `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
   ADD PRIMARY KEY (`id_detalle_compra`),
@@ -338,7 +354,7 @@ ALTER TABLE `detalle_compra`
   ADD KEY `id_producto` (`id_producto`);
 
 --
--- Indexes for table `detalle_venta`
+-- Indices de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
   ADD PRIMARY KEY (`id_detalle_venta`),
@@ -346,21 +362,21 @@ ALTER TABLE `detalle_venta`
   ADD KEY `id_producto` (`id_producto`);
 
 --
--- Indexes for table `devolucion`
+-- Indices de la tabla `devolucion`
 --
 ALTER TABLE `devolucion`
   ADD PRIMARY KEY (`id_devolucion`),
   ADD KEY `id_venta` (`id_venta`);
 
 --
--- Indexes for table `inventario`
+-- Indices de la tabla `inventario`
 --
 ALTER TABLE `inventario`
   ADD PRIMARY KEY (`id_inventario`),
   ADD KEY `id_producto` (`id_producto`);
 
 --
--- Indexes for table `libro_contable`
+-- Indices de la tabla `libro_contable`
 --
 ALTER TABLE `libro_contable`
   ADD PRIMARY KEY (`id_libro`),
@@ -370,7 +386,7 @@ ALTER TABLE `libro_contable`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indexes for table `producto`
+-- Indices de la tabla `producto`
 --
 ALTER TABLE `producto`
   ADD PRIMARY KEY (`id_producto`),
@@ -378,26 +394,26 @@ ALTER TABLE `producto`
   ADD KEY `id_talla` (`id_talla`);
 
 --
--- Indexes for table `proveedor`
+-- Indices de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
   ADD PRIMARY KEY (`id_proveedor`);
 
 --
--- Indexes for table `sesiones`
+-- Indices de la tabla `sesiones`
 --
 ALTER TABLE `sesiones`
   ADD PRIMARY KEY (`id_sesion`),
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indexes for table `talla`
+-- Indices de la tabla `talla`
 --
 ALTER TABLE `talla`
   ADD PRIMARY KEY (`id_talla`);
 
 --
--- Indexes for table `usuario`
+-- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id_usuario`),
@@ -405,162 +421,163 @@ ALTER TABLE `usuario`
   ADD UNIQUE KEY `nombre_usuario` (`nombre_usuario`);
 
 --
--- Indexes for table `venta`
+-- Indices de la tabla `venta`
 --
 ALTER TABLE `venta`
   ADD PRIMARY KEY (`id_venta`),
-  ADD KEY `id_cliente` (`id_cliente`);
+  ADD KEY `id_cliente` (`id_cliente`),
+  ADD KEY `id_producto` (`id_producto`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `categoria`
+-- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `id_categoria` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `cliente`
+-- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `compra`
+-- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `id_compra` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `cuentas_cobrar`
+-- AUTO_INCREMENT de la tabla `cuentas_cobrar`
 --
 ALTER TABLE `cuentas_cobrar`
-  MODIFY `id_cuenta_cobrar` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_cuenta_cobrar` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `cuentas_pagar`
+-- AUTO_INCREMENT de la tabla `cuentas_pagar`
 --
 ALTER TABLE `cuentas_pagar`
-  MODIFY `id_cuenta_pagar` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_cuenta_pagar` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `detalle_compra`
+-- AUTO_INCREMENT de la tabla `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
-  MODIFY `id_detalle_compra` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detalle_compra` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `detalle_venta`
+-- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle_venta` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detalle_venta` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `devolucion`
+-- AUTO_INCREMENT de la tabla `devolucion`
 --
 ALTER TABLE `devolucion`
-  MODIFY `id_devolucion` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_devolucion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `inventario`
+-- AUTO_INCREMENT de la tabla `inventario`
 --
 ALTER TABLE `inventario`
-  MODIFY `id_inventario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_inventario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `libro_contable`
+-- AUTO_INCREMENT de la tabla `libro_contable`
 --
 ALTER TABLE `libro_contable`
-  MODIFY `id_libro` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_libro` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `producto`
+-- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT for table `proveedor`
+-- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `id_proveedor` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `sesiones`
+-- AUTO_INCREMENT de la tabla `sesiones`
 --
 ALTER TABLE `sesiones`
-  MODIFY `id_sesion` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_sesion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `talla`
+-- AUTO_INCREMENT de la tabla `talla`
 --
 ALTER TABLE `talla`
-  MODIFY `id_talla` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_talla` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `usuario`
+-- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `venta`
+-- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `compra`
+-- Filtros para la tabla `compra`
 --
 ALTER TABLE `compra`
   ADD CONSTRAINT `compra_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`);
 
 --
--- Constraints for table `cuentas_cobrar`
+-- Filtros para la tabla `cuentas_cobrar`
 --
 ALTER TABLE `cuentas_cobrar`
   ADD CONSTRAINT `cuentas_cobrar_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`);
 
 --
--- Constraints for table `cuentas_pagar`
+-- Filtros para la tabla `cuentas_pagar`
 --
 ALTER TABLE `cuentas_pagar`
   ADD CONSTRAINT `cuentas_pagar_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`);
 
 --
--- Constraints for table `detalle_compra`
+-- Filtros para la tabla `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
   ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`),
   ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
 
 --
--- Constraints for table `detalle_venta`
+-- Filtros para la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
   ADD CONSTRAINT `detalle_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`),
   ADD CONSTRAINT `detalle_venta_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
 
 --
--- Constraints for table `devolucion`
+-- Filtros para la tabla `devolucion`
 --
 ALTER TABLE `devolucion`
   ADD CONSTRAINT `devolucion_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`);
 
 --
--- Constraints for table `inventario`
+-- Filtros para la tabla `inventario`
 --
 ALTER TABLE `inventario`
   ADD CONSTRAINT `inventario_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `libro_contable`
+-- Filtros para la tabla `libro_contable`
 --
 ALTER TABLE `libro_contable`
   ADD CONSTRAINT `libro_contable_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`id_compra`),
@@ -569,20 +586,20 @@ ALTER TABLE `libro_contable`
   ADD CONSTRAINT `libro_contable_ibfk_4` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
 
 --
--- Constraints for table `producto`
+-- Filtros para la tabla `producto`
 --
 ALTER TABLE `producto`
   ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id_categoria`),
   ADD CONSTRAINT `producto_ibfk_2` FOREIGN KEY (`id_talla`) REFERENCES `talla` (`id_talla`);
 
 --
--- Constraints for table `sesiones`
+-- Filtros para la tabla `sesiones`
 --
 ALTER TABLE `sesiones`
   ADD CONSTRAINT `sesiones_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
 
 --
--- Constraints for table `venta`
+-- Filtros para la tabla `venta`
 --
 ALTER TABLE `venta`
   ADD CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`);
