@@ -53,7 +53,7 @@ class compraController extends Controller
                     'precio_compra' => $producto['precio_compra'],
                 ]);
 
-                $stock = inventarioModel::find($producto['id_producto']);
+                $stock = inventarioModel::where("id_producto", $producto['id_producto'])->first();
                 $stock->cantidad_disponible += $producto['cantidad'];
                 $stock->save();
             }

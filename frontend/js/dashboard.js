@@ -1,5 +1,4 @@
 
-
 const Sesion = new Sesiones();
 const sesion = Sesion.obtenerSesion();
 
@@ -46,8 +45,7 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log("sesion activa");
   }
 
-  new MenuComponent().mount();
-  new TopbarComponent().mount();
+
 
 });
 
