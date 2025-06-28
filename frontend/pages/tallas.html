@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario de Ropa</title>
     <link rel="stylesheet" href="../css/topbar_menu.css">
     <link rel="stylesheet" href="../css/tablas.css">
-
+    <title>Tallas</title>
+    <script src="../js/tallas.js"></script>
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
-    <script src="../js/inventario.js" defer></script>
 </head>
 <body>
 
@@ -21,30 +20,34 @@
         <header class="topbar"></header>
 
         <section class="welcome">
-          <h1>Inventario</h1>
-          <div class="botones-acciones">
-          </div>
+          <h1>Gestión de Tallas</h1>
 
-           <table id="tabla">
+            <div class="botones-acciones">
+                <a href="productos.html"><button>⏪ Regresar</button></a>
+            </div>
+        
+          <table>
 
-                <thead>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio C/U</th>
-                    <th>Categoria</th>
-                    <th>Talla</th>
-                    <th>Cantidad Actual (stock)</th>
-                </thead>
+            <thead>
+               <tr>
+                  <th>Nombre</th>
+                  <th>Acciones</th>
+               </tr>
+            </thead>
 
-            <tbody id="datos">
+            <tbody class="cont-tallas">
 
             </tbody>
 
-            </table>
+          </table>
+
+          <button id="btn-agregarFila" class="btn purple"><span>➕ Nueva talla</span></button>
+
         </section>
+
       </main>
 
   </div>
-
+        
 </body>
 </html>

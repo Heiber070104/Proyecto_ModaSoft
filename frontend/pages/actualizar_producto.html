@@ -4,35 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actualizar producto</title>
-    <script type="module" src="../../js/updatepages/actualizar_producto.js" defer></script>
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/tablas.css">
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+    <script type="module" src="../js/actualizar_producto.js" defer></script>
 </head>
 <body>
+
+    <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+      <main class="main-content">
+        <header class="topbar"></header>
+
+        <section class="welcome">
+          <h1>Editar producto</h1>
+          <div class="botones-acciones">
+            <a href="productos.html"><button>⏪ Regresar</button></a>
+          </div>
+
+          <form id="formulario">
+
+                <label>Coloque nombre</label><br>
+                <input type="text" id="nombre"><br><br>
+
+                <label>Coloque descripcion</label><br>
+                <input type="text" id="descripcion"><br><br>
+
+                <label>Coloque precio</label><br>
+                <input type="number" id="precio"><br><br>
+
+                <label>Coloque categoria</label><br>
+                <select id="categorias"></select><br><br>
+
+                <label>Coloque talla</label><br>
+                <select id="tallas"></select><br><br>
+
+                <label>Coloque cantidad</label><br>
+                <input type="number" id="cantidad"><br><br>
+
+                <input type="submit" value="Actualizar" class="btn blue">
+
+            </form>
+
+        </section>
+      </main>
+
+  </div>
     
-    <form id="formulario">
-
-        <label>Coloque nombre</label>
-        <input type="text" id="nombre"><br>
-
-        <label>Coloque descripcion</label>
-        <input type="text" id="descripcion"><br>
-
-        <label>Coloque precio</label>
-        <input type="number" id="precio"><br>
-
-        <label>Coloque categoria</label>
-        <select id="categorias"></select><br>
-
-        <label>Coloque talla</label>
-        <select id="tallas"></select><br>
-
-        <label>Coloque cantidad</label>
-        <input type="number" id="cantidad"><br>
-
-        <input type="submit" value="Actualizar">
-
-    </form>
-
-    <a href="../inventario.html"><button>Regresar</button></a>
+>>>>>>> 2838c6ce0e540a7263d7f79c1d93b1c3c799248f
 
 </body>
 </html>

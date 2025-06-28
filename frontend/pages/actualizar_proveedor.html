@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo proveedor</title>
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/tablas.css">
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+    <script src="../js/actualizar_proveedor.js"></script>
+</head>
+<body>
+
+    <div class="container">
+
+    <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+    <main class="main-content">
+    <header class="topbar"></header>
+
+    <section class="welcome">
+
+     <h1>Editar Proveedor</h1>
+
+      <div class="botones-acciones">
+        <a href="proveedores.html"><button>⏪ Regresar</button></a>
+      </div>
+
+      <form id="formulario">
+
+          <label>Coloque nombre</label><br>
+          <input type="text" id="nombre"><br><br>
+
+          <label>Coloque direccion</label><br>
+          <input type="text" id="direccion"><br><br>
+
+          <label>Coloque telefono</label><br>
+          <input type="text" id="telefono"><br><br>
+
+          <label>Coloque correo electrónico</label><br>
+          <input type="email" id="correo"><br><br>
+
+          <input type="submit" value="Registrar" class="btn blue">
+     </form>
+        
+    </section>
+    </main>
+
+  </div>
+    
+</body>
+</html>

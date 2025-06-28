@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Productos - ModaSoft</title>
   <link rel="stylesheet" href="../css/topbar_menu.css">
-<link rel="stylesheet" href="../css/productos.css">
+  <link rel="stylesheet" href="../css/tablas.css">
 
   <script src="../js/sesiones.js"></script>
   <script src="../js/componentes/menu.js" defer></script>
@@ -12,44 +12,41 @@
   <script src="../js/productos.js" defer></script> <!-- si tienes lógica para cargar datos -->
 </head>
 <body>
+
   <div class="container">
-    <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
 
-    <main class="main-content">
-  <header class="topbar"></header>
+      <main class="main-content">
+        <header class="topbar"></header>
 
-  <section class="welcome">
-    <h1>Gestión de Productos</h1>
-<div class="botones-acciones">
-  <button class="btn blue" onclick="irAFormulario()">➕ Nuevo producto</button>
-  <button class="btn purple" onclick="mostrarFormularioTalla()">➕ Añadir talla</button>
-</div>
- 
+        <section class="welcome">
+          <h1>Gestión de Productos</h1>
+          <div class="botones-acciones">
+            <a href="añadir_producto.html"><button class="btn blue">➕ Nuevo producto</button></a>
+            <a href="tallas.html"><button class="btn purple">➕Gestor de tallas</button></a>
+            <a href="categoria.html"><button class="btn purple">➕Gestor de categorias</button></a>
+          </div>
 
-    <table id="tabla">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Precio C/U</th>
-          <th>Categoría</th>
-          <th>Talla</th>
-          <th>Opciones</th>
-        </tr>
-      </thead>
-      <tbody id="datos"></tbody>
-    </table>
-  </section>
-</main>
+          <table id="tabla">
+            
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio C/U</th>
+                <th>Categoría</th>
+                <th>Talla</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody id="datos"></tbody>
+
+          </table>
+        </section>
+      </main>
 
   </div>
 
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
-  new MenuComponent().mount();
-  new TopbarComponent().mount();
-  cargarProductos(); // ¡Este es esencial!
-});
-  </script>
 </body>
 </html>

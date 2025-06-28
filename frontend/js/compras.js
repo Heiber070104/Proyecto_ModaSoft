@@ -1,27 +1,50 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    
-    try{
 
-        const res = await fetch("http://localhost:8000/compras", {
-            method: "GET"
+document.addEventListener("DOMContentLoaded", () => {
+
+    const eventosFila = fila => {
+
+        const select = fila.querySelector(".productos")
+
+        select.addEventListener("change", () => {
+            if(select.options[select.selectedIndex].classList.contains("disabled")){
+                select.selectedIndex = 0;
+            }
         })
 
-        if(res.ok){
+    }
+
+    const cargarCompras = async () => {
+
+        try{
+
+            const res = await fetch("http://localhost:8000/compras", {
+                method: "GET"
+            })
+
+            if(res.ok){
 
             const consulta = await res.json();
-            let html = "";
+            
 
             console.log(consulta)
 
             Object.values(consulta).forEach(compra => {
 
+
+                let html = "";
+                const contenedor = document.querySelector(".cont-compras");
+                const nuevaFila = document.createElement("tr")
+                nuevaFila.classList = "fila"
+
                 html += `
-                    <tr>
+
                         <td>${compra.fecha}</td>
                         <td>${compra.proveedor["nombre"]}</td>
                         <td>${compra.total}</td>
                         <td>
-                            <select id="productos">
+
+                            <select class="productos">
+
                                 <option value="0" selected disabled hidden>Lista de productos</option>
                 `
 
@@ -39,25 +62,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                           </select>
                         </td>
                         <td>${compra.estado}</td>
-                    </tr>
+
                 `
+
+                nuevaFila.innerHTML = html;
+                contenedor.appendChild(nuevaFila)
+                eventosFila(nuevaFila);
                 
             })
 
-            document.getElementById("datos").innerHTML = html;
+            }else{
+                console.log(res.json())
+            }
 
-        }else{
-            console.log(res.json())
+        }catch(e){
+            console.log(e)
         }
 
-    }catch(e){
-        console.log(e)
     }
 
-    document.getElementById("productos").addEventListener("change", function () {
-        if(this.options[this.selectedIndex].classList.contains("disabled")){
-            this.selectedIndex = 0;
-        }
-    })  
+    cargarCompras();
 
 })

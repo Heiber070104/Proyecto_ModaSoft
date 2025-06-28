@@ -5,34 +5,33 @@ class MenuComponent {
     }
 
     mount() {
-const container = document.querySelector(".sidebar");
+        const container = document.querySelector(".sidebar");
 
-    if (container) {
-        container.insertAdjacentHTML("afterbegin", this.render());
-        this.setupEvents();
-    } else {
-        console.error("Contenedor .container no encontrado para insertar el menú.");
-    }
+        if (container) {
+            container.insertAdjacentHTML("afterbegin", this.render());
+            this.setupEvents();
+        } else {
+            console.error("Contenedor .container no encontrado para insertar el menú.");
+        }
     }
 
     render() {
         // 2. Devuelve el HTML del menú como string
+
         return `
-            <aside class="sidebar">
-       <img src="../public/logo_modasoft.png" alt="Logo de ModaSoft" />
-      <ul>
-        <li class="menu-item" data-page="productos.html"><span>🛍️</span>Productos</li>
-        <li class="menu-item" data-page="tallas.html""><span>🛍️</span>Tallas</button></li>
-        <li><span>📦</span> Inventario</li>
-        <li class="menu-item" data-page="ventas.html"><span>💰</span>Ventas</li>
-        <li class="menu-item" data-page="compras.html"><span>🏷</span>Compras</li>
-        <li><span>💲</span> Cuentas por Pagar/ Cobrar</li>
-        <li class="menu-item" data-page="devoluciones.html"><span>🧾</span>Devoluciones</button></li>
-        <li><span>📚</span> Libro Diario/Mayor</li>
-        <li><span>📄</span> Registro Contable</li>
-        <li><span>📊</span> Reportes</li>
-      </ul>
-    </aside>
+    
+            <img src="../public/logo_modasoft.png" alt="Logo de ModaSoft" />
+                <ul>
+                    <li class="menu-item" data-page="productos.html"><span>🛍️</span> Productos</li>
+                    <li class="menu-item" data-page="inventario.html"><span>📦</span> Inventario</li>
+                    <li class="menu-item" data-page="compras.html"><span>💵</span> Compras</li>
+                    <li class="menu-item" data-page="proveedores.html"><span>🤵</span> Proveedores</li>
+                    <li><span>💲</span> Cuentas por Pagar/ Cobrar</li>
+                    <li class="menu-item" data-page="devoluciones.html"><span>🧾</span> Devoluciones</button></li>
+                    <li><span>📚</span> Libro Diario/Mayor</li>
+                    <li><span>📄</span> Registro Contable</li>
+                </ul>
+
         `;
     }
 
@@ -71,3 +70,5 @@ const container = document.querySelector(".sidebar");
         }
     }
 }
+
+new MenuComponent().mount();

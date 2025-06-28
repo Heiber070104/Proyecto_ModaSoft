@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario de Ropa</title>
+    <title>Caracteristicas</title>
     <link rel="stylesheet" href="../css/topbar_menu.css">
     <link rel="stylesheet" href="../css/tablas.css">
 
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
-    <script src="../js/inventario.js" defer></script>
+    <script src="../js/categoria.js"></script>
 </head>
 <body>
-
+    
     <div class="container">
       <aside class="sidebar"></aside> <!-- Aquí va el menú -->
 
@@ -21,26 +21,28 @@
         <header class="topbar"></header>
 
         <section class="welcome">
-          <h1>Inventario</h1>
-          <div class="botones-acciones">
-          </div>
 
-           <table id="tabla">
+          <h1>Gestión de Categorias</h1>
+
+            <div class="botones-acciones">
+                <a href="productos.html"><button>⏪ Regresar</button></a>
+            </div>
+     
+            <table>
 
                 <thead>
                     <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio C/U</th>
-                    <th>Categoria</th>
-                    <th>Talla</th>
-                    <th>Cantidad Actual (stock)</th>
+                    <th>Acciones</th>
                 </thead>
 
-            <tbody id="datos">
+                <tbody class="cont-categ">
 
-            </tbody>
+                </tbody>
 
             </table>
+
+            <button id="btn-agregarCateg" class="btn purple">➕ Nueva categoría</button><br>
+    
         </section>
       </main>
 

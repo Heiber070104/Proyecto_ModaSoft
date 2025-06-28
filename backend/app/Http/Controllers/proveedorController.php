@@ -11,7 +11,7 @@ class proveedorController extends Controller
     public function consultarProveedor(Request $request){
 
         try{
-            $proveedor = Proveedor::all();
+            $proveedor = Proveedor::whereNull("deleted_at")->get();
             return response()->json($proveedor, 200);
         }catch(\Exception $e){
             return response()->json([

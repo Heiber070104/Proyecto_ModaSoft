@@ -24,7 +24,7 @@ render() {
       <div class="user-info">
         Usuario: <strong>${this.sesion.usuario}</strong>
       </div>
-      <button id="logout" class="logout-btn" aria-label="Cerrar sesión">⏻ Cerrar Sesion</button>
+      <button id="logout" class="logout-btn" aria-label="Cerrar sesión">🔚 Cerrar Sesion</button>
     </div>
   `;
 }
@@ -57,3 +57,5 @@ render() {
 }
 
 }
+
+new TopbarComponent().mount()
