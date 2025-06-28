@@ -13,6 +13,8 @@ class proveedorModel extends Model
     public $timestamps = false;
     public $table = 'proveedor';    
     public $primaryKey = 'id_proveedor';
+    
+    protected $dates = ['deleted_at'];
     public $fillable = [
         'nombre',
         'telefono',

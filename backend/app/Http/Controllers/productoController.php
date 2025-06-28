@@ -15,7 +15,7 @@ class productoController extends Controller
             $productos = productoModel::join("categoria", "producto.id_categoria", "=", "categoria.id_categoria")
                 ->join("talla", "producto.id_talla", "=", "talla.id_talla")
                 ->join("inventario", "producto.id_producto", "=", "inventario.id_producto") 
-                 ->whereNull("producto.deleted_at")  //softdelete
+                ->whereNull("producto.deleted_at")  //softdelete
                 ->select("producto.*", "categoria.nombre as categoria", "talla.descripcion as talla", "inventario.cantidad_disponible as cantidad")
             ->get();
 

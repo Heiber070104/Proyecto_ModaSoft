@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 23, 2025 at 03:33 AM
+-- Generation Time: Jun 28, 2025 at 04:14 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -49,11 +49,19 @@ INSERT INTO `categoria` (`id_categoria`, `nombre`) VALUES
 
 CREATE TABLE `cliente` (
   `id_cliente` int NOT NULL,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `direccion` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `telefono` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `cedula` int NOT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `direccion` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `telefono` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
   `correo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cliente`
+--
+
+INSERT INTO `cliente` (`id_cliente`, `cedula`, `nombre`, `direccion`, `telefono`, `correo`) VALUES
+(1, 30324605, 'Juliet Escalona', 'Calle 23', '04145539006', 'julietescalona04@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -74,10 +82,8 @@ CREATE TABLE `compra` (
 --
 
 INSERT INTO `compra` (`id_compra`, `fecha`, `id_proveedor`, `total`, `estado`) VALUES
-(1, '2025-06-21', 1, '45.00', 'pendiente'),
-(2, '2025-06-21', 1, '60.00', 'pagada'),
-(4, '2025-06-22', 2, '95.00', 'pagada'),
-(5, '2025-06-22', 2, '65.00', 'pendiente');
+(12, '2025-06-08', 1, '20.00', 'pendiente'),
+(13, '2025-06-27', 2, '230.00', 'pagada');
 
 -- --------------------------------------------------------
 
@@ -126,14 +132,9 @@ CREATE TABLE `detalle_compra` (
 --
 
 INSERT INTO `detalle_compra` (`id_detalle_compra`, `id_compra`, `id_producto`, `cantidad`, `precio_compra`) VALUES
-(1, 1, 1, 2, '30.00'),
-(2, 1, 2, 3, '15.00'),
-(3, 2, 1, 3, '45.00'),
-(4, 2, 2, 3, '15.00'),
-(5, 4, 3, 5, '50.00'),
-(6, 4, 1, 3, '45.00'),
-(7, 5, 1, 3, '45.00'),
-(8, 5, 3, 2, '20.00');
+(12, 12, 20, 1, '20.00'),
+(13, 13, 20, 3, '180.00'),
+(14, 13, 19, 2, '50.00');
 
 -- --------------------------------------------------------
 
@@ -179,9 +180,11 @@ CREATE TABLE `inventario` (
 --
 
 INSERT INTO `inventario` (`id_inventario`, `id_producto`, `cantidad_disponible`) VALUES
-(1, 1, 14),
-(2, 2, 11),
-(3, 3, 8);
+(1, 1, 4),
+(2, 2, 5),
+(3, 18, 10),
+(4, 19, 3),
+(5, 20, 19);
 
 -- --------------------------------------------------------
 
@@ -213,17 +216,20 @@ CREATE TABLE `producto` (
   `descripcion` text COLLATE utf8mb4_general_ci,
   `precio_unitario` decimal(10,2) DEFAULT NULL,
   `id_categoria` int DEFAULT NULL,
-  `id_talla` int DEFAULT NULL
+  `id_talla` int DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `producto`
 --
 
-INSERT INTO `producto` (`id_producto`, `nombre`, `descripcion`, `precio_unitario`, `id_categoria`, `id_talla`) VALUES
-(1, 'Pantalon grande', 'Grande', '15.00', 2, 1),
-(2, 'Camisa Pequeña', 'Pequeña', '5.00', 1, 2),
-(3, 'Zapato RS21', 'You can fly', '10.00', 3, 2);
+INSERT INTO `producto` (`id_producto`, `nombre`, `descripcion`, `precio_unitario`, `id_categoria`, `id_talla`, `deleted_at`) VALUES
+(1, 'Pantalon grande', 'Grande', '15.00', 2, 1, '2025-06-22 04:25:34'),
+(2, 'Camisa Pequeña', 'Pequeña', '5.00', 1, 2, '2025-06-21 00:40:08'),
+(18, 'Pantalón jeans', 'Pantalón de mezclilla para hombre', '20.00', 1, 2, '2025-06-02 00:37:37'),
+(19, 'Camisa formal', 'Camisa de manga larga', '25.00', 2, 1, NULL),
+(20, 'Chaqueta acolchada', 'Ideal para invierno', '60.00', 3, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -244,8 +250,8 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`id_proveedor`, `nombre`, `direccion`, `telefono`, `correo`) VALUES
-(1, 'La Poderosa, C.A', 'Calle 15', '04125003452', 'poderosa@gmail.com'),
-(2, 'Gallo Cotorrero, C.A', 'Calle 12', '04123453234', 'cotorra@gmail.com');
+(1, 'Gallo Cotorrero, C.A', 'Calle 12', '04123453234', 'cotorra@gmail.com'),
+(2, 'Cositas, C.A', 'Calle 15', '041234534553', 'cosas@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -266,7 +272,7 @@ CREATE TABLE `sesiones` (
 
 INSERT INTO `sesiones` (`id_sesion`, `id_usuario`, `fecha_ultimo_acceso`, `conectado`) VALUES
 (2, 2, '2025-06-09 00:12:14', 0),
-(4, 4, '2025-06-22 22:14:59', 1);
+(4, 4, '2025-06-27 19:26:16', 1);
 
 -- --------------------------------------------------------
 
@@ -286,7 +292,10 @@ CREATE TABLE `talla` (
 INSERT INTO `talla` (`id_talla`, `descripcion`) VALUES
 (1, 'X'),
 (2, 'XL'),
-(3, 'XS');
+(3, 'XZ'),
+(4, 'XX'),
+(5, 'XM'),
+(6, 'XC');
 
 -- --------------------------------------------------------
 
@@ -296,11 +305,11 @@ INSERT INTO `talla` (`id_talla`, `descripcion`) VALUES
 
 CREATE TABLE `usuario` (
   `id_usuario` int NOT NULL,
-  `nombre_usuario` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nombre_usuario` varchar(25) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `nombre_personal` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
   `correo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `rol` enum('Administrador','Vendedor','Contador') COLLATE utf8mb4_general_ci DEFAULT 'Vendedor',
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `activo` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -320,6 +329,7 @@ INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `nombre_personal`, `corre
 
 CREATE TABLE `venta` (
   `id_venta` int NOT NULL,
+  `id_producto` int NOT NULL,
   `fecha` date DEFAULT NULL,
   `id_cliente` int DEFAULT NULL,
   `total` decimal(12,2) DEFAULT NULL,
@@ -443,7 +453,8 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `venta`
   ADD PRIMARY KEY (`id_venta`),
-  ADD KEY `id_cliente` (`id_cliente`);
+  ADD KEY `id_cliente` (`id_cliente`),
+  ADD KEY `id_producto` (`id_producto`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -459,13 +470,13 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT for table `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_cliente` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `id_compra` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_compra` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `cuentas_cobrar`
@@ -483,7 +494,7 @@ ALTER TABLE `cuentas_pagar`
 -- AUTO_INCREMENT for table `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
-  MODIFY `id_detalle_compra` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_detalle_compra` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `detalle_venta`
@@ -501,7 +512,7 @@ ALTER TABLE `devolucion`
 -- AUTO_INCREMENT for table `inventario`
 --
 ALTER TABLE `inventario`
-  MODIFY `id_inventario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_inventario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `libro_contable`
@@ -513,7 +524,7 @@ ALTER TABLE `libro_contable`
 -- AUTO_INCREMENT for table `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_producto` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `proveedor`
@@ -531,7 +542,7 @@ ALTER TABLE `sesiones`
 -- AUTO_INCREMENT for table `talla`
 --
 ALTER TABLE `talla`
-  MODIFY `id_talla` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_talla` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `usuario`

@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         nuevaFila.innerHTML = `
             <td class="prCol" style="width: 50%">
-                <input type="text" class="input descripcion" placeholder="Ingrese descripcion de categoria">
+                <input type="text" class="input descripcion" placeholder="Ingrese descripcion de talla">
             </td>
             <td>
                 <button class="btn-modificar" hidden>🔨 Modificar</button>
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnRegistrar.toggleAttribute("hidden", false);
             btnCancelar.toggleAttribute("hidden", false);
 
-            prCol.innerHTML = `<input type="text" value="${valor}" class="input descripcion" placeholder="Ingrese descripcion de categoria">`
+            prCol.innerHTML = `<input type="text" value="${valor}" class="input descripcion" placeholder="Ingrese descripcion de talla">`
             fila.classList.add("modify")
 
         })

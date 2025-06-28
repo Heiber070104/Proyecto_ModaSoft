@@ -3,50 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compras</title>
+    <title>Proveedores</title>
     <link rel="stylesheet" href="../css/topbar_menu.css">
     <link rel="stylesheet" href="../css/tablas.css">
-
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
-    <script src="../js/compras.js"></script>
+    <script src="../js/proveedores.js"></script>
 </head>
 <body>
 
-     <div class="container">
+    <div class="container">
       <aside class="sidebar"></aside> <!-- Aquí va el menú -->
 
       <main class="main-content">
         <header class="topbar"></header>
 
         <section class="welcome">
-          <h1>Gestión de Compras</h1>
+          <h1>Gestión de Proveedores</h1>
           <div class="botones-acciones">
-            <a href="añadir_compra.html"><button class="btn blue">➕ Nueva compra</button></a>
-            <a href="proveedores.html"><button class="btn blue">Gestor de proveedores</button></a>
+            <a href="añadir_proveedor.html"><button>➕ Nuevo proveedor</button></a>
+            <a href="compras.html"><button>⏪ Regresar</button></a>
           </div>
 
           <table id="tabla">
-
+            
             <thead>
-                <th>Fecha</th>
-                <th>Proveedor</th>
-                <th>Total</th>
-                <th>Productos</th>
-                <th>Estado</th>
+              <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+              </tr>
             </thead>
 
-            <tbody class="cont-compras">
+            <tbody class="cont-prov"></tbody>
 
-            </tbody>
-
-           </table>
-
+          </table>
+          
         </section>
       </main>
 
-  </div>
+    </div>
     
 </body>
 </html>
