@@ -31,9 +31,7 @@ class compraController extends Controller
         try{
          // Validar los datos de la solicitud
             $data = $request->validate([
-
                 'fecha' => 'required|date',
-
                 'id_proveedor' => 'required|integer',
                 'total' => 'required|numeric',
                 'estado' => 'required|string',

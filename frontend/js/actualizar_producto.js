@@ -34,13 +34,19 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
             })
         })
 
+        const consulta = await res.json(); 
+
         if(res.ok){
-            alert("Producto actualizado")
-            window.location.href = "../../pages/inventario.html"
+            alert(consulta.message)
+            window.location.href = "productos.html"
+        }else{
+            console.log("Error al actualizar el producto: " + consulta.message);
+            alert("Error al actulizar el producto, intente nuevamente" + consulta.message);  
         }
 
     }catch(error){
-        console.log
+        console.log(error)
+        alert("Error al actualizar el producto, intente nuevamente" + error);
     }
 })
 

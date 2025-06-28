@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario de Ropa</title>
+    <title>Proveedores</title>
     <link rel="stylesheet" href="../css/topbar_menu.css">
     <link rel="stylesheet" href="../css/tablas.css">
-
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
-    <script src="../js/inventario.js" defer></script>
+    <script src="../js/proveedores.js"></script>
 </head>
 <body>
 
@@ -21,30 +20,32 @@
         <header class="topbar"></header>
 
         <section class="welcome">
-          <h1>Inventario</h1>
+          <h1>Gestión de Proveedores</h1>
           <div class="botones-acciones">
+            <a href="añadir_proveedor.html"><button>➕ Nuevo proveedor</button></a>
+            <a href="compras.html"><button>⏪ Regresar</button></a>
           </div>
 
-           <table id="tabla">
+          <table id="tabla">
+            
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
 
-                <thead>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio C/U</th>
-                    <th>Categoria</th>
-                    <th>Talla</th>
-                    <th>Cantidad Actual (stock)</th>
-                </thead>
+            <tbody class="cont-prov"></tbody>
 
-            <tbody id="datos">
-
-            </tbody>
-
-            </table>
+          </table>
+          
         </section>
       </main>
 
-  </div>
-
+    </div>
+    
 </body>
 </html>

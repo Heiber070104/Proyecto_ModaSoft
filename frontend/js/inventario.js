@@ -23,16 +23,6 @@ const actualizarTabla = async () => {
                         <td>${producto.categoria}</td>
                         <td>${producto.talla}</td>
                         <td>${producto.cantidad}</td>
-                        <td>
-                            <a href="updatepages/actualizar_producto.html?id=${producto.id_producto}">
-                                <button>
-                                    Actualizar
-                                </button>
-                            </a>
-                            <button onclick="eliminar(${producto.id_producto},'${producto.nombre}')">
-                                Eliminar
-                            </button>
-                        </td>
                     </tr>
             `
           })
@@ -44,32 +34,6 @@ const actualizarTabla = async () => {
         console.log(error)
     }
 
-}
-
-const eliminar = async (id, nombre) => {
-
-   const respuesta = confirm(`¿Seguro que quiere eliminar "${nombre}" de la base de datos?`)
-
-   if(respuesta){
-
-        try{
-
-            const res = await fetch(`http://localhost:8000/productos/${id}`, {
-                method: "DELETE"
-            })
-
-            if(res.ok){
-                alert("Producto eliminado de la base de datos")
-                window.location.reload();
-            }else{
-                console.log("Error al eliminar el producto"+ res.message);
-            }
-
-        }catch(error){
-        console.log(error)
-        }
-
-   }
 }
 
 document.addEventListener('DOMContentLoaded', actualizarTabla)
