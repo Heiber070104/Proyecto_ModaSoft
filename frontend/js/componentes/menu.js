@@ -23,7 +23,9 @@ const container = document.querySelector(".sidebar");
       <ul>
         <li class="menu-item" data-page="productos.html"><span>🛍️</span>Productos</li>
         <li class="menu-item" data-page="tallas.html""><span>🛍️</span>Tallas</button></li>
-        <li><span>📦</span> Inventario y Compras</li>
+        <li><span>📦</span> Inventario</li>
+        <li class="menu-item" data-page="ventas.html"><span>💰</span>Ventas</li>
+        <li class="menu-item" data-page="compras.html"><span>🏷</span>Compras</li>
         <li><span>💲</span> Cuentas por Pagar/ Cobrar</li>
         <li class="menu-item" data-page="devoluciones.html"><span>🧾</span>Devoluciones</button></li>
         <li><span>📚</span> Libro Diario/Mayor</li>

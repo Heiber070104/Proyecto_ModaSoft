@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function cargarProductos() {
   try {
-    const res = await fetch('http://localhost:8000/productos', {method: "GET"});
+    const res = await fetch('http://localhost:8000/productos');
     const productos = await res.json();
 
     const tbody = document.getElementById("datos");
