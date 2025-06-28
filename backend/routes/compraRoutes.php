@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CompraController;
+use App\Http\Controllers\compraController as Compra;
 
 Route::prefix("compras")->group(function (){
-    Route::get("/", [CompraController::class, 'consultarTodo']);
-    Route::post("/", [CompraController::class, 'crearCompra']);
+    Route::get("/", [Compra::class, 'consultarTodo']);
+    Route::post("/", [Compra::class, 'crearCompra']);
 })
 
 ?>
