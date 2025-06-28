@@ -12,20 +12,22 @@ table {
 
 
 thead {
-background-color: #3f2b84; /* Un púrpura más vibrante */
-color: #ffffff;
+
+  background-color: #3f2b84; /* Un púrpura más vibrante */
+  color: #ffffff;
 
 }
 
 thead th {
   padding: 15px;
-  text-align: left;
+  text-align: center;
   font-weight: 600;
   font-size: 14px;
   border-right: 1px solid #e3d9f4; /* línea entre columnas */
 }
 
 tbody td {
+  text-align: center;
   padding: 12px 15px;
   font-size: 14px;
   color: #333;
@@ -36,11 +38,11 @@ tbody td {
 
 
 tbody tr:nth-child(even) {
-  background-color: #f3f0fa; /* Lavanda muy suave */
+  background-color: #f3f0fa; 
 }
 
 tbody tr:hover {
-  background-color: #e4dcfb; /* Lavanda con un poco más de contraste */
+  background-color: #e4dcfb; 
 }
 
 
@@ -85,4 +87,63 @@ table button:hover {
   gap: 12px;
   margin-bottom: 20px;
   justify-content: center; /* opcional: centrado horizontal */
+}
+
+input, select{
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+  box-shadow: inset 0 0 0 transparent;
+
+}
+
+select{
+  width: 100%;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border: 2px solid #7c3aed; /* Morado vivo */
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5),
+              0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(1.02);
+}
+
+/* Campos con íconos */
+.input-icon {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 5px 10px;
+}
+
+.input-icon .icon {
+  margin-right: 8px;
+}
+
+.input-icon input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  padding: 8px 0;
+  background: none;
+}
+
+form{
+  color: white;
+  background-color: #401d7d;
+  padding: 40px;
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  border-radius: 20px;
 }

@@ -3,27 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/tablas.css">
     <title>Tallas</title>
     <script src="../js/tallas.js"></script>
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
 </head>
 <body>
 
-    <h1>Tallas</h1>
+    <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
 
-    <table>
+      <main class="main-content">
+        <header class="topbar"></header>
 
-        <thead>
-            <th>Nombre</th>
-            <th>Acciones</th>
-        </thead>
+        <section class="welcome">
+          <h1>Gestión de Tallas</h1>
 
-        <tbody class="cont-tallas">
+            <div class="botones-acciones">
+                <a href="productos.html"><button class="btn purple">Regresar a productos</button></a>
+            </div>
+        
+          <table>
 
-        </tbody>
+            <thead>
+               <tr>
+                  <th>Nombre</th>
+                  <th>Acciones</th>
+               </tr>
+            </thead>
 
-    </table>
+            <tbody class="cont-tallas">
 
-    <button id="btn-agregarFila"><span>➕</span></button>
-    
+            </tbody>
+
+          </table>
+
+          <button id="btn-agregarFila" class="btn purple"><span>➕</span></button><br>
+
+        </section>
+
+      </main>
+
+  </div>
+        
 </body>
 </html>

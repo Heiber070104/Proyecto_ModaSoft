@@ -98,12 +98,18 @@ body {
 }
 
 .welcome {
+  overflow: auto;
   flex-grow: 1;
-  display: flex;
+  display: grid;
+  grid-auto-rows: min-content;
+  align-content: start;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-top: 1;
+  margin-top: -1;
 }
+
 
 .welcome h1 {
   font-size: 28px;

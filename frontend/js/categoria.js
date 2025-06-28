@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const btnAgregarFila = document.getElementById("btn-agregarFila");
+    const btnAgregarFila = document.getElementById("btn-agregarCateg");
 
-    const cargarTallas = async () => {
+    const cargarCateg = async () => {
 
-        const tabla = document.querySelector(".cont-tallas");
+        const tabla = document.querySelector(".cont-categ");
         tabla.innerHTML = "";
 
         try{
 
-            const res = await fetch("http://localhost:8000/tallas", {
+            const res = await fetch("http://localhost:8000/categorias", {
                 method: "GET"
             })
 
@@ -17,19 +17,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if(res.ok){
 
-                Object.values(consulta).forEach(talla => {
+                Object.values(consulta).forEach(categ => {
 
                     const nuevaFila = document.createElement("tr");
                     nuevaFila.className = "fila";
 
                     nuevaFila.innerHTML = `
-                        <td class="prCol" style="width: 50%" data-id="${talla.id_talla}">
-                            ${talla.descripcion}
+                        <td class="prCol" style="width: 50%" data-id="${categ.id_categoria}">
+                            ${categ.nombre}
                         </td>
                         <td>
                             <button class="btn-modificar">🔨 Modificar</button>
                             <button class="btn-registrar" hidden>✅ Registrar</button>
-                            <button class="btn-cancelar" hidden>❌Cancelar</button>
+                            <button class="btn-cancelar" hidden>❌ Cancelar</button>
                         </td> 
                     `
 
@@ -48,17 +48,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    cargarTallas();
+    cargarCateg();
 
     btnAgregarFila.addEventListener("click", () => {
 
-        const contenedor = document.querySelector(".cont-tallas");
+        const contenedor = document.querySelector(".cont-categ");
         const nuevaFila = document.createElement("tr");
         nuevaFila.className = "fila";
 
         nuevaFila.innerHTML = `
             <td class="prCol" style="width: 50%">
-                <input type="text" class="input descripcion" placeholder="Ingrese descripcion de categoria">
+                <input type="text" class="nombre" placeholder="Ingrese descripcion de categoria">
             </td>
             <td>
                 <button class="btn-modificar" hidden>🔨 Modificar</button>
@@ -87,31 +87,31 @@ document.addEventListener("DOMContentLoaded", () => {
             btnRegistrar.toggleAttribute("hidden", false);
             btnCancelar.toggleAttribute("hidden", false);
 
-            prCol.innerHTML = `<input type="text" value="${valor}" class="input descripcion" placeholder="Ingrese descripcion de categoria">`
+            prCol.innerHTML = `<input type="text" value="${valor}" class="nombre" placeholder="Ingrese descripcion de categoria">`
             fila.classList.add("modify")
 
         })
 
         btnRegistrar.addEventListener("click", async () => {
 
-            const descripcion = fila.querySelector(".descripcion").value;
-            if(descripcion == ""){
-                alert("La descripcion de la talla está vacia, rellénelo")
+            const nombre = fila.querySelector(".nombre").value;
+            if(nombre == ""){
+                alert("La nombre de la categoria está vacia, rellénelo")
                 return false;
             }
 
             if(fila.classList.contains("modify")){
-                const respuesta = confirm("¿Estas seguro que quieres modificar el nombre esta talla?")
+                const respuesta = confirm("¿Estas seguro que quieres modificar el nombre esta categoria?")
                 if(!respuesta){
                     return false;
                 }
 
                 id = fila.querySelector(".prCol").getAttribute("data-id");
                 method = "PUT"
-                link = `http://localhost:8000/tallas/${id}`;
+                link = `http://localhost:8000/categorias/${id}`;
             }else{
                 method = "POST"
-                link = `http://localhost:8000/tallas`;
+                link = `http://localhost:8000/categorias`;
             }
 
             try{
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        descripcion: descripcion
+                        nombre: nombre
                     })
                 })
 
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if(fila.classList.contains("modify")){
 
-                const valor = fila.querySelector(".descripcion").value;
+                const valor = fila.querySelector(".nombre").value;
                 const prCol = fila.querySelector(".prCol"); 
                 prCol.textContent = valor;
 
