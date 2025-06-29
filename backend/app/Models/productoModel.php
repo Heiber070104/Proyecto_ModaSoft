@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes; //para borrado logico
 
 use App\Models\compraModel;
+use App\Models\ventaModel;
 
 class productoModel extends Model
 {
@@ -40,10 +41,13 @@ class productoModel extends Model
         return $this->hasOne('App\Models\inventarioModel', 'id_producto', 'id_producto');
     }
 
-    public function compras()
-    {
+    public function compra(){
         return $this->belongsToMany(compraModel::class, 'detalle_compra', 'id_producto', 'id_compra')
                     ->withPivot('cantidad', 'precio_compra');
     }
-  
+
+    public function venta(){
+        return $this->belongsToMany(ventaModel::class, "detalle_compra", "id_producto", "id_venta")
+            ->withPivot("cantidad", "precio_venta");
+    }
 }

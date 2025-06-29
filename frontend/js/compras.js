@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const eventosFila = fila => {
@@ -24,9 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const consulta = await res.json();
             
+
             console.log(consulta)
 
             Object.values(consulta).forEach(compra => {
+
 
                 let html = "";
                 const contenedor = document.querySelector(".cont-compras");
@@ -34,11 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 nuevaFila.classList = "fila"
 
                 html += `
+
                         <td>${compra.fecha}</td>
                         <td>${compra.proveedor["nombre"]}</td>
                         <td>${compra.total}</td>
                         <td>
+
                             <select class="productos">
+
                                 <option value="0" selected disabled hidden>Lista de productos</option>
                 `
 
@@ -56,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
                           </select>
                         </td>
                         <td>${compra.estado}</td>
+
                 `
 
                 nuevaFila.innerHTML = html;

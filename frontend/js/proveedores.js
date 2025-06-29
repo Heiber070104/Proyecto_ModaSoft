@@ -1,32 +1,4 @@
-function editarProv(id) {
-  // Puedes usar localStorage o query params para pasar el ID
-  window.location.href = `actualizar_proveedor.html?id=${id}`;
-}
-
-function eliminarProv(id) {
-  const confirmar = confirm("¿Estás seguro que deseas eliminar este proveedor?");
-  if (!confirmar) return;
-
-  fetch(`http://localhost:8000/proveedores/${id}`, {
-    method: "DELETE"
-  })
-    .then(res => {
-      if (res.ok) {
-        alert("Proveedor eliminado correctamente.");
-        cargarProductos();
-      } else {
-        alert("Error al eliminar proveedor.");
-      }
-    })
-    .catch(err => {
-      console.error("Error al eliminar:", err);
-      alert("No se pudo eliminar el proveedor.");
-    });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  async function cargarProv() {
+async function cargarProv() {
   try {
     const res = await fetch('http://localhost:8000/proveedores');
     const productos = await res.json();
@@ -54,6 +26,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 }
 
-cargarProv();
 
-});
+function editarProv(id) {
+  // Puedes usar localStorage o query params para pasar el ID
+  window.location.href = `actualizar_proveedor.html?id=${id}`;
+}
+
+function eliminarProv(id) {
+  const confirmar = confirm("¿Estás seguro que deseas eliminar este proveedor?");
+  if (!confirmar) return;
+
+  fetch(`http://localhost:8000/proveedores/${id}`, {
+    method: "DELETE"
+  })
+    .then(res => {
+      if (res.ok) {
+        alert("Proveedor eliminado correctamente.");
+        cargarProv();
+      } else {
+        alert("Error al eliminar proveedor.");
+      }
+    })
+    .catch(err => {
+      console.error("Error al eliminar:" + err);
+      alert("No se pudo eliminar el proveedor." + err);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", cargarProv);

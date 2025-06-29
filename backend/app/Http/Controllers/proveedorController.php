@@ -21,8 +21,11 @@ class proveedorController extends Controller
       
     }  
 
-    public function buscarProveedor($id){
+    public function buscarProveedor(Request $request, $id){
         try{
+            if(!$id){
+                return response()->json(["message" => "Falta ID", 400]);
+            }
             $proveedor = Proveedor::findOrFail($id);
             return response()->json($proveedor, 200);
         }catch(\Exception $e){
@@ -58,6 +61,9 @@ class proveedorController extends Controller
 
     public function actualizarProveedor(Request $request, $id){
         try{
+            if(!$id){
+                return response()->json(["message" => "Falta ID", 400]);
+            }
             $proveedor = Proveedor::findOrFail($id);
             $data = $request->validate([
                 'nombre' => 'sometimes|required|string|max:100',
@@ -67,11 +73,6 @@ class proveedorController extends Controller
             ]);
 
             $proveedor->update($data);
-
-            if(!$proveedor){
-                return response()->json(['error' => 'Error al actualizar el proveedor'], 500);
-            }
-
             return response()->json(["message" => "Proveedor actualizado exitosamente"], 200);
 
         }catch(\Exception $e){
@@ -83,6 +84,9 @@ class proveedorController extends Controller
 
     public function eliminarProveedor($id){
         try{
+            if(!$id){
+                return response()->json(["message" => "Falta ID", 400]);
+            }
             $proveedor = Proveedor::findOrFail($id);
             $proveedor->delete();
             return response()->json(['message' => 'Proveedor eliminado correctamente'], 200);
