@@ -5,7 +5,7 @@ body {
 }
 /* Logo */
 .sidebar img {
-    width: 230px; /* Ajusta el ancho deseado */
+    width: 180px; /* Ajusta el ancho deseado */
     height: auto; /* Mantiene la proporción de la imagen */
 }
 

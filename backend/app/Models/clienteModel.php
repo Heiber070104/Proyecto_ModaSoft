@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ventaModel;
 
 class clienteModel extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    public $timespamp = false;
+    public $timestamps = false;
     public $table = "cliente";
     public $primaryKey = "id_cliente";
     

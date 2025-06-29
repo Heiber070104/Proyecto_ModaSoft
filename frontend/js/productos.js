@@ -1,32 +1,4 @@
-function editarProducto(id) {
-  // Puedes usar localStorage o query params para pasar el ID
-  window.location.href = `actualizar_producto.html?id=${id}`;
-}
-
-function eliminarProducto(id) {
-  const confirmar = confirm("¿Estás seguro que deseas eliminar este producto?");
-  if (!confirmar) return;
-
-  fetch(`http://localhost:8000/productos/${id}`, {
-    method: "DELETE"
-  })
-    .then(res => {
-      if (res.ok) {
-        alert("Producto eliminado correctamente.");
-        cargarProductos();
-      } else {
-        alert("Error al eliminar producto.");
-      }
-    })
-    .catch(err => {
-      console.error("Error al eliminar:", err);
-      alert("No se pudo eliminar el producto.");
-    });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  async function cargarProductos() {
+ async function cargarProductos() {
   try {
     const res = await fetch('http://localhost:8000/productos');
     const productos = await res.json();
@@ -55,6 +27,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 }
 
-cargarProductos();
+function editarProducto(id) {
+  // Puedes usar localStorage o query params para pasar el ID
+  window.location.href = `actualizar_producto.html?id=${id}`;
+}
 
-});
+function eliminarProducto(id) {
+  const confirmar = confirm("¿Estás seguro que deseas eliminar este producto?");
+  if (!confirmar) return;
+
+  fetch(`http://localhost:8000/productos/${id}`, {
+    method: "DELETE"
+  })
+    .then(res => {
+      if (res.ok) {
+        alert("Producto eliminado correctamente.");
+        cargarProductos();
+      } else {
+        alert("Error al eliminar producto.");
+      }
+    })
+    .catch(err => {
+      console.error("Error al eliminar:", err);
+      alert("No se pudo eliminar el producto.");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", cargarProductos);

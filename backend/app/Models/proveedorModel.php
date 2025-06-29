@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes; 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\compraModel;
 
 class proveedorModel extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public $timestamps = false;
     public $table = 'proveedor';    

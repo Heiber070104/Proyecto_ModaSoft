@@ -98,17 +98,17 @@
                 <th>Estado</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="cont-ventas">
             <!-- Filas con ventas -->
         </tbody>
     </table>
 
     <script>
-        const urlVentas = 'http://127.0.0.1:8000/venta';
+        const urlVentas = 'http://localhost:8000/ventas';
 
         // Función para cargar todas las ventas y mostrar en tabla
         function cargarVentas() {
-            const tbody = document.querySelector('#tablaVentas tbody');
+            const tbody = document.querySelector('.cont-ventas');
             tbody.innerHTML = '';
 
             fetch(urlVentas)
