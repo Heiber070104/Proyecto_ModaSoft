@@ -4,14 +4,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     e.preventDefault();
 
+    const rif = document.getElementById("rif").value;
     const nombre = document.getElementById("nombre").value;
     const direccion = document.getElementById("direccion").value;
     const telefono = document.getElementById("telefono").value;
     const correo = document.getElementById("correo").value;
 
-
-
-    if(!nombre || !direccion || !telefono || !correo){
+    if(!rif || !nombre || !direccion || !telefono || !correo){
         alert("Rellene todos los campos");
         return false;
     }
@@ -24,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
+                rif: rif,
                 nombre: nombre,
                 direccion: direccion,
                 telefono: telefono,
@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if(res.ok){
             
             alert(consulta.message)
-
-            document.getElementById("nombre").value = "";
-            document.getElementById("direccion").value = "";
-            document.getElementById("telefono").value = "";
-            document.getElementById("correo").value = "";
+            window.location.href = "proveedores.html"
+            // document.getElementById("nombre").value = "";
+            // document.getElementById("direccion").value = "";
+            // document.getElementById("telefono").value = "";
+            // document.getElementById("correo").value = "";
 
         }else{
             console.log("Error al registrar el proveedor: " + consulta.message);

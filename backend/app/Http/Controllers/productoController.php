@@ -12,14 +12,10 @@ class productoController extends Controller
     {
         // Lógica para consultar todos los productos
         try {
-            $productos = productoModel::join("categoria", "producto.id_categoria", "=", "categoria.id_categoria")
-                ->join("talla", "producto.id_talla", "=", "talla.id_talla")
-                ->join("inventario", "producto.id_producto", "=", "inventario.id_producto") 
-                ->whereNull("producto.deleted_at")  //softdelete
-                ->select("producto.*", "categoria.nombre as categoria", "talla.descripcion as talla", "inventario.cantidad_disponible as cantidad")
-            ->get();
 
+            $productos = productoModel::with("categoria")->with("talla")->with("proveedor")->with("inventario")->get();
             return response()->json($productos);
+
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al consultar productos: ' . $e->getMessage()], 500);
         }
@@ -29,19 +25,14 @@ class productoController extends Controller
     {
         // Lógica para buscar un producto por ID
         try {
-            $producto = productoModel::join("categoria", "producto.id_categoria", "=", "categoria.id_categoria")
-                ->join("talla", "producto.id_talla", "=", "talla.id_talla")
-                ->join("inventario", "producto.id_producto", "=", "inventario.id_producto")
-                ->whereNull("producto.deleted_at") //softdelete
-                ->select("producto.*", "categoria.nombre as categoria", "talla.descripcion as talla", "inventario.cantidad_disponible as cantidad")
-                ->where('producto.id_producto', $id)
-            ->first();
+
+            $producto = productoModel::with("categoria")->with("talla")->with("proveedor")->with("inventario")->find($id);
 
             if (!$producto) {
                 return response()->json(['message' => 'Producto no encontrado'], 404);
             }
 
-            return response()->json($producto);
+            return response()->json($producto, 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al buscar producto: ' . $e->getMessage()], 500);
         }
@@ -56,22 +47,25 @@ class productoController extends Controller
                 'nombre' => 'required|string|max:255',
                 'descripcion' => 'nullable|string',
                 'precio' => 'required|numeric|min:0',
+                'porcentaje' => 'required|numeric|min:0',
                 'id_categoria' => 'required|integer',
                 'id_talla' => 'required|integer',
-                'cantidad' => 'required|integer|min:0'
+                'id_proveedor' => 'required|integer'
             ]);
 
             $producto = productoModel::create([
                 'nombre' => $data['nombre'],
                 'descripcion' => $data['descripcion'],
                 'precio_unitario' => $data['precio'],
+                'porcentaje_ganancia' => $data["porcentaje"],
                 'id_categoria' => $data['id_categoria'],
-                'id_talla' => $data['id_talla']
+                'id_talla' => $data['id_talla'],
+                'id_proveedor' => $data["id_proveedor"]
             ]);
 
             $inventario = inventarioModel::create([
                 'id_producto' => $producto->id_producto,
-                'cantidad_disponible' => $data['cantidad']
+                'cantidad_disponible' => 0
             ]);
 
             return response()->json(['message' => 'Producto creado exitosamente'], 201);
@@ -89,9 +83,7 @@ class productoController extends Controller
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
             'precio' => 'required|numeric|min:0',
-            'id_categoria' => 'required|integer',
-            'id_talla' => 'required|integer',
-            'cantidad' => 'required|integer|min:0'
+            'porcentaje' => 'required|numeric|min:0'
         ]);
 
         try{
@@ -100,19 +92,8 @@ class productoController extends Controller
                 'nombre' => $data['nombre'],
                 'descripcion' => $data['descripcion'],
                 'precio_unitario' => $data['precio'],
-                'id_categoria' => $data['id_categoria'],
-                'id_talla' => $data['id_talla']
+                'porcentaje_ganancia' => $data["porcentaje"],
             ]);
-
-            $inventario = inventarioModel::where('id_producto', $id)->first();
-            if ($inventario) {
-                $inventario->update(['cantidad_disponible' => $data['cantidad']]);
-            } else {
-                inventarioModel::create([
-                    'id_producto' => $producto->id_producto,
-                    'cantidad_disponible' => $data['cantidad']
-                ]);
-            }
 
             return response()->json(['message' => 'Producto actualizado exitosamente'], 200);
         } catch (\Exception $e) {

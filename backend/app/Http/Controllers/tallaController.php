@@ -10,7 +10,7 @@ class tallaController extends Controller
     public function consultarTalla(Request $request)
     {
         try {
-            $tallas = tallaModel::all();
+            $tallas = tallaModel::with("categoria")->orderBy("id_categoria", "ASC")->get();
             return response()->json($tallas, 201);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al consultar tallas: ' . $e->getMessage()], 500);
@@ -19,7 +19,7 @@ class tallaController extends Controller
     public function buscarTalla(Request $request, $id)
     {
         try {
-            $talla = tallaModel::find($id);
+            $talla = tallaModel::with("categoria")->find($id);
             if (!$talla) {
                 return response()->json(["message" => "Talla no encontrada"], 404);
             }
@@ -32,6 +32,7 @@ class tallaController extends Controller
     {
         try {
             $data = $request->validate([
+                "id_categoria" => "required|integer|exists:categoria,id_categoria",
                 "descripcion" => "required|string|max:50"
             ]);
 
@@ -51,6 +52,7 @@ class tallaController extends Controller
             }
 
             $data = $request->validate([
+                'id_categoria' => 'required|integer|exists:categoria,id_categoria',
                 'descripcion' => 'required|string|max:50',
             ]);
 

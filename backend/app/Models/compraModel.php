@@ -15,7 +15,8 @@ class compraModel extends Model
     public $table = 'compra';
     public $primaryKey = 'id_compra';
     public $fillable = [
-        'fecha',
+        'fecha_creada',
+        'fecha_vence',
         'id_proveedor',
         'total',
         'estado'

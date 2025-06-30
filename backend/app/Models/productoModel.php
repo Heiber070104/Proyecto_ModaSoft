@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes; //para borrado logico
 
+use App\Models\proveedorModel;
 use App\Models\compraModel;
 use App\Models\ventaModel;
+use App\Models\categoriaModel;
+use App\Models\tallaModel;
+use App\Models\inventarioModel;
 
 class productoModel extends Model
 {
@@ -22,23 +26,29 @@ class productoModel extends Model
         'nombre',
         'descripcion',
         'precio_unitario',
+        'porcentaje_ganancia',
         'id_categoria',
-        "id_talla"
+        "id_talla",
+        "id_proveedor"
     ];
+
+    public function proveedor(){
+        return $this->hasOne(proveedorModel::class, "id_proveedor", "id_proveedor");
+    }
 
     public function categoria()
     {
-        return $this->belongsTo('App\Models\categoriaModel', 'id_categoria', 'id_categoria');
+        return $this->hasOne(categoriaModel::class, 'id_categoria', 'id_categoria');
     }
 
     public function talla()
     {
-        return $this->belongsTo('App\Models\tallaModel', 'id_talla', 'id_talla');
+        return $this->hasOne(tallaModel::class, 'id_talla', 'id_talla');
     }
 
     public function inventario()
     {
-        return $this->hasOne('App\Models\inventarioModel', 'id_producto', 'id_producto');
+        return $this->hasOne(inventarioModel::class, 'id_producto', 'id_producto');
     }
 
     public function compra(){

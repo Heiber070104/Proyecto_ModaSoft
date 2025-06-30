@@ -5,14 +5,15 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     const nombre = document.getElementById("nombre").value;
     const descripcion = document.getElementById("descripcion").value;
     const precio = document.getElementById("precio").value;
-
+    const porcentaje = document.getElementById("porcentaje").value;
     const id_categoria = document.getElementById("categorias").value;
     const id_talla = document.getElementById("tallas").value;
-    const cantidad = document.getElementById("cantidad").value;
+    const id_proveedor = document.getElementById("proveedores").value;
 
 
 
-    if(!nombre || !descripcion || !precio || !id_categoria || !id_talla){
+    if(!nombre || !descripcion || !precio || !porcentaje || id_categoria == "!" || id_talla == "!" || id_proveedor == "!")
+    {
         alert("Rellene todos los campos");
         return false;
     }
@@ -27,33 +28,48 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
             body: JSON.stringify({
                 nombre: nombre,
                 descripcion: descripcion,
-                precio_unitario: precio_unitario,
+                precio: precio,
+                porcentaje: porcentaje,
                 id_categoria: id_categoria,
                 id_talla: id_talla,
+                id_proveedor: id_proveedor
             })
         })
 
+        const consulta = await res.json();
+
         if(res.ok){
-            alert("Producto registrado con éxito")
-
-            document.getElementById("nombre").value = "";
-            document.getElementById("descripcion").value = "";
-            document.getElementById("precio").value = 0;
-            document.getElementById("categorias").value = 1;
-            document.getElementById("tallas").value = 1;
-            document.getElementById("cantidad").value = 0;
-
+            alert(consulta.message);
+            window.location.href = "inventario.html";
         }else{
-            console.log("Error al registrar el producto: " + res.message);
-            alert("Error al registrar el producto, intente nuevamente" + res.message);  
+            console.log("Error al registrar el producto: " + consulta.message);
+            alert("Error al registrar el producto, intente nuevamente" + consulta.message);  
         }
 
     }catch(error){
         console.log(error)
-        alert("Error al registrar el producto, intente nuevamente" + res.message); 
+        alert("Error al registrar el producto, intente nuevamente" + error); 
     }
 
 })
+
+document.getElementById("categorias").addEventListener("change", () => {
+
+    const id = document.getElementById("categorias").value;
+    const select = document.getElementById("tallas");
+
+    select.selectedIndex = "!";
+
+    select.querySelectorAll("option").forEach(option => {
+        if(option.dataset.cat != id){
+            option.hidden = true;
+        }else{
+            option.hidden = false
+        }
+    })
+   
+})
+
 
 const cargarSelect = async (direccion) => {
 
@@ -67,15 +83,22 @@ const cargarSelect = async (direccion) => {
 
        if(res.ok){
 
-            let html = "";
+            let html = `<option value='!' hidden selected>Seleccione ${direccion}</option>`;
 
             Object.values(consulta).forEach(datos => {
 
                 let arrayDatos = Object.values(datos);
 
+                let cat = ""
+                let indice = 1
+                if(Number.isInteger(arrayDatos[1])){
+                    cat = `data-cat='${arrayDatos[1]}' hidden`
+                    indice = 2;
+                }
+
                 html += `
-                    <option value="${arrayDatos[0]}">
-                        ${arrayDatos[1]}
+                    <option value="${arrayDatos[0]}" ${cat}>
+                        ${arrayDatos[indice]}
                     </option>
                 `
             })
@@ -89,7 +112,44 @@ const cargarSelect = async (direccion) => {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     cargarSelect("categorias"); 
     cargarSelect("tallas");
+    cargarSelect("proveedores");
+
+    const params = new URLSearchParams(window.location.search);
+    if(params.get("id")){
+        const id = params.get("id");
+       
+        try{
+
+            const res = await fetch(`http://localhost:8000/productos/${id}`, {
+                method: "GET"
+            });
+
+            const consulta = await res.json();
+            
+            if(res.ok){
+
+                const select = document.getElementById("tallas");
+                const optionDisable = select.querySelector(`option[value="${consulta.id_talla}"]`);
+                optionDisable.disabled = true;
+
+                document.getElementById("nombre").value = consulta.nombre;
+                document.getElementById("descripcion").value = consulta.descripcion;
+                document.getElementById("categorias").value = consulta.id_categoria;
+                document.getElementById("proveedores").value = consulta.id_proveedor;
+
+                
+
+                const cambio = new Event("change")
+                document.getElementById("categorias").dispatchEvent(cambio)
+            }else{
+                console.log(consulta.message)
+            }
+        }catch(error){
+            console.log(error);
+        }
+    };
+
 })

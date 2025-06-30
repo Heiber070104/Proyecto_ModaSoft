@@ -8,10 +8,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const res = await fetch(`http://localhost:8000/proveedores/${id}`)
         const consulta = await res.json()
 
-        console.log(consulta)
-
         if(res.ok){
 
+            document.getElementById("rif").value = consulta.rif;
             document.getElementById("nombre").value = consulta.nombre;
             document.getElementById("direccion").value = consulta.direccion;
             document.getElementById("telefono").value = consulta.telefono;
@@ -27,6 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         e.preventDefault();
 
+        const rif = document.getElementById("rif").value;
         const nombre = document.getElementById("nombre").value;
         const direccion = document.getElementById("direccion").value;
         const telefono = document.getElementById("telefono").value;
@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
+                    rif: rif,
                     nombre: nombre,
                     direccion: direccion,
                     telefono: telefono,
