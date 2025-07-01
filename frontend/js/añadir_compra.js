@@ -2,10 +2,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const date = new Date();
     const btnAgregar = document.getElementById('agregar-producto');
+    const prov = document.getElementById("proveedores");
     var opcionesProductos;
     var total;
    
-    document.getElementById("fecha").value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    document.getElementById("fecha_vence").value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
     try{
 
@@ -43,8 +44,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             Object.values(consultapd).forEach(producto => {
                 html += `
-                    <option value="${producto.id_producto}" data-precio="${producto.precio_unitario}">
-                        ${producto.nombre} -- Precio C/U: ${producto.precio_unitario}$
+                    <option value="${producto.id_producto}" data-precio="${producto.precio_unitario}" data-prov="${producto.id_proveedor}">
+                        ${producto.nombre} -- ${producto.talla["descripcion"]} -- ${producto.precio_unitario}$C/U
                     </option>
                 `
             })
@@ -77,6 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         contenedor.appendChild(nuevoProducto);
         configurarEventosProducto(nuevoProducto);
         calcularTotal();
+        validarProveedor(false);
         validarSelect();
     });
 
@@ -90,18 +92,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         const subtotal = producto.querySelector('.subtotal');
         const btnEliminar = producto.querySelector('.eliminar');
     
-
         select.addEventListener('change', actualizarSubtotal);
         cantidad.addEventListener('input', actualizarSubtotal);
     
-    // Eliminar producto
+        // Eliminar producto
         btnEliminar.addEventListener('click', function() {
             producto.remove();
             validarSelect();
             calcularTotal();
         });
     
-    // Función para actualizar subtotal
+        // Función para actualizar subtotal
         function actualizarSubtotal() {
             const precio = parseFloat(select.selectedOptions[0]?.dataset.precio) || 0;
             const cant = parseInt(cantidad.value) || 0;
@@ -112,6 +113,38 @@ document.addEventListener("DOMContentLoaded", async () => {
             validarSelect();
         }
     }
+
+    function validarProveedor(camProv){
+
+
+        let id = document.getElementById("proveedores").value;
+        document.querySelectorAll(".select-productos").forEach(select => {
+
+            if(camProv == true){
+                select.selectedIndex = "!"   
+            }
+
+            cambio = new Event("change");
+            select.dispatchEvent(cambio)
+
+            select.querySelectorAll("option").forEach(option => {
+                if(option.dataset.prov != id){
+                    option.hidden  = true; 
+                }else{
+                    option.hidden  = false; 
+                }
+            })
+
+        })
+
+    }
+
+    validarProveedor(true)
+
+    prov.addEventListener("change", () => {
+        validarProveedor(true);
+    })
+
 
     function calcularTotal() {
         total = 0;
@@ -127,6 +160,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function validarSelect() {
          // Obtener todos los valores seleccionados
         const valores = [];
+
         document.querySelectorAll('.select-productos').forEach(select => {
             if (select.value) {
                 valores.push(select.value);
@@ -136,30 +170,29 @@ document.addEventListener("DOMContentLoaded", async () => {
          // Actualizar el estado disabled de las opciones
         document.querySelectorAll('.select-productos').forEach(select => {
             // Habilitar todas las opciones primero
-        Array.from(select.options).forEach(option => {
-            option.disabled = false;
-        });
+            Array.from(select.options).forEach(option => {
+                option.disabled = false;
+            });
 
-        // Deshabilitar opciones seleccionadas en otros selects
-        valores.forEach(valor => {
-            if (select.value !== valor) { // No deshabilitar la opción actualmente seleccionada
-                const optionToDisable = select.querySelector(`option[value='${valor}']`);
-                if (optionToDisable) {
-                    optionToDisable.disabled = true;
+            // Deshabilitar opciones seleccionadas en otros selects
+            valores.forEach(valor => {
+                if (select.value !== valor) { // No deshabilitar la opción actualmente seleccionada
+                    const optionToDisable = select.querySelector(`option[value='${valor}']`);
+                    if (optionToDisable) {
+                        optionToDisable.disabled = true;
+                    }
                 }
-            }
-        });
+            });
+
         });
     }
 
     document.getElementById("btn-registrar").addEventListener("click", async () =>{
 
-        const fecha = document.getElementById("fecha").value;
+        const fecha = document.getElementById("fecha_vence").value;
         const id_proveedor = document.getElementById("proveedores").value;
-        const total = document.getElementById("total-general").textContent;
-        const estado = document.getElementById("estado").value;
 
-        if(!fecha || fecha=="" || !id_proveedor || id_proveedor=="" || !total || total===0 || !estado || estado==""){
+        if(!fecha || fecha=="" || !id_proveedor || id_proveedor=="" || !total || total===0){
             alert("Rellene los campos vacios")
             return false;
         }
@@ -181,6 +214,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         })
 
+        console.log(productos)
+
         try{
 
             const res = await fetch("http://localhost:8000/compras", {
@@ -189,10 +224,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    fecha: fecha,
+                    fecha_vence: fecha,
                     id_proveedor: id_proveedor,
                     total: total,
-                    estado: estado,
+                    estado: "pendiente",
                     productos: productos
                 })
             })
@@ -201,7 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if(res.ok){
                 alert(consulta.message);
-                window.location = "../../pages/compras.html"
+                window.location.href = "compras.html"
             }else{
                 console.log(consulta)
             }

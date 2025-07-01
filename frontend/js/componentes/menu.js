@@ -15,45 +15,46 @@ class MenuComponent {
         }
     }
 
-    render() {
-        // 2. Devuelve el HTML del menú como string
-
-        return `
-    
+render() {
+    return `
+        <div class="menu-logo" data-page="dashboard.html" style="cursor: pointer;">
             <img src="../public/logo_modasoft.png" alt="Logo de ModaSoft" />
-                <ul>
-                    <li class="menu-item" data-page="productos.html"><span>🛍️</span> Productos</li>
-                    <li class="menu-item" data-page="inventario.html"><span>📦</span> Inventario</li>
-                    <li class="menu-item" data-page="compras.html"><span>💵</span> Compras</li>
-                    <li class="menu-item" data-page="ventas.html"><span>💹</span> Ventas</li>
-                    <li class="menu-item" data-page="proveedores.html"><span>🤵</span> Proveedores</li>
-                    <li class="menu-item" data-page="clientes.html"><span>🧍‍♂️</span> Clientes</li>
-                    <li><span>💲</span> Cuentas por Pagar/ Cobrar</li>
-                    <li class="menu-item" data-page="devoluciones.html"><span>🧾</span> Devoluciones</button></li>
-                    <li><span>📚</span> Libro Diario/Mayor</li>
-                    <li><span>📄</span> Registro Contable</li>
-                </ul>
+        </div>
+        <ul>
+            <li class="menu-item" data-page="inventario.html"><span>📦</span> Inventario</li>
+            <li class="menu-item" data-page="compras.html"><span>💵</span> Compras</li>
+            <li class="menu-item" data-page="ventas.html"><span>💹</span> Ventas</li>
+            <li class="menu-item" data-page="proveedores.html"><span>🤵</span> Proveedores</li>
+            <li class="menu-item" data-page="clientes.html"><span>🧍‍♂️</span> Clientes</li>
+            <li class="menu-item" data-page="cuentas_pagar.html"><span>💲</span> Cuentas por Pagar</li>
+            <li class="menu-item" data-page="devoluciones.html"><span>🧾</span> Devoluciones</li>
+            <li><span>📚</span> Libro Diario/Mayor</li>
+            <li><span>📄</span> Registro Contable</li>
+            <li class="menu-item" data-page="reportes.html"><span>📊</span> Reportes</li>
+        </ul>
+    `;
+}
 
-        `;
-    }
 
-    setupEvents() {
+
+ 
         // 3. Configura eventos de clic para cada item
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', () => {
-                if (this.sesion) {
-                    window.location.href = item.dataset.page;
-                } else {
-                    alert('Error de Sesion');
-                    window.location.href = '../pages/login.html';
-
-                }
-            });
+     setupEvents() {
+    document.querySelectorAll('.menu-item, .menu-logo').forEach(item => {
+        item.addEventListener('click', () => {
+            const page = item.getAttribute('data-page');
+            if (this.sesion && page) {
+                window.location.href = page;
+            } else {
+                alert('Error de Sesión');
+                window.location.href = '../pages/login.html';
+            }
         });
-
+    });
         // 4. Configura el botón de logout (usando tu código existente)
         document.getElementById('logout')?.addEventListener('click', this.handleLogout);
     }
+
 
     handleLogout = async () => {
         try {

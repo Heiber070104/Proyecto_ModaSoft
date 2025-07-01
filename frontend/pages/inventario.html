@@ -6,7 +6,7 @@
     <title>Inventario de Ropa</title>
     <link rel="stylesheet" href="../css/topbar_menu.css">
     <link rel="stylesheet" href="../css/tablas.css">
-
+    <link rel="icon" href="../public/logo_modasoft.png">
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
@@ -23,6 +23,8 @@
         <section class="welcome">
           <h1>Inventario</h1>
           <div class="botones-acciones">
+            <a href="tallas.html"><button>📏 Gestor de tallas</button></a>
+            <a href="categoria.html"><button>👚 Gestor de categorias</button></a>
           </div>
 
            <table id="tabla">
@@ -30,10 +32,13 @@
                 <thead>
                     <th>Nombre</th>
                     <th>Descripción</th>
-                    <th>Precio C/U</th>
+                    <th>Precio proveedor</th>
+                    <th>Precio de venta</th>
+                    <th>% Ganancia</th>
                     <th>Categoria</th>
                     <th>Talla</th>
                     <th>Cantidad Actual (stock)</th>
+                    <th>Acciones</th>
                 </thead>
 
             <tbody id="datos">

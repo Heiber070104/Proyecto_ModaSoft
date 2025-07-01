@@ -9,6 +9,7 @@ async function cargarProv() {
     productos.forEach(prov => {
       const fila = document.createElement('tr');
       fila.innerHTML = `
+        <td>${prov.rif}</td>
         <td>${prov.nombre}</td>
         <td>${prov.direccion}</td>
         <td>${prov.telefono}</td>

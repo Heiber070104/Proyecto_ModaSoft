@@ -6,10 +6,13 @@ use App\Http\Controllers\ventaController as Venta;
 Route::prefix("ventas")->group(function (){
 
     Route::get("/", [Venta::class, "consultarTodo"]);
+    Route::get("/pdf/{id}", [Venta::class, "generarPDF"]);
+    Route::get("/productosMasVendidos", [Venta::class, "productosMasVendidos"]);
+    Route::get("/productosMayorGanancias", [Venta::class, "productosMayorGanancias"]);
+    Route::get("/completar/{id}", [Venta::class, "completarVenta"]);
+    Route::get("/cancelar/{id}", [Venta::class, "cancelarVenta"]);
     Route::get("/{id}", [Venta::class, "buscarVenta"]);
     Route::post("/", [Venta::class, "crearVenta"]);
-    Route::put("/{id}", [Venta::class, "actualizarVenta"]);
-    Route::delete("/{id}", [Venta::class, "eliminarVenta"]);
     
 })
 
