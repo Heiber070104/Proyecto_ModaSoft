@@ -15,13 +15,8 @@ class ventaModel extends Model
     public $table = 'venta';
     public $primaryKey = "id_venta";
     public $fillable = [
-<<<<<<< HEAD
-        'fecha_creada',
-        'fecha_vence',
-=======
         'factura',
         'fecha',
->>>>>>> b38f72e4c081f8d241cbfce2ab92431575613391
         "id_cliente",
         "total",
         "estado"
