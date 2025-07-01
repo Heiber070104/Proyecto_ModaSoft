@@ -123,41 +123,93 @@ class ventaController extends Controller
 
     public function productosMasVendidos(){
 
-        $productos = productoModel::with("talla")->get();
-        $nombreProductos = [];
+        try{
 
-        foreach($productos as $producto){
+            $productos = productoModel::with("talla")->get();
+            $nombreProductos = [];
+
+            foreach($productos as $producto){
          
-            array_push($nombreProductos, [
-                "nombre" => $producto->nombre, 
-                "talla" => $producto->talla->descripcion,
-                "cantidad" => 0
-            ]);
-        }
-
-        $ventas = ventaModel::with("producto")->get();
-
-        foreach($ventas as $indice => $valor){
-
-            if($valor->estado != "completada"){
-                continue;
+                array_push($nombreProductos, [
+                    "nombre" => $producto->nombre, 
+                    "talla" => $producto->talla->descripcion,
+                    "cantidad" => 0
+                ]);
             }
 
-            foreach($valor->producto as $producto){
+            $ventas = ventaModel::with("producto")->get();
 
-               for ($i=0; $i < count($nombreProductos); $i++) { 
+            foreach($ventas as $indice => $valor){
+
+                if($valor->estado != "completada"){
+                    continue;
+                }
+
+                foreach($valor->producto as $producto){
+
+                    for ($i=0; $i < count($nombreProductos); $i++) { 
                 
-                    $nombre = $producto->nombre." ".$producto->talla->descripcion;
-                    if($nombre == $nombreProductos[$i]["nombre"]." ".$nombreProductos[$i]["talla"]){
-                        $nombreProductos[$i]["cantidad"]++;
+                        $nombre = $producto->nombre." ".$producto->talla->descripcion;
+                        if($nombre == $nombreProductos[$i]["nombre"]." ".$nombreProductos[$i]["talla"]){
+                            $nombreProductos[$i]["cantidad"] += $producto->pivot->cantidad;
+                        }
                     }
-               }
+
+                }
 
             }
 
+            return response()->json($nombreProductos, 200);
+
+        }catch(\Exception $e){
+            return response()->json(['message' => 'Error en la consulta: ' . $e->getMessage()], 500);
         }
 
-        return response()->json($nombreProductos, 200);
+    }
+
+    public function productosMayorGanancias(){
+
+        try{
+            
+            $productos = productoModel::with("talla")->get();
+            $nombreProductos = [];
+
+            foreach($productos as $producto){
+         
+                array_push($nombreProductos, [
+                    "nombre" => $producto->nombre, 
+                    "talla" => $producto->talla->descripcion,
+                    "ganancias" => 0
+                ]);
+            }
+
+            $ventas = ventaModel::with("producto")->get();
+
+            foreach($ventas as $indice => $valor){
+
+                if($valor->estado != "completada"){
+                    continue;
+                }
+
+                foreach($valor->producto as $producto){
+
+                    for ($i=0; $i < count($nombreProductos); $i++) { 
+                
+                        $nombre = $producto->nombre." ".$producto->talla->descripcion;
+                        if($nombre == $nombreProductos[$i]["nombre"]." ".$nombreProductos[$i]["talla"]){
+                            $nombreProductos[$i]["ganancias"] += $producto->pivot->precio_venta;
+                        }
+                    }
+
+                }
+
+            }
+
+            return response()->json($nombreProductos, 200);
+
+        }catch(\Exception $e){
+            return response()->json(['message' => 'Error en la consulta: ' . $e->getMessage()], 500);
+        }
 
     }
 
