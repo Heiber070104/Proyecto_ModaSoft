@@ -9,6 +9,7 @@ use App\Models\inventarioModel;
 use App\Models\productoModel;
 use Codedge\Fpdf\Fpdf\Fpdf;
 
+
 class compraController extends Controller
 {
 
@@ -92,15 +93,15 @@ class compraController extends Controller
             $compra->estado = 'procesada';
             $compra->save();
 
-            return response()->json(['message' => 'Stock actualizado correctamente'], 200);
+            return response()->json(['message' => 'Compra completada exitosamente, existencias actualizadas'], 200);
         }catch(\Exception $e){
-            return response()->json(['message' => 'Error al actualizar el stock: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Error al completar compra: ' . $e->getMessage()], 500);
+
         }
 
     }
 
-    public function cancelarCompra($id)
-    {
+    public function cancelarCompra(Request $request, $id){
         try {
             $compra = compraModel::find($id);
             if (!$compra) {
@@ -115,73 +116,73 @@ class compraController extends Controller
     }
 
     // funcion PDF
-public function generarPDF($id)
-{
-    $compra = compraModel::with(['proveedor', 'producto'])->findOrFail($id);
+    public function generarPDF($id){
+        $compra = compraModel::with(['proveedor', 'producto'])->findOrFail($id);
 
-    $pdf = new Fpdf();
-    $pdf->AddPage();
+        $pdf = new Fpdf();
+        $pdf->AddPage();
 
-    // Colores y fuentes
-    $pdf->SetFont('Arial', 'B', 18);
-    $pdf->SetTextColor(75, 46, 131); // Color morado #4B2E83
+        // Colores y fuentes
+        $pdf->SetFont('Arial', 'B', 18);
+        $pdf->SetTextColor(75, 46, 131); // Color morado #4B2E83
 
-    // Logo
-    $logoPath = base_path('../frontend/public/logo_modasoft_N.png');
-    if (file_exists($logoPath)) {
-        $pdf->Image($logoPath, 5, 1, 50); // X, Y, tamaño
-    }
+        // Logo
+        $logoPath = base_path('../frontend/public/logo_modasoft_N.png');
+        if (file_exists($logoPath)) {
+            $pdf->Image($logoPath, 5, 1, 50); // X, Y, tamaño
+        }
 
-    $pdf->Cell(0, 18, 'Detalle de Compra #' . $compra->id_compra, 0, 1, 'C');
-    $pdf->Ln(20);
+        $pdf->Cell(0, 18, 'Detalle de Compra #' . $compra->id_compra, 0, 1, 'C');
+        $pdf->Ln(20);
 
-    // Datos generales
-    $pdf->SetFont('Arial', '', 14);
-    $pdf->SetTextColor(0);
+        // Datos generales
+        $pdf->SetFont('Arial', '', 14);
+        $pdf->SetTextColor(0);
 
-    $pdf->Cell(0, 8, 'Proveedor: ' . $compra->proveedor->nombre, 0, 1);
-    $pdf->Cell(0, 8, 'Fecha creada: ' . $compra->fecha_creada, 0, 1);
-    $pdf->Cell(0, 8, 'Fecha despacho: ' . $compra->fecha_vence, 0, 1);
-    $pdf->Cell(0, 8, 'Estado: ' . ucfirst($compra->estado), 0, 1);
-    $pdf->Ln(8);
+        $pdf->Cell(0, 8, 'Proveedor: ' . $compra->proveedor->nombre, 0, 1);
+        $pdf->Cell(0, 8, 'Fecha creada: ' . $compra->fecha_creada, 0, 1);
+        $pdf->Cell(0, 8, 'Fecha despacho: ' . $compra->fecha_vence, 0, 1);
+        $pdf->Cell(0, 8, 'Estado: ' . ucfirst($compra->estado), 0, 1);
+        $pdf->Ln(8);
 
-    // Tabla productos
-    $pdf->SetFont('Arial', 'B', 12);
-    $pdf->SetFillColor(75, 46, 131); // Morado
-    $pdf->SetTextColor(255);
+        // Tabla productos
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->SetFillColor(75, 46, 131); // Morado
+        $pdf->SetTextColor(255);
 
-    $pdf->Cell(70, 8, 'Producto', 1, 0, 'C', true);
-    $pdf->Cell(30, 8, 'Cantidad', 1, 0, 'C', true);
-    $pdf->Cell(40, 8, 'Precio Unitario', 1, 0, 'C', true);
-    $pdf->Cell(40, 8, 'Subtotal', 1, 1, 'C', true);
+        $pdf->Cell(70, 8, 'Producto', 1, 0, 'C', true);
+        $pdf->Cell(30, 8, 'Cantidad', 1, 0, 'C', true);
+        $pdf->Cell(40, 8, 'Precio Unitario', 1, 0, 'C', true);
+        $pdf->Cell(40, 8, 'Subtotal', 1, 1, 'C', true);
 
-    $pdf->SetFont('Arial', '', 11);
-    $pdf->SetTextColor(0);
+        $pdf->SetFont('Arial', '', 11);
+        $pdf->SetTextColor(0);
 
-    foreach ($compra->producto as $producto) {
-        $pdf->Cell(70, 8, utf8_decode($producto->nombre), 1);
-        $pdf->Cell(30, 8, $producto->pivot->cantidad, 1, 0, 'C');
-        $pdf->Cell(40, 8, number_format($producto->precio_unitario, 2), 1, 0, 'R');
-        $pdf->Cell(40, 8, number_format($producto->pivot->precio_compra, 2), 1, 1, 'R');
-    }
+        foreach ($compra->producto as $producto) {
+            $pdf->Cell(70, 8, utf8_decode($producto->nombre), 1);
+            $pdf->Cell(30, 8, $producto->pivot->cantidad, 1, 0, 'C');
+            $pdf->Cell(40, 8, number_format($producto->precio_unitario, 2), 1, 0, 'R');
+            $pdf->Cell(40, 8, number_format($producto->pivot->precio_compra, 2), 1, 1, 'R');
+        }
 
-    // Total
-    $pdf->Ln(3);
-    $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(0, 10, 'Total General: Bs ' . number_format($compra->total, 2), 0, 1, 'R');
+        // Total
+        $pdf->Ln(3);
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Cell(0, 10, 'Total General: Bs ' . number_format($compra->total, 2), 0, 1, 'R');
 
-    // Firma
-    $pdf->Ln(20);
-    $pdf->SetFont('Arial', '', 11);
-    $pdf->Cell(60, 8, '__________________________', 0, 0, 'C');
-    $pdf->Cell(60, 8, '__________________________', 0, 0, 'C');
-    $pdf->Cell(60, 8, '__________________________', 0, 1, 'C');
+        // Firma
+        $pdf->Ln(20);
+        $pdf->SetFont('Arial', '', 11);
+        $pdf->Cell(60, 8, '__________________________', 0, 0, 'C');
+        $pdf->Cell(60, 8, '__________________________', 0, 0, 'C');
+        $pdf->Cell(60, 8, '__________________________', 0, 1, 'C');
 
-    $pdf->Cell(60, 6, 'Receptor', 0, 0, 'C');
-    $pdf->Cell(60, 6, 'Almacenista', 0, 0, 'C');
-    $pdf->Cell(60, 6, 'Supervisor', 0, 1, 'C');
+        $pdf->Cell(60, 6, 'Receptor', 0, 0, 'C');
+        $pdf->Cell(60, 6, 'Almacenista', 0, 0, 'C');
+        $pdf->Cell(60, 6, 'Supervisor', 0, 1, 'C');
 
-    $pdf->Output();
-    exit;
-}
+        $pdf->Output();
+        exit;
+    }   
+
 }

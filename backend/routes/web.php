@@ -29,7 +29,3 @@ require __DIR__.'/tallaRoutes.php';
 require __DIR__.'/proveedorRoutes.php';
 require __DIR__.'/ventaRoutes.php';
 require __DIR__.'/clienteRoutes.php';
-
-// routes/web.php
-Route::get('/compras/pdf/{id}', [compraController::class, 'generarPDF'])->name('compras.pdf');
-

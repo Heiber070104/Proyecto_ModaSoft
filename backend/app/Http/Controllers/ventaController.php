@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ventaModel;
+use App\Models\productoModel;
 use App\Models\inventarioModel;
 
 class ventaController extends Controller
@@ -23,22 +25,21 @@ class ventaController extends Controller
     public function crearVenta(Request $request){
 
       try{
+
+        // DB::beginTransaction();
+
         // Validar los datos de la solicitud
             $data = $request->validate([
-                'fecha' => 'date',
+                'factura' => 'required|string|max:20',
                 'id_cliente' => 'required|integer',
-                'estado' => 'required|string',
             ]);
 
-            if(!$data["fecha"]){
-                $data["fecha"] = now();
-            }
-
             $venta = ventaModel::create([
-                'fecha' => $data["fecha"],
+                'factura' => $data["factura"],
+                'fecha' => now(),
                 'id_cliente' => $data['id_cliente'],
                 'total' => 0,
-                'estado' => $data['estado'],
+                'estado' => "en_proceso",
             ]);
 
             $total = 0;
@@ -47,8 +48,8 @@ class ventaController extends Controller
 
                 $stock = inventarioModel::where("id_producto", $producto["id_producto"])->first();
                 if($producto["cantidad"] > $stock->cantidad_disponible){
-                    $venta->delete();
-                    return response()->json(["message" => "La cantidad de la compra supera a la cantidad disponible"], 403);
+                    // DB::rollBack();
+                    return response()->json(["message" => "La cantidad del producto ID:".$producto["id_producto"]." supera a la cantidad disponible"], 400);
                 }
 
                 $venta->producto()->attach($producto['id_producto'], [
@@ -56,19 +57,160 @@ class ventaController extends Controller
                     'precio_venta' => $producto['precio_venta'],
                 ]);
 
-                $total += $producto["cantidad"];
                 $stock->cantidad_disponible -= $producto["cantidad"];
                 $stock->save();
-
+                $total += $producto["precio_venta"];
+            
             }
 
             $venta->update(["total" => $total]);
 
             return response()->json(['message' => 'Venta creada exitosamente'], 201);
+            // DB::commit();
 
         }catch(\Exception $e){
-            return response()->json(['error' => 'Error al crear la venta: ' . $e->getMessage()], 500);
+            // DB::rollBack();
+            return response()->json(['message' => 'Error al crear la venta: ' . $e->getMessage()], 500);
         }
 
     }
+
+    public function completarVenta(Request $request, $id){
+
+        try{
+            
+            $venta = ventaModel::findOrFail($id);
+            $venta->estado = "completada";
+            $venta->save();
+
+            return response()->json(['message' => 'Venta completada exitosamente'], 200);
+        }catch(\Exception $e){
+            return response()->json(['message' => 'Error al completar venta: ' . $e->getMessage()], 500);
+        }
+
+    }
+
+    public function cancelarVenta(Request $request, $id)
+    {
+        try {
+            if(!$id){
+                return response()->json(['message' => 'ID de compra no proporcionado'], 400);
+            }
+
+            $venta = ventaModel::find($id);
+            if (!$venta) { 
+                return response()->json(['message' => 'Compra no encontrada'], 404);
+            }
+
+            $productos = $venta->producto->toArray();
+
+            foreach ($productos as $producto) {
+
+                $stock = inventarioModel::where("id_producto", $producto["id_producto"])->first();
+                $stock->cantidad_disponible += $producto["pivot"]["cantidad"];
+                $stock->save();
+
+            }
+
+            $venta->estado = 'cancelada';
+            $venta->save();
+           
+            return response()->json(['message' => 'Venta cancelada exitosamente, existencias actualizadas'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al cancelar la venta: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function productosMasVendidos(){
+
+        try{
+
+            $productos = productoModel::with("talla")->get();
+            $nombreProductos = [];
+
+            foreach($productos as $producto){
+         
+                array_push($nombreProductos, [
+                    "nombre" => $producto->nombre, 
+                    "talla" => $producto->talla->descripcion,
+                    "cantidad" => 0
+                ]);
+            }
+
+            $ventas = ventaModel::with("producto")->get();
+
+            foreach($ventas as $indice => $valor){
+
+                if($valor->estado != "completada"){
+                    continue;
+                }
+
+                foreach($valor->producto as $producto){
+
+                    for ($i=0; $i < count($nombreProductos); $i++) { 
+                
+                        $nombre = $producto->nombre." ".$producto->talla->descripcion;
+                        if($nombre == $nombreProductos[$i]["nombre"]." ".$nombreProductos[$i]["talla"]){
+                            $nombreProductos[$i]["cantidad"] += $producto->pivot->cantidad;
+                        }
+                    }
+
+                }
+
+            }
+
+            return response()->json($nombreProductos, 200);
+
+        }catch(\Exception $e){
+            return response()->json(['message' => 'Error en la consulta: ' . $e->getMessage()], 500);
+        }
+
+    }
+
+    public function productosMayorGanancias(){
+
+        try{
+            
+            $productos = productoModel::with("talla")->get();
+            $nombreProductos = [];
+
+            foreach($productos as $producto){
+         
+                array_push($nombreProductos, [
+                    "nombre" => $producto->nombre, 
+                    "talla" => $producto->talla->descripcion,
+                    "ganancias" => 0
+                ]);
+            }
+
+            $ventas = ventaModel::with("producto")->get();
+
+            foreach($ventas as $indice => $valor){
+
+                if($valor->estado != "completada"){
+                    continue;
+                }
+
+                foreach($valor->producto as $producto){
+
+                    for ($i=0; $i < count($nombreProductos); $i++) { 
+                
+                        $nombre = $producto->nombre." ".$producto->talla->descripcion;
+                        if($nombre == $nombreProductos[$i]["nombre"]." ".$nombreProductos[$i]["talla"]){
+                            $nombreProductos[$i]["ganancias"] += $producto->pivot->precio_venta;
+                        }
+                    }
+
+                }
+
+            }
+
+            return response()->json($nombreProductos, 200);
+
+        }catch(\Exception $e){
+            return response()->json(['message' => 'Error en la consulta: ' . $e->getMessage()], 500);
+        }
+
+    }
+
 }

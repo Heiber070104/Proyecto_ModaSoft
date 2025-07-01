@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/tablas.css">
+    <title>Tallas</title>
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/reportes.js"></script>
+</head>
+<body>
+
+    <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+        <main class="main-content">
+            <header class="topbar"></header>
+
+            <section class="welcome">
+        
+                <div style="width: 50%; height: 50%;">
+                    <canvas id="productosMasVendidos"></canvas>
+                </div>
+
+                <div style="width: 50%; height: 50%;">
+                    <canvas id="productosMayorGanancia"></canvas>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+        
+</body>
+
+</html>

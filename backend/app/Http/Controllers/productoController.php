@@ -13,7 +13,9 @@ class productoController extends Controller
         // Lógica para consultar todos los productos
         try {
 
-            $productos = productoModel::with("categoria")->with("talla")->with("proveedor")->with("inventario")->get();
+            $productos = productoModel::with("categoria")
+                ->with("talla")->with("proveedor")->with("inventario")
+                ->orderBy("nombre", "ASC")->get();
             return response()->json($productos);
 
         } catch (\Exception $e) {
