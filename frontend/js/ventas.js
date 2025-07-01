@@ -7,22 +7,47 @@ const cargarVentas = async () => {
             method: "GET"
         })
 
+        const consulta = await res.json();
+
+        console.log(consulta)
+
         if(res.ok){
 
-            const consulta = await res.json();
+            const contenedor = document.querySelector(".cont-ventas");
+            contenedor.innerHTML = "";
 
             Object.values(consulta).forEach(venta => {
 
                 let html = "";
-                const contenedor = document.querySelector(".cont-ventas");
                 const nuevaFila = document.createElement("tr")
                 nuevaFila.classList = "fila"
 
-                html += `
+                let col = "🔒 Venta cerrada"
+                let estado;
 
+                switch(venta.estado){
+                    case "en_proceso":
+                        estado = "⌚ En proceso"
+                         col = `
+                            <button onclick='completarVenta(${venta.id_venta})'>✅ Completar venta</button>
+                            <button onclick='cancelarVenta(${venta.id_venta})'>❌ Cancelar venta</button>
+                        ` 
+                    break;
+                    case "completada":
+                        estado = "💲 Completada"
+                    break;
+                    case "cancelada":
+                        estado = "💸 Cancelada"
+                    break
+                }
+
+                html += `
+                        <td>${venta.id_venta}</td>
+                        <td>${venta.factura}</td>
                         <td>${venta.fecha}</td>
                         <td>${venta.cliente["nombre"]}</td>
                         <td>${venta.total}</td>
+                        <td>${estado}</td>
                         <td>
 
                             <select class="productos">
@@ -33,7 +58,7 @@ const cargarVentas = async () => {
                 for(producto of venta.producto){
                     html += `
                         <option class="disabled">
-                            Producto: ${producto.nombre} --  
+                            Producto: ${producto.nombre} ${producto.id_talla} --  
                             Cantidad: ${producto.pivot["cantidad"]} -- 
                             Precio total: ${producto.pivot["precio_venta"]} 
                         </option>
@@ -43,18 +68,16 @@ const cargarVentas = async () => {
                 html += `
                           </select>
                         </td>
-                        <td>${venta.estado}</td>
-
+                        <td>${col}</td>
                 `
 
                 nuevaFila.innerHTML = html;
                 contenedor.appendChild(nuevaFila)
-                eventosFila(nuevaFila);
-                
+        
             })
 
         }else{
-            console.log(res.json())
+            console.log(consulta.message)
         }
 
     }catch(e){
@@ -62,51 +85,58 @@ const cargarVentas = async () => {
     }
 }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarVentas();
+const completarVenta = async id => {
 
-            // const form = document.getElementById('formVenta');
-            // const mensajeError = document.getElementById('mensajeError');
-            // const mensajeExito = document.getElementById('mensajeExito');
+    const confirmar = confirm("¿Seguro quiere completar esta venta?");
+    if(!confirmar){
+        return;
+    }
 
-            // form.addEventListener('submit', e => {
-            //     e.preventDefault();
-            //     mensajeError.style.display = 'none';
-            //     mensajeExito.style.display = 'none';
+        try{
 
-            //     const formData = new FormData(form);
-            //     const data = Object.fromEntries(formData.entries());
+            const res = await fetch(`http://localhost:8000/ventas/completar/${id}`, {
+                method: "GET"
+            })
 
-            //     // Convertir algunos campos a tipos correctos
-            //     data.id_cliente = parseInt(data.id_cliente);
-            //     data.total = parseFloat(data.total);
+            const consulta = await res.json();
 
-            //     fetch(urlVentas, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify(data),
-            //     })
-            //         .then(res => {
-            //             if (!res.ok) return res.json().then(err => { throw err; });
-            //             return res.json();
-            //         })
-            //         .then(resData => {
-            //             mensajeExito.textContent = resData.mensaje || 'Venta registrada con éxito';
-            //             mensajeExito.style.display = 'block';
-            //             form.reset();
-            //             cargarVentas();
-            //         })
-            //         .catch(err => {
-            //             console.error(err);
-            //             mensajeError.textContent = err.message || 'Error al registrar la venta';
-            //             if (err.errors) {
-            //                 // Mostrar errores de validación de Laravel
-            //                 const mensajes = Object.values(err.errors).flat().join('; ');
-            //                 mensajeError.textContent += ': ' + mensajes;
-            //             }
-            //             mensajeError.style.display = 'block';
-            //         });
-            // });
-        });
+            if(res.ok){
+                alert(consulta.message);
+                cargarVentas();
+            }else{
+                alert(consulta.message);
+            }
+        }catch(e){
+            console.log(e)
+        }
+
+}
+
+const cancelarVenta = async id => {
+
+    const confirmar = confirm("¿Seguro quiere cancelar esta venta?");
+    if(!confirmar){
+        return;
+    }
+
+        try{
+
+            const res = await fetch(`http://localhost:8000/ventas/cancelar/${id}`, {
+                method: "GET"
+            })
+
+            const consulta = await res.json();
+
+            if(res.ok){
+                alert(consulta.message);
+                cargarVentas();
+            }else{
+                alert(consulta.message);
+            }
+        }catch(e){
+            console.log(e)
+        }
+
+}
+
+document.addEventListener('DOMContentLoaded', cargarVentas);

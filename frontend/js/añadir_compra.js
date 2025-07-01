@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             Object.values(consultapd).forEach(producto => {
                 html += `
                     <option value="${producto.id_producto}" data-precio="${producto.precio_unitario}" data-prov="${producto.id_proveedor}">
-                        ${producto.nombre} -- Precio C/U: ${producto.precio_unitario}$
+                        ${producto.nombre} -- ${producto.talla["descripcion"]} -- ${producto.precio_unitario}$C/U
                     </option>
                 `
             })
@@ -78,6 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         contenedor.appendChild(nuevoProducto);
         configurarEventosProducto(nuevoProducto);
         calcularTotal();
+        validarProveedor(false);
         validarSelect();
     });
 
@@ -113,12 +114,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    function validarProveedor(){
+    function validarProveedor(camProv){
 
         let id = document.getElementById("proveedores").value;
         document.querySelectorAll(".select-productos").forEach(select => {
 
-            select.value = "!";
+            if(camProv == true){
+                select.selectedIndex = "!"   
+            }
+
             cambio = new Event("change");
             select.dispatchEvent(cambio)
 
@@ -134,8 +138,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
+    validarProveedor(true)
+
     prov.addEventListener("change", () => {
-        validarProveedor();
+        validarProveedor(true);
     })
 
 

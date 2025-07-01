@@ -1,23 +1,85 @@
-<h1>Registrar Nueva Venta</h1>
-    <form id="formVenta">
-        <div>
-            <label for="fecha">Fecha:</label>
-            <input type="date" id="fecha" name="fecha" required />
-        </div>
-        <div>
-            <label for="id_cliente">ID Cliente:</label>
-            <input type="number" id="id_cliente" name="id_cliente" required min="1" />
-        </div>
-        <div>
-            <label for="total">Total:</label>
-            <input type="number" step="0.01" id="total" name="total" required min="0" />
-        </div>
-        <div>
-            <label for="estado">Estado:</label>
-            <input type="text" id="estado" name="estado" required maxlength="50" />
-        </div>
-        <button type="submit">Registrar Venta</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Venta</title>
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <!-- <link rel="stylesheet" href="../css/tablas.css"> -->
+
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+    <script src="../js/añadir_venta.js"></script>
+
+</head>
+<body>
+    <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+      <main class="main-content">
+        <header class="topbar"></header>
+
+        <section class="welcome">
+          <h1>Nueva orden de venta</h1>
+          <form id="formulario" action="">
+
+            <label>Coloque factura de venta</label><br>
+            <input type="text" id="factura" placeholder="F-001"><br>
+
+            <label>Seleccione cliente</label>
+            <select id="clientes"></select><br>
+
+            <label>Cantidad total : <div id="total-general">0.00</div></label>
+
+            <label>Seleccion productos: </label>
+        
+            <table id="tabla">
+        
+                <thead>
+                    <th>Productos</th>
+                    <th>Cantidad</th>
+                    <th>Existencias</th>
+                    <th>Precio</th>
+                    <th>Opciones</th>
+                </thead>
+
+                <tbody class="cont-productos">
+
+                <tr class="producto">
+                    <td>
+                        <select class="select-productos" data-precio data-stock></select>
+                    </td>
+                    <td>
+                        <input class="cantidad" type="number" value="1" min="1">
+                    </td>
+                    <td>
+                        <div class="stock">0</div>
+                    </td>
+                    <td>
+                       <div class="subtotal">0.00</div>
+                    </td>
+                    <td>
+                        <button class="eliminar" disabled>🗑</button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
     </form>
 
-    <div id="mensajeError"></div>
-    <div id="mensajeExito"></div>
+    <button id="agregar-producto"><span>➕</span></button><br>
+
+    <button id="btn-registrar">Registrar</button><br>
+
+    <a href="compras.html"><button>Atrás</button></a>
+
+        </section>
+      </main>
+
+  </div>
+
+</body>
+</html>

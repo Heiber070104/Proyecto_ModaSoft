@@ -125,7 +125,7 @@ const cancelarCompra = async id => {
 
         try{
 
-            const res = fetch(`http://localhost:8000/compras/cancelar/${id}`, {
+            const res = await fetch(`http://localhost:8000/compras/cancelar/${id}`, {
                 method: "GET"
             })
 

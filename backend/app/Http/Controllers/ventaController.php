@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ventaModel;
+use App\Models\productoModel;
 use App\Models\inventarioModel;
 
 class ventaController extends Controller
@@ -118,6 +119,46 @@ class ventaController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al cancelar la venta: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function productosMasVendidos(){
+
+        $productos = productoModel::with("talla")->get();
+        $nombreProductos = [];
+
+        foreach($productos as $producto){
+         
+            array_push($nombreProductos, [
+                "nombre" => $producto->nombre, 
+                "talla" => $producto->talla->descripcion,
+                "cantidad" => 0
+            ]);
+        }
+
+        $ventas = ventaModel::with("producto")->get();
+
+        foreach($ventas as $indice => $valor){
+
+            if($valor->estado != "completada"){
+                continue;
+            }
+
+            foreach($valor->producto as $producto){
+
+               for ($i=0; $i < count($nombreProductos); $i++) { 
+                
+                    $nombre = $producto->nombre." ".$producto->talla->descripcion;
+                    if($nombre == $nombreProductos[$i]["nombre"]." ".$nombreProductos[$i]["talla"]){
+                        $nombreProductos[$i]["cantidad"]++;
+                    }
+               }
+
+            }
+
+        }
+
+        return response()->json($nombreProductos, 200);
+
     }
 
 }

@@ -30,6 +30,7 @@ render() {
             <li class="menu-item" data-page="devoluciones.html"><span>🧾</span> Devoluciones</li>
             <li><span>📚</span> Libro Diario/Mayor</li>
             <li><span>📄</span> Registro Contable</li>
+            <li class="menu-item" data-page="reportes.html"><span>📊</span> Reportes</li>
         </ul>
     `;
 }

@@ -140,8 +140,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById("categorias").value = consulta.id_categoria;
                 document.getElementById("proveedores").value = consulta.id_proveedor;
 
-                
-
                 const cambio = new Event("change")
                 document.getElementById("categorias").dispatchEvent(cambio)
             }else{
