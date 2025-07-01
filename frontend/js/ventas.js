@@ -50,24 +50,7 @@ const cargarVentas = async () => {
                         <td>${venta.total}</td>
                         <td>${estado}</td>
                         <td>
-
-                            <select class="productos">
-
-                                <option value="0" selected disabled hidden>Lista de productos</option>
-                `
-
-                for(producto of venta.producto){
-                    html += `
-                        <option class="disabled">
-                            Producto: ${producto.nombre} ${producto.id_talla} --  
-                            Cantidad: ${producto.pivot["cantidad"]} -- 
-                            Precio total: ${producto.pivot["precio_venta"]} 
-                        </option>
-                    `
-                }
-
-                html += `
-                          </select>
+                            <a href="http://localhost:8000/ventas/pdf/${venta.id_venta}" target="_blank" class="btn btn-danger"><button>📄 Detalles de venta</button></a>
                         </td>
                         <td>${col}</td>
                 `

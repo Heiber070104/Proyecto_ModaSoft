@@ -21,9 +21,8 @@ form label {
   color: #1f1e1e;
 }
 
-input[type="date"],
-select {
-  width: 100%;
+input,select {
+  width: 50%;
   padding: 8px;
   margin-bottom: 10px;
   border-radius: 5px;

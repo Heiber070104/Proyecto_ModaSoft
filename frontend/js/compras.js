@@ -47,7 +47,7 @@ const cargarCompras = async () => {
                     <td>${compra.total}</td>
                     <td>${estado}</td>
                     <td>
-                        <a href="http://localhost:8000/compras/pdf/${compra.id_compra}" target="_blank" class="btn btn-danger">📄 FPDF</a>
+                        <a href="http://localhost:8000/compras/pdf/${compra.id_compra}" target="_blank" class="btn btn-danger"><button>📄 Detalles de compra</button></a>
                     </td>
                     <td>${col}</td>
                 `;
