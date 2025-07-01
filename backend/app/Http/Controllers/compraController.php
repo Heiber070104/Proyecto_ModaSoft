@@ -92,14 +92,14 @@ class compraController extends Controller
             $compra->estado = 'procesada';
             $compra->save();
 
-            return response()->json(['message' => 'Stock actualizado correctamente'], 200);
+            return response()->json(['message' => 'Compra completada exitosamente, existencias actualizadas'], 200);
         }catch(\Exception $e){
-            return response()->json(['message' => 'Error al actualizar el stock: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Error al completar compra: ' . $e->getMessage()], 500);
         }
 
     }
 
-    public function cancelarCompra($id)
+    public function cancelarCompra(Request $request, $id)
     {
         try {
             $compra = compraModel::find($id);
