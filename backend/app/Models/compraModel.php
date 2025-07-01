@@ -15,8 +15,8 @@ class compraModel extends Model
     public $table = 'compra';
     public $primaryKey = 'id_compra';
     public $fillable = [
-        'id',
-        'fecha',
+        'fecha_creada',
+        'fecha_vence',
         'id_proveedor',
         'total',
         'estado'
@@ -26,8 +26,8 @@ class compraModel extends Model
         return $this->belongsTo(proveedorModel::class, 'id_proveedor', 'id_proveedor');
     }
 
-    public function producto (){
-        return $this->belongsToMany(productoModel::class, "detalle_compra", 'id_compra', 'id_compra')
+    public function producto(){
+        return $this->belongsToMany(productoModel::class, "detalle_compra", 'id_compra', 'id_producto')
                     ->withPivot('cantidad', 'precio_compra');
     }
 

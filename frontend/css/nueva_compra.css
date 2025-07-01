@@ -1,0 +1,107 @@
+
+.botones-acciones button {
+  padding: 10px 15px;
+  background-color: #3f2b84;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.botones-acciones button:hover {
+  background-color:  #3f2b84;;
+}
+
+/* Formulario */
+form label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #1f1e1e;
+}
+
+input[type="date"],
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Tabla de productos */
+#tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+#tabla thead {
+  background-color:#3f2b84;
+  color: #fff;
+}
+
+#tabla th,
+#tabla td {
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.subtotal {
+  font-weight: bold;
+  text-align: right;
+}
+
+button.eliminar {
+  background-color: #fa0000;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: not-allowed;
+}
+
+button.eliminar.enabled {
+  cursor: pointer;
+}
+
+/* Total general */
+#total-general {
+  display: inline-block;
+  margin-top: 5px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Botones inferiores */
+#agregar-producto,
+#btn-registrar,
+a button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  background-color: #2ecc71;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#agregar-producto:hover,
+#btn-registrar:hover,
+a button:hover {
+  background-color: #27ae60;
+}
+
+/* Enlace "Atrás" */
+a button {
+  background-color: #fa0000;
+  position: absolute; /* Cambia la posición a absoluta */
+  top: 80px; /* Ajusta la distancia desde la parte superior */
+  right: 30px; /* Ajusta la distancia desde la derecha */
+}
+a button:hover {
+  background-color: #f04c4c;
+}

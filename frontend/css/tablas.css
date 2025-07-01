@@ -1,0 +1,153 @@
+/* === Tabla de Productos === */
+
+table {
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: white;
+  margin: 30px auto;
+  width: 100%; /* o ajusta según el contenedor */
+  max-width: 1000px;
+  box-shadow: 0 8px 24px rgba(63, 43, 132, 0.25);
+}
+
+
+thead {
+
+  background-color: #3f2b84; /* Un púrpura más vibrante */
+  color: #ffffff;
+
+}
+
+thead th {
+  padding: 15px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  border-right: 1px solid #e3d9f4; /* línea entre columnas */
+}
+
+tbody td {
+  text-align: center;
+  padding: 12px 15px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #e3d9f4; /* línea horizontal */
+  border-right: 1px solid #e3d9f4; /* línea vertical */
+}
+
+
+
+tbody tr:nth-child(even) {
+  background-color: #f3f0fa; 
+}
+
+tbody tr:hover {
+  background-color: #e4dcfb; 
+}
+
+
+tbody td:last-child {
+  text-align: center;
+}
+
+/* Botones en tabla */
+button {
+  background-color: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 0 5px;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.2);
+  color: #2d1d66;
+}
+
+.btn.purple {
+  background-color: #4B2E83; /* morado elegante */
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.2s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn.purple:hover {
+  background-color: #351f5d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.botones-acciones {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  justify-content: center; /* opcional: centrado horizontal */
+}
+
+input, select{
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+  box-shadow: inset 0 0 0 transparent;
+
+}
+
+select{
+   width: 92%;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border: 2px solid #7c3aed; /* Morado vivo */
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5),
+              0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(1.02);
+}
+
+/* Campos con íconos */
+.input-icon {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 5px 10px;
+}
+
+.input-icon .icon {
+  margin-right: 8px;
+}
+
+.input-icon input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  padding: 8px 0;
+  background: none;
+}
+
+form{
+
+  align-self: center;
+  color: white;
+  width: 25%;
+  background-color: #401d7d;
+  padding: 40px;
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  border-radius: 20px;
+}

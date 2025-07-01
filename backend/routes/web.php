@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\compraController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,8 +21,15 @@ Route::get('/api', function () {
     ]);
 });
 
+require __DIR__.'/compraRoutes.php';
 require __DIR__.'/usuarioRoutes.php';
 require __DIR__.'/productoRoutes.php';
 require __DIR__.'/categoriaRoutes.php';
 require __DIR__.'/tallaRoutes.php';
 require __DIR__.'/proveedorRoutes.php';
+require __DIR__.'/ventaRoutes.php';
+require __DIR__.'/clienteRoutes.php';
+
+// routes/web.php
+Route::get('/compras/pdf/{id}', [compraController::class, 'generarPDF'])->name('compras.pdf');
+

@@ -1,0 +1,23 @@
+<h1>Registrar Nueva Venta</h1>
+    <form id="formVenta">
+        <div>
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" required />
+        </div>
+        <div>
+            <label for="id_cliente">ID Cliente:</label>
+            <input type="number" id="id_cliente" name="id_cliente" required min="1" />
+        </div>
+        <div>
+            <label for="total">Total:</label>
+            <input type="number" step="0.01" id="total" name="total" required min="0" />
+        </div>
+        <div>
+            <label for="estado">Estado:</label>
+            <input type="text" id="estado" name="estado" required maxlength="50" />
+        </div>
+        <button type="submit">Registrar Venta</button>
+    </form>
+
+    <div id="mensajeError"></div>
+    <div id="mensajeExito"></div>
