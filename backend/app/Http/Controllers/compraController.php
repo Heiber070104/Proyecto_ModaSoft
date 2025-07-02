@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\compraModel;
 use App\Models\inventarioModel;
 use App\Models\productoModel;
+use App\Models\cuentasPagarModel;
 use Codedge\Fpdf\Fpdf\Fpdf;
 
 
@@ -83,15 +84,22 @@ class compraController extends Controller
             $productos = $compra->producto->toArray();
 
             foreach ($productos as $producto) {
-
                 $stock = inventarioModel::where("id_producto", $producto["id_producto"])->first();
                 $stock->cantidad_disponible += $producto["pivot"]["cantidad"];
                 $stock->save();
-
             }
 
             $compra->estado = 'procesada';
             $compra->save();
+
+            // Crear la cuenta por pagar
+            $cuentaPagar = cuentasPagarModel::create([  
+                'id_compra' => $compra->id_compra,
+                'monto_total' => $compra->total,
+                'monto_pagado' => 0, // Inicialmente no se ha pagado nada
+                'fecha_vencimiento' => now()->addDays(15), // Fecha de vencimiento 30 días después
+                'estado' => 'pendiente',
+            ]);
 
             return response()->json(['message' => 'Compra completada exitosamente, existencias actualizadas'], 200);
         }catch(\Exception $e){
@@ -112,6 +120,48 @@ class compraController extends Controller
             return response()->json(['message' => 'Compra cancelada exitosamente'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al cancelar la compra: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function consultarDeudas(Request $request, $id = null){
+        try {
+
+            if ($id) {
+                $deuda = cuentasPagarModel::with('compra.proveedor')->find($id);
+                if (!$deuda) {
+                    return response()->json(['message' => 'Deuda no encontrada'], 404);
+                }
+                return response()->json($deuda, 200);
+            }
+
+            $deudas = cuentasPagarModel::with("compra.proveedor")->get();
+            return response()->json($deudas, 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al consultar deudas: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function pagarDeuda(Request $request, $id){
+        try {
+            $data = $request->validate([
+                'monto_pagado' => 'required|numeric',
+            ]);
+
+            $cuentaPagar = cuentasPagarModel::find($id);
+            if (!$cuentaPagar) {
+                return response()->json(['message' => 'Cuenta por pagar no encontrada'], 404);
+            }
+
+            $cuentaPagar->monto_pagado += $data['monto_pagado'];
+            if ($cuentaPagar->monto_pagado >= $cuentaPagar->monto_total) {
+                $cuentaPagar->monto_pagado = $cuentaPagar->monto_total; // Asegurarse de no exceder el total
+                $cuentaPagar->estado = 'pagado';
+            }
+            $cuentaPagar->save();
+
+            return response()->json(['message' => 'Pago registrado exitosamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al registrar el pago: ' . $e->getMessage()], 500);
         }
     }
 

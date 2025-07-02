@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\productoModel;
 use App\Models\proveedorModel;
+use App\Models\cuentasPagarModel;
 
 class compraModel extends Model
 {
@@ -24,6 +25,10 @@ class compraModel extends Model
 
     public function proveedor(){
         return $this->belongsTo(proveedorModel::class, 'id_proveedor', 'id_proveedor');
+    }
+
+    public function cuentasPagar(){
+        return $this->hasOne(cuentasPagarModel::class, "id_compra", "id_compra");
     }
 
     public function producto(){
