@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ventas</title>
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/tablas.css">
+    <link rel="icon" href="../public/logo_modasoft.png">
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+    <script src="../js/ventas.js"></script>
+   
+</head>
+<body>
+
+     <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+      <main class="main-content">
+        <header class="topbar"></header>
+
+        <section class="welcome">
+          <h1>Gestión de Ventas</h1>
+          <div class="botones-acciones">
+            <a href="añadir_venta.html"><button>➕ Nueva venta</button></a>
+            <a href="clientes.html"><button>Gestor de clientes</button></a>
+          </div>
+
+        <table class="tablaVentas">
+        <thead>
+            <tr>
+                <th>N° de venta</th>
+                <th>N° Factura</th>
+                <th>Fecha creado</th>
+                <th>Cliente</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Detalles de venta</th>     
+                <th>Acciones</th>     
+            </tr>
+        </thead>
+        <tbody class="cont-ventas">
+            <!-- Filas con ventas -->
+        </tbody>
+        </table>
+
+        </section>
+      </main>
+
+  </div>
+
+</body>
+</html>

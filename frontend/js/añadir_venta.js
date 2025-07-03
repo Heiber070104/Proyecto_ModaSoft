@@ -2,34 +2,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const date = new Date();
     const btnAgregar = document.getElementById('agregar-producto');
-    const prov = document.getElementById("proveedores");
     var opcionesProductos;
     var total;
-   
-    document.getElementById("fecha_vence").value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
     try{
 
-        const respr = await fetch("http://localhost:8000/proveedores",{
+        const respr = await fetch("http://localhost:8000/clientes",{
             method: "GET"
         })
        
-        const consultapr = await respr.json();
+        const consultacl = await respr.json();
 
         if(respr.ok){
 
             let html = "";
 
-            Object.values(consultapr).forEach(proveedor => {
+            Object.values(consultacl).forEach(cliente => {
                 html += `
-                    <option value="${proveedor.id_proveedor}">
-                        ${proveedor.nombre}
+                    <option value="${cliente.id_cliente}">
+                        ${cliente.nombre}
                     </option>
                 `
             })
-            document.getElementById("proveedores").innerHTML = html;
+            document.getElementById("clientes").innerHTML = html;
         }else{
-            console.log(consultapr)
+            console.log(consultapr.message)
         }
 
         const respd = await fetch("http://localhost:8000/productos",{
@@ -43,9 +40,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             let html = "<option value='!' hidden selected>Elija producto</option>";
 
             Object.values(consultapd).forEach(producto => {
+
+                let precio_venta = parseFloat(producto.precio_unitario * producto.porcentaje_ganancia / 100);
+                precio_venta = parseFloat(precio_venta) + parseFloat(producto.precio_unitario);
+
                 html += `
-                    <option value="${producto.id_producto}" data-precio="${producto.precio_unitario}" data-prov="${producto.id_proveedor}">
-                        ${producto.nombre} -- ${producto.talla["descripcion"]} -- ${producto.precio_unitario}$C/U
+                    <option value="${producto.id_producto}" data-precio="${precio_venta.toFixed(2)}" data-stock=${producto.inventario["cantidad_disponible"]}>
+                        ${producto.nombre} -- ${producto.talla["descripcion"]} -- ${precio_venta.toFixed(2)}$C/U
                     </option>
                 `
             })
@@ -65,12 +66,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         nuevoProducto.className = "producto";
             nuevoProducto.innerHTML = `
             <td>
-                <select class="select-productos" data-precio>
+                <select class="select-productos" data-precio data-stock>
                     <option value='!' hidden selected>Elija producto</option>
                     ${opcionesProductos}
                 </select>
             </td>
             <td><input class="cantidad" type="number" value="1" min="1"></td>
+            <td><div class="stock">0</div></td>
             <td><div class="subtotal">$<span class="valor-subtotal">0.00</span></div></td>
             <td><button class="eliminar">🗑</button></td>
         `;
@@ -78,7 +80,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         contenedor.appendChild(nuevoProducto);
         configurarEventosProducto(nuevoProducto);
         calcularTotal();
-        validarProveedor(false);
         validarSelect();
     });
 
@@ -90,10 +91,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const select = producto.querySelector('.select-productos');
         const cantidad = producto.querySelector('.cantidad');
         const subtotal = producto.querySelector('.subtotal');
+        const stock = producto.querySelector(".stock");
         const btnEliminar = producto.querySelector('.eliminar');
     
-        select.addEventListener('change', actualizarSubtotal);
-        cantidad.addEventListener('input', actualizarSubtotal);
+        select.addEventListener('change', () => {actualizarSubtotal(); validarStock(true)});
+        cantidad.addEventListener('input', () => {actualizarSubtotal(); validarStock(false)});
     
         // Eliminar producto
         btnEliminar.addEventListener('click', function() {
@@ -101,6 +103,31 @@ document.addEventListener("DOMContentLoaded", async () => {
             validarSelect();
             calcularTotal();
         });
+
+        function validarStock(cambioSelect){
+
+            if(cambioSelect){
+                cantidad.value = 1;
+            }
+
+            const stockOption = parseInt(select.selectedOptions[0]?.dataset.stock) || 0;
+            const cant = parseInt(cantidad.value) || 0;
+            stock.textContent = parseInt(stockOption);
+            console.log(stockOption)
+
+            if(stockOption == 0){
+                cantidad.disabled = true;
+                return;
+            }else{
+                cantidad.disabled = false;
+            }
+
+            if(cant > stockOption){
+                alert("¡¡La cantidad del producto supera las existencias!!");
+                cantidad.value = stockOption;
+            }
+
+        }
     
         // Función para actualizar subtotal
         function actualizarSubtotal() {
@@ -113,38 +140,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             validarSelect();
         }
     }
-
-    function validarProveedor(camProv){
-
-
-        let id = document.getElementById("proveedores").value;
-        document.querySelectorAll(".select-productos").forEach(select => {
-
-            if(camProv == true){
-                select.selectedIndex = "!"   
-            }
-
-            cambio = new Event("change");
-            select.dispatchEvent(cambio)
-
-            select.querySelectorAll("option").forEach(option => {
-                if(option.dataset.prov != id){
-                    option.hidden  = true; 
-                }else{
-                    option.hidden  = false; 
-                }
-            })
-
-        })
-
-    }
-
-    validarProveedor(true)
-
-    prov.addEventListener("change", () => {
-        validarProveedor(true);
-    })
-
 
     function calcularTotal() {
         total = 0;
@@ -189,10 +184,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("btn-registrar").addEventListener("click", async () =>{
 
-        const fecha = document.getElementById("fecha_vence").value;
-        const id_proveedor = document.getElementById("proveedores").value;
+        const factura = document.getElementById("factura").value;
+        const id_cliente = document.getElementById("clientes").value;
 
-        if(!fecha || fecha=="" || !id_proveedor || id_proveedor=="" || !total || total===0){
+        if(!factura || factura=="" || !id_cliente || id_cliente=="" || !total || total===0){
             alert("Rellene los campos vacios")
             return false;
         }
@@ -203,13 +198,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const id_producto = prod.querySelector(".select-productos").value;
             const cantidad = prod.querySelector(".cantidad").value;
-            const precio_compra = prod.querySelector(".subtotal").textContent;
+            const precio_venta = prod.querySelector(".subtotal").textContent;
 
-            if(!id_producto || id_producto==="!" || !cantidad || cantidad===0 || !precio_compra || precio_compra===0){
+            if(!id_producto || id_producto==="!" || !cantidad || cantidad===0 || !precio_venta || precio_venta===0){
                 alert("Por favor seleccione un producto en el campo vacío")
             }
 
-            productos.push({"id_producto": id_producto, "cantidad": cantidad, "precio_compra": precio_compra});
+            productos.push({"id_producto": id_producto, "cantidad": cantidad, "precio_venta": precio_venta});
             return false;
 
         })
@@ -218,16 +213,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try{
 
-            const res = await fetch("http://localhost:8000/compras", {
+            const res = await fetch("http://localhost:8000/ventas", {
                 method:  "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    fecha_vence: fecha,
-                    id_proveedor: id_proveedor,
-                    total: total,
-                    estado: "pendiente",
+                    factura: factura,
+                    id_cliente: id_cliente,
                     productos: productos
                 })
             })
@@ -236,9 +229,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if(res.ok){
                 alert(consulta.message);
-                window.location.href = "compras.html"
+                window.location.href = "ventas.html"
             }else{
-                console.log(consulta)
+                console.log(consulta.message)
+                alert(consulta.message)
             }
 
         }catch(e){

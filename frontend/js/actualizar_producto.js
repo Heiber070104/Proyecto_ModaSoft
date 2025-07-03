@@ -7,11 +7,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     const nombre = document.getElementById("nombre").value;
     const descripcion = document.getElementById("descripcion").value;
     const precio = document.getElementById("precio").value;
-    const id_categoria = document.getElementById("categorias").value;
-    const id_talla = document.getElementById("tallas").value;
-    const cantidad = document.getElementById("cantidad").value;
+    const porcentaje = document.getElementById("porcentaje").value;
 
-    if(!id || !nombre || !descripcion || !precio || !id_categoria || !id_talla || !cantidad){
+    if(!id || !nombre || !descripcion || !precio || !porcentaje){
         alert("Rellene todos los campos");
         return false;
     }
@@ -28,9 +26,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
                 nombre: nombre,
                 descripcion: descripcion,
                 precio: precio,
-                id_categoria: id_categoria,
-                id_talla: id_talla,
-                cantidad: cantidad
+                porcentaje: porcentaje
             })
         })
 
@@ -38,7 +34,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
 
         if(res.ok){
             alert(consulta.message)
-            window.location.href = "productos.html"
+            window.location.href = "inventario.html"
         }else{
             console.log("Error al actualizar el producto: " + consulta.message);
             alert("Error al actulizar el producto, intente nuevamente" + consulta.message);  
@@ -50,44 +46,43 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     }
 })
 
-const cargarSelect = async (direccion) => {
+// const cargarSelect = async (direccion) => {
 
-    try{
+//     try{
 
-       const res = await fetch(`http://localhost:8000/${direccion}`, {
-            method: "GET"
-       })
+//        const res = await fetch(`http://localhost:8000/${direccion}`, {
+//             method: "GET"
+//        })
 
-       const consulta = await res.json();
+//        const consulta = await res.json();
 
-       if(res.ok){
-;
-            let html = "";
+//        if(res.ok){
+// ;
+//             let html = "";
 
-            Object.values(consulta).forEach(datos => {
+//             Object.values(consulta).forEach(datos => {
 
-                let arrayDatos = Object.values(datos);
+//                 let arrayDatos = Object.values(datos);
 
-                html += `
-                    <option value="${arrayDatos[0]}">
-                        ${arrayDatos[1]}
-                    </option>
-                `
-            })
+               
 
-            document.getElementById(direccion).innerHTML = html;
+//                 html += `
+//                     <option value="${arrayDatos[0]}">
+//                         ${arrayDatos[1]}
+//                     </option>
+//                 `
+//             })
 
-       }
+//             document.getElementById(direccion).innerHTML = html;
 
-    }catch(error){
-        console.log(error);
-    }
-}
+//        }
+
+//     }catch(error){
+//         console.log(error);
+//     }
+// }
 
 document.addEventListener("DOMContentLoaded", async () => {
-
-    await cargarSelect("categorias"); 
-    await cargarSelect("tallas");
 
     try {
          
@@ -101,9 +96,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("nombre").value = consulta.nombre;
             document.getElementById("descripcion").value = consulta.descripcion;
             document.getElementById("precio").value = consulta.precio_unitario;
-            document.getElementById("categorias").value = consulta.id_categoria;
-            document.getElementById("tallas").value = consulta.id_talla;
-            document.getElementById("cantidad").value = consulta.cantidad;
+            document.getElementById("porcentaje").value = consulta.porcentaje_ganancia;
+            // document.getElementById("categorias").value = consulta.id_categoria;
+            // document.getElementById("tallas").value = consulta.id_talla;
+            // document.getElementById("cantidad").value = consulta.cantidad;
 
         }
             

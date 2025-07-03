@@ -1,15 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nueva Compra</title>
+    <title>Nueva Venta</title>
     <link rel="stylesheet" href="../css/nueva_compra.css"> 
     <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="icon" href="../public/logo_modasoft.png">
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
-    <script src="../js/añadir_compra.js"></script>
+    <script src="../js/añadir_venta.js"></script>
+    
 
 </head>
 <body>
@@ -20,37 +23,40 @@
         <header class="topbar"></header>
 
         <section class="welcome">
-          <h1>Nueva orden de compra</h1>
-
+          <h1>Nueva orden de venta</h1>
           <form id="formulario" action="">
 
-        <label>Seleccione fecha despacho</label>
-        <input type="date" id="fecha_vence"><br>
+            <label>Coloque factura de venta</label><br>
+            <input type="text" id="factura" placeholder="F-001"><br>
 
-        <label>Seleccione proveedor</label>
-        <select id="proveedores"></select><br>
+            <label>Seleccione cliente</label>
+            <select id="clientes"></select><br>
 
-        <label for="">Seleccion productos</label>
+            <label>Cantidad total : <div id="total-general">0.00</div></label>
 
-        <label>Cantidad total: <div id="total-general">0.00</div></label>
+            <label>Seleccion productos: </label>
         
-        <table id="tabla">
+            <table id="tabla">
         
-            <thead>
-                <th>Productos</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Opciones</th>
-            </thead>
+                <thead>
+                    <th>Productos</th>
+                    <th>Cantidad</th>
+                    <th>Existencias</th>
+                    <th>Precio</th>
+                    <th>Opciones</th>
+                </thead>
 
-            <tbody class="cont-productos">
+                <tbody class="cont-productos">
 
                 <tr class="producto">
                     <td>
-                        <select class="select-productos" data-precio></select>
+                        <select class="select-productos" data-precio data-stock></select>
                     </td>
                     <td>
                         <input class="cantidad" type="number" value="1" min="1">
+                    </td>
+                    <td>
+                        <div class="stock">0</div>
                     </td>
                     <td>
                        <div class="subtotal">0.00</div>
@@ -79,3 +85,4 @@
 
 </body>
 </html>
+

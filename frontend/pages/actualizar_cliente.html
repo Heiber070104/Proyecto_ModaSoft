@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuevo proveedor</title>
+    <title>Editar cliente</title>
+    <link rel="icon" href="../public/logo_modasoft.png">
     <link rel="stylesheet" href="../css/topbar_menu.css">
     <link rel="stylesheet" href="../css/tablas.css">
-    <link rel="icon" href="../public/logo_modasoft.png">
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
-    <script src="../js/añadir_proveedor.js"></script>
+    <script src="../js/actualizar_cliente.js"></script>
 </head>
 <body>
-
-    <div class="container">
+    
+<div class="container">
 
     <aside class="sidebar"></aside> <!-- Aquí va el menú -->
 
@@ -23,19 +23,19 @@
 
     <section class="welcome">
 
-     <h1>Registro de Proveedores</h1>
+     <h1>Editar cliente</h1>
 
       <div class="botones-acciones">
-        <a href="proveedores.html"><button>⏪ Regresar</button></a>
+        <a href="clientes.html"><button>⏪ Regresar</button></a>
       </div>
 
       <form id="formulario">
 
-          <label>Coloque RIF</label><br>
-          <input type="text" id="rif"><br><br>
-
           <label>Coloque nombre</label><br>
           <input type="text" id="nombre"><br><br>
+
+          <label">Coloque cédula</label><br>
+          <input type="text" id="cedula"><br><br>
 
           <label>Coloque direccion</label><br>
           <input type="text" id="direccion"><br><br>
@@ -53,6 +53,6 @@
     </main>
 
   </div>
-    
+
 </body>
 </html>

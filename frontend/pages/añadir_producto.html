@@ -4,12 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nuevo producto</title>
-  <link rel="stylesheet" href="../css/topbar_menu.css">
+
   <link rel="stylesheet" href="../css/tablas.css">
+  <link rel="stylesheet" href="../css/topbar_menu.css">
+
+
+
   <script src="../js/sesiones.js"></script>
   <script src="../js/componentes/menu.js" defer></script>
   <script src="../js/componentes/topbar.js" defer></script>
   <script src="../js/añadir_producto.js" defer></script>
+
 </head>
 <body>
 <div class="container">
@@ -20,13 +25,17 @@
 
   <section class="welcome">
 
+
      <h1>Registro de Productos</h1>
 
       <div class="botones-acciones">
-            <a href="productos.html"><button>⏪ Regresar</button></a>
+            <a href="inventario.html"><button>⏪ Regresar</button></a>
       </div>
-    
+
       <form id="formulario">
+
+          <label>Coloque proveedor</label><br>
+          <select id="proveedores"></select><br><br>
 
           <label>Coloque nombre</label><br>
           <input type="text" id="nombre"><br><br>
@@ -37,18 +46,17 @@
           <label>Coloque precio</label><br>
           <input type="number" id="precio" min="0"><br><br>
 
+          <label>Coloque porcentaje de ganancia %</label><br>
+          <input type="number" max="35" id="porcentaje"><br><br>
+
           <label>Coloque categoria</label><br>
           <select id="categorias"></select><br><br>
 
           <label>Coloque talla</label><br>
           <select id="tallas"></select><br><br>
 
-          <label>Coloque cantidad</label><br>
-          <input type="number" id="cantidad"><br><br>
-
           <input type="submit" value="Registrar" class="btn blue">
         </form>
-        
   </section>
 </main>
 

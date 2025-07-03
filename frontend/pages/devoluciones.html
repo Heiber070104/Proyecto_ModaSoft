@@ -1,26 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devoluciones de ventas</title>
-    <link rel="stylesheet" href="../css/devoluciones.css">
-    <script src="../js/devoluciones.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Devoluciones de Ventas</title>
+  <link rel="icon" href="../public/logo_modasoft.png">
+
+  <!-- Estilos globales -->
+  <link rel="stylesheet" href="../css/topbar_menu.css" />
+  <link rel="stylesheet" href="../css/tablas.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Scripts para menú y topbar -->
+  <script src="../js/sesiones.js"></script>
+  <script src="../js/componentes/menu.js" defer></script>
+  <script src="../js/componentes/topbar.js" defer></script>
+
+  <!-- Script propio -->
+  <script src="../js/devoluciones.js" defer></script>
 </head>
 <body>
 
-    <h1>Devoluciones</h1>
-    <h3>Buscar venta para devolución</h3>
-    <p>Escribe el ID de la venta que deseas localizar para aplicar una devolución.</p>
+  <div class="container">
+    <aside class="sidebar"></aside> <!-- Menú lateral cargado dinámicamente -->
     
-    <div class="devolucion-search-box">
-        <label for="buscarVenta">Numero de venta:</label>
-        <input type="text" id="buscarVenta" name="venta_id" placeholder="Escribe el numero de la venta"/>
-        <button type="button" id="btnBuscarVenta">🔍</button>
-    </div>
+    <main class="main-content">
+      <header class="topbar"></header> <!-- Topbar cargada dinámicamente -->
 
+      <section class="welcome">
+        <h1>Devoluciones</h1>
+        <p>Escribe el número de la venta que deseas localizar para aplicar una devolución.</p>
 
+        <div class="devolucion-search-box" style="margin: 15px 0;">
+          <label for="buscarVenta">N° Venta:</label>
+          <input type="text" id="buscarVenta" name="venta_id" placeholder="Ej: 12345" />
+          <button type="button" id="btnBuscarVenta">🔍</button>
+        </div>
 
+        <p id="mensajeError" style="color: red; display: none;">Venta no encontrada</p>
 
+        <div id="resultadoVenta" style="display: none;">
+          <h3>Detalles de la Venta</h3>
+          <ul>
+            <li><strong>Fecha:</strong> <span id="fechaVenta"></span></li>
+            <li><strong>Cliente:</strong> <span id="clienteVenta"></span></li>
+            <li><strong>Total:</strong> <span id="totalVenta"></span></li>
+            <li><strong>Estado:</strong> <span id="estadoVenta"></span></li>
+          </ul>
+
+          <h3>Devoluciones asociadas</h3>
+          <table id="tabla">
+            <thead>
+              <tr>
+                <th>ID Devolución</th>
+                <th>ID Venta</th>
+                <th>Fecha</th>
+                <th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
 </body>
 </html>
