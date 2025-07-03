@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cuentas por pagar</title>
+
+    <link rel="stylesheet" href="../css/tablas.css">
+    <link rel="stylesheet" href="../css/topbar_menu.css">
     <link rel="icon" href="../public/logo_modasoft.png">
-    <title>Document</title>
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+    <script src="../js/cuentas_pagar.js"></script>
+
 </head>
 <body>
 
@@ -20,17 +29,17 @@
           <table id="tabla">
 
             <thead>
-                <th>N° compra</th>
-                <th>Fecha creación</th>
-                <th>Fecha Despacho</th>
+
+                <th>ID de compra</th>
                 <th>Proveedor</th>
-                <th>Total</th>
+                <th>Fecha de vencimiento</th>
+                <th>Monto total</th>
+                <th>Monto pagado</th>
                 <th>Estado</th>
-                <th>Detalle de orden</th>
                 <th>Acciones</th>
             </thead>
 
-            <tbody class="cont-compras">
+            <tbody class="cont-deudas">
 
             </tbody>
 

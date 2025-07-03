@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             direccion: direccion,
             telefono: telefono,
             correo: correo
+
         })
     });
 

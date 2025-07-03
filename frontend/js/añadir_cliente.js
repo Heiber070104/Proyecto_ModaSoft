@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("formulario").addEventListener("submit", async (e) => {
+
         e.preventDefault();
 
         const nombre = document.getElementById("nombre").value.trim();
