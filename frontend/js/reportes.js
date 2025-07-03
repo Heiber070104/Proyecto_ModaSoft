@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     const productosMasVendidos = document.getElementById('productosMasVendidos');
                     const graficaMasVendidos = new Chart(productosMasVendidos, {
-                        type: 'bar',
+                        type: 'pie',
                         data: {
                         labels: nombres,
                         datasets: [{
