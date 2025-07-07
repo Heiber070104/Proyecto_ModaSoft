@@ -171,6 +171,7 @@ class compraController extends Controller
 
         $pdf = new Fpdf();
         $pdf->AddPage();
+        $pdf->setTitle('Detalle de Compra #' . $compra->id_compra);
 
         // Colores y fuentes
         $pdf->SetFont('Arial', 'B', 18);

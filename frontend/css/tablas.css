@@ -52,6 +52,7 @@ tbody td:last-child {
 
 /* Botones en tabla */
 button {
+
   background-color: transparent;
   border: none;
   font-size: 18px;

@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const date = new Date();
     const btnAgregar = document.getElementById('agregar-producto');
     var opcionesProductos;
     var total;
@@ -123,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             if(cant > stockOption){
-                alert("¡¡La cantidad del producto supera las existencias!!");
+                Swal.fire("La cantidad del producto no puede superar las existencias");
                 cantidad.value = stockOption;
             }
 
@@ -188,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const id_cliente = document.getElementById("clientes").value;
 
         if(!factura || factura=="" || !id_cliente || id_cliente=="" || !total || total===0){
-            alert("Rellene los campos vacios")
+            Swal.fire("Rellene los campos vacios")
             return false;
         }
 
@@ -201,15 +200,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const precio_venta = prod.querySelector(".subtotal").textContent;
 
             if(!id_producto || id_producto==="!" || !cantidad || cantidad===0 || !precio_venta || precio_venta===0){
-                alert("Por favor seleccione un producto en el campo vacío")
+                Swal.fire("Por favor seleccione un producto en el campo vacío")
             }
 
             productos.push({"id_producto": id_producto, "cantidad": cantidad, "precio_venta": precio_venta});
             return false;
 
         })
-
-        console.log(productos)
 
         try{
 
@@ -228,15 +225,28 @@ document.addEventListener("DOMContentLoaded", async () => {
             const consulta = await res.json();
 
             if(res.ok){
-                alert(consulta.message);
+                await Swal.fire({
+                    title: "Exito",
+                    text: consulta.message,
+                    icon: "success"
+                });
                 window.location.href = "ventas.html"
             }else{
                 console.log(consulta.message)
-                alert(consulta.message)
+                Swal.fire({
+                    title: "Error",
+                    text: consulta.message,
+                    icon: "warning"
+                });
             }
 
         }catch(e){
             console.log(e)
+            Swal.fire({
+                title: "Error",
+                text: e,
+                icon: "warning"
+            });
         }
 
     })

@@ -2,6 +2,54 @@ class MenuComponent {
     constructor() {
         // 1. Al crear instancia, verifica la sesión inmediatamente
         this.sesion = new Sesiones().obtenerSesion();
+        if (!this.sesion || !this.sesion.id || !this.sesion.usuario || !this.sesion.rol) {
+            window.location.href = '../pages/login.html';
+            alert("Error de Sesión");
+            return
+        }
+    }
+
+    sessions(){
+        // 2. Verifica si la sesión está activa
+    
+        switch (this.sesion.rol) {
+            case "Comprador":
+                document.querySelectorAll("li").forEach(item => {
+                    const vistas = item.getAttribute("data-page");
+                    if(vistas === "ventas.html" || vistas === "clientes.html" 
+                        || vistas === "devoluciones.html" || vistas === "reportes.html"){
+                        item.style.display = "none";
+                    }
+                })
+            break;
+            case "Vendedor":
+                document.querySelectorAll("li").forEach(item => {
+                    const vistas = item.getAttribute("data-page");
+                    if(vistas === "compras.html" || vistas === "proveedores.html" 
+                        || vistas === "cuentas_pagar.html" || vistas === "reportes.html"){
+                        item.style.display = "none";
+                    }
+                })    
+            break;
+            case "Gerente":
+                document.querySelectorAll("li").forEach(item => {
+                    const vistas = item.getAttribute("data-page");
+                    if(vistas === "usuarios.html"){
+                        item.style.display = "none";
+                    }
+                })
+            break;
+            case "Contador":
+                document.querySelectorAll("li").forEach(item => {
+                    const vistas = item.getAttribute("data-page");
+                    if(vistas === "inventario.html" || vistas === "reportes.html"){
+                        item.style.display = "none";
+                    }
+                })
+            break;
+
+        }
+
     }
 
     mount() {
@@ -10,6 +58,7 @@ class MenuComponent {
         if (container) {
             container.insertAdjacentHTML("afterbegin", this.render());
             this.setupEvents();
+            this.sessions();
         } else {
             console.error("Contenedor .container no encontrado para insertar el menú.");
         }

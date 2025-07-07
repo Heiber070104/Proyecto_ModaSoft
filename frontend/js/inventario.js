@@ -1,3 +1,30 @@
+const cargarRol = () => {
+
+        const sesion = new Sesiones().obtenerSesion();
+
+        if(!sesion || !sesion.rol || !sesion.rol) {
+            alert("No tiene autorización.");
+            sesion.cerrarSesion();
+            window.location.href = "../pages/login.html";
+        }
+        
+        switch(sesion.rol){
+        
+            case "Contador":
+                alert("EL usuario actual no tienen autorización para acceder a esta página.");
+                window.location.href = "../pages/dashboard.html";  
+            break;
+            case "Gerente":
+            case "Vendedor":
+                const ocultar = document.querySelectorAll(".rol");
+                ocultar.forEach(element => {
+                    element.style.display = "none";
+                })
+            break;
+        }
+        
+}
+
 const actualizarTabla = async () => {
 
     try{
@@ -16,8 +43,6 @@ const actualizarTabla = async () => {
             
           Object.values(consulta).forEach(producto => {
 
-            console.log(producto)
-
             precio_total = parseFloat(producto.precio_unitario  * producto.porcentaje_ganancia / 100);
             precio_total = parseFloat(precio_total) + parseFloat(producto.precio_unitario);
             
@@ -30,7 +55,7 @@ const actualizarTabla = async () => {
                         <td>${producto.categoria["nombre"]}</td>
                         <td>${producto.talla["descripcion"]}</td>
                         <td>${producto.inventario["cantidad_disponible"]}</td>
-                        <td>
+                        <td class="rol">
                          <a href="actualizar_producto.html?id=${producto.id_producto}"><button>🔨 Modificar</button></a>
                          <a href="añadir_producto.html?id=${producto.id_producto}"><button>➕ Nueva talla</button></a>
                         </td>
@@ -39,6 +64,8 @@ const actualizarTabla = async () => {
           })
 
           document.getElementById("datos").innerHTML = html;
+          new loaderComponent().stopLoading();
+          cargarRol();
 
         }
     }catch(error){
@@ -47,4 +74,4 @@ const actualizarTabla = async () => {
 
 }
 
-document.addEventListener('DOMContentLoaded', actualizarTabla)
+document.addEventListener('DOMContentLoaded', () => {cargarRol(); actualizarTabla()})
