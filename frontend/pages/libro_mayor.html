@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario de Ropa</title>
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/tablas.css">
+    <link rel="icon" href="../public/logo_modasoft.png">
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+</head>
+<body>
+    <div class="container">
+    <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+    <main class="main-content">
+    <header class="topbar"></header>
+
+    <section class="welcome">
+    <h1>Libro Mayor</h1>
+    <table id="libroMayor">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Descripcion</th>
+                <th>referencia</th>
+                <th>Debe</th>
+                <th>haber</th>
+                <th>saldo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Las filas se llenarán dinámicamente -->
+        </tbody>
+    </table>
+    </section>
+    </main>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        axios.get('/api/libro-mayor')
+            .then(response => {
+                const tbody = document.querySelector('#libroMayor tbody');
+                response.data.forEach(cuenta => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${cuenta.nombre}</td>
+                        <td>${cuenta.saldo}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error al cargar el libro mayor:', error));
+    </script>
+</body>
+</html>

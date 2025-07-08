@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="icon" href="../public/logo_modasoft.png">
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+    <script src="../js/pagar_deuda.js"></script>
+</head>
+<body>
+    
+     <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+      <main class="main-content">
+        <header class="topbar"></header>
+
+        <section class="welcome">
+          <h1>Abonar a deuda</h1>
+
+         <form id="formulario">
+
+            <label>Monto de deuda restante</label><br>
+            <div id="maximo" data-max>0.00</div>
+
+            <label>Monto a abonar</label><br>
+            <input type="number" id="monto_abono" placeholder="Ingrese el monto a abonar" required><br><br>
+
+            <input type="submit">
+
+         </form>
+
+        </section>
+      </main>
+
+  </div>
+
+</body>
+</html>

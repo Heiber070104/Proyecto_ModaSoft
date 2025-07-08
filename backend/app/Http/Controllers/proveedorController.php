@@ -15,19 +15,22 @@ class proveedorController extends Controller
             return response()->json($proveedor, 200);
         }catch(\Exception $e){
             return response()->json([
-                'error' => 'Error al consultar el proveedor: ' . $e->getMessage()
+                'message' => 'Error al consultar el proveedor: ' . $e->getMessage()
             ], 500);
         }
       
     }  
 
-    public function buscarProveedor($id){
+    public function buscarProveedor(Request $request, $id){
         try{
+            if(!$id){
+                return response()->json(["message" => "Falta ID", 400]);
+            }
             $proveedor = Proveedor::findOrFail($id);
             return response()->json($proveedor, 200);
         }catch(\Exception $e){
             return response()->json([
-                'error' => 'Proveedor no encontrado: ' . $e->getMessage()
+                'message' => 'Proveedor no encontrado: ' . $e->getMessage()
             ], 404);
         }
     }
@@ -36,6 +39,7 @@ class proveedorController extends Controller
         try{
 
             $data = $request->validate([
+                'rif' => 'required|string|max:20',
                 'nombre' => 'required|string|max:100',
                 'telefono' => 'required|string|max:20',
                 'direccion' => 'required|string|max:200',
@@ -45,21 +49,25 @@ class proveedorController extends Controller
             $proveedor = Proveedor::create($data);
 
             if(!$proveedor){
-                return response()->json(['error' => 'Error al crear el proveedor'], 500);
+                return response()->json(['message' => 'Error al crear el proveedor'], 500);
             }   
             return response()->json(["message" => "Proveedor registrado exitosamente"], 201);
 
         }catch(\Exception $e){
             return response()->json([
-                'error' => 'Error al crear el proveedor: ' . $e->getMessage()
+                'message' => 'Error al crear el proveedor: ' . $e->getMessage()
             ], 500);
         }
     }
 
     public function actualizarProveedor(Request $request, $id){
         try{
+            if(!$id){
+                return response()->json(["message" => "Falta ID", 400]);
+            }
             $proveedor = Proveedor::findOrFail($id);
             $data = $request->validate([
+                'rif' => 'sometimes|required|string|max:20',
                 'nombre' => 'sometimes|required|string|max:100',
                 'telefono' => 'sometimes|required|string|max:20',
                 'direccion' => 'sometimes|required|string|max:200',
@@ -67,28 +75,26 @@ class proveedorController extends Controller
             ]);
 
             $proveedor->update($data);
-
-            if(!$proveedor){
-                return response()->json(['error' => 'Error al actualizar el proveedor'], 500);
-            }
-
             return response()->json(["message" => "Proveedor actualizado exitosamente"], 200);
 
         }catch(\Exception $e){
             return response()->json([
-                'error' => 'Error al actualizar el proveedor: ' . $e->getMessage()
+                'message' => 'Error al actualizar el proveedor: ' . $e->getMessage()
             ], 500);
         }
     }
 
     public function eliminarProveedor($id){
         try{
+            if(!$id){
+                return response()->json(["message" => "Falta ID", 400]);
+            }
             $proveedor = Proveedor::findOrFail($id);
             $proveedor->delete();
             return response()->json(['message' => 'Proveedor eliminado correctamente'], 200);
         }catch(\Exception $e){
             return response()->json([
-                'error' => 'Error al eliminar el proveedor: ' . $e->getMessage()
+                'message' => 'Error al eliminar el proveedor: ' . $e->getMessage()
             ], 500);
         }
     }

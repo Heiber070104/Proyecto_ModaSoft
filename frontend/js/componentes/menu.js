@@ -28,8 +28,9 @@ render() {
             <li class="menu-item" data-page="clientes.html"><span>🧍‍♂️</span> Clientes</li>
             <li class="menu-item" data-page="cuentas_pagar.html"><span>💲</span> Cuentas por Pagar</li>
             <li class="menu-item" data-page="devoluciones.html"><span>🧾</span> Devoluciones</li>
-            <li><span>📚</span> Libro Diario/Mayor</li>
-            <li><span>📄</span> Registro Contable</li>
+            <li class="menu-item" data-page="registro_contable.html"><span>📄</span> Registro Contable</li>
+            <li class="menu-item" data-page="libro_diario.html"><span>📚</span> Libro Diario</li>
+            <li class="menu-item" data-page="libro_mayor.html"><span>📚</span> Libro Mayor</li>
             <li class="menu-item" data-page="reportes.html"><span>📊</span> Reportes</li>
         </ul>
     `;
