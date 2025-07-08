@@ -1,6 +1,6 @@
 class loaderComponent{
 
-     constructor() {
+  constructor() {
     this.sesion = new Sesiones().obtenerSesion();
   }
 
@@ -14,7 +14,7 @@ class loaderComponent{
     if (container) {
       container.insertAdjacentHTML("beforebegin", this.render());
     } else {
-      console.error("Contenedor .topbar no encontrado.");
+      console.error("Contenedor .loader no encontrado.");
     }
   }
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro - ModaSoft</title>
+    
+  <link rel="stylesheet" href="../css/tablas.css">
+  <link rel="icon" href="../public/logo_modasoft.png">
+  <link rel="stylesheet" href="../css/topbar_menu.css">
+  <script src="../js/sesiones.js"></script>
+  <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
+  <script src="../js/componentes/menu.js" defer></script>
+  <script src="../js/componentes/topbar.js"defer></script>
+
+
+  <script src="../js/añadir_usuario.js" type="module" defer></script>
+</head>
+<body>
+
+  <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+      <main class="main-content">
+        <header class="topbar"></header>
+
+        <section class="welcome">
+        <h1>Registro en ModaSoft</h1>
+        <form id="formulario">
+
+        <label for="nombre">Contraseña del administrador actual <br> <strong>SEGURIDAD</strong></label>
+        <input type="password" id="conAdmin" name="conAdmin" required /><br><br>    
+
+        <label for="nombre">Nombre Personal</label>
+        <input type="text" id="nombre_personal" name="nombre_personal" required /><br><br>
+
+        <label for="correo">Correo</label>
+        <input type="email" id="correo" name="correo" required /><br><br>
+
+        <label for="rol">Rol</label>
+          <select id="rol" name="rol" required>
+          <option value="Administrador">Administrador</option>
+          <option value="Gerente">Gerente</option>
+          <option value="Vendedor">Vendedor</option>
+          <option value="Comprador">Comprador</option>
+          <option value="Contador">Contador</option>
+        </select><br><br>
+
+        <label for="usuario">Nombre de usuario</label>
+        <input type="text" id="nombre_usuario" name="nombre_usuario" required /><br><br>
+
+        <label for="contraseña">Contraseña de usuario</label>
+        <input type="password" id="contraseña" name="contraseña" required /><br><br>
+
+        <label for="contraseña">Repita la contraseña de usuario</label>
+        <input type="password" id="conRepetida" name="conRepetida" required /><br>
+
+        <label style="color: red" id="aviso" hidden>Las contraseñas no son iguales</label><br><br>
+
+        <input type="submit" class="btn blue" value="Registrar">
+      </form>
+
+        </section>
+
+      </main>
+
+  </div>
+
+</body>
+</html>
+

@@ -16,8 +16,12 @@ class MenuComponent {
             case "Comprador":
                 document.querySelectorAll("li").forEach(item => {
                     const vistas = item.getAttribute("data-page");
-                    if(vistas === "ventas.html" || vistas === "clientes.html" 
-                        || vistas === "devoluciones.html" || vistas === "reportes.html"){
+                    if(
+                        vistas === "ventas.html" || 
+                        vistas === "clientes.html" || 
+                        vistas === "devoluciones.html" || 
+                        vistas === "reportes.html"
+                    ){
                         item.style.display = "none";
                     }
                 })
@@ -25,24 +29,23 @@ class MenuComponent {
             case "Vendedor":
                 document.querySelectorAll("li").forEach(item => {
                     const vistas = item.getAttribute("data-page");
-                    if(vistas === "compras.html" || vistas === "proveedores.html" 
-                        || vistas === "cuentas_pagar.html" || vistas === "reportes.html"){
+                    if(
+                        vistas === "compras.html" ||
+                        vistas === "proveedores.html" || 
+                        vistas === "cuentas_pagar.html" || 
+                        vistas === "reportes.html"
+                    ){
                         item.style.display = "none";
                     }
                 })    
             break;
-            case "Gerente":
-                document.querySelectorAll("li").forEach(item => {
-                    const vistas = item.getAttribute("data-page");
-                    if(vistas === "usuarios.html"){
-                        item.style.display = "none";
-                    }
-                })
-            break;
             case "Contador":
                 document.querySelectorAll("li").forEach(item => {
                     const vistas = item.getAttribute("data-page");
-                    if(vistas === "inventario.html" || vistas === "reportes.html"){
+                    if(
+                        vistas === "inventario.html" || 
+                        vistas === "reportes.html"
+                    ){
                         item.style.display = "none";
                     }
                 })
@@ -80,6 +83,7 @@ render() {
             <li><span>📚</span> Libro Diario/Mayor</li>
             <li><span>📄</span> Registro Contable</li>
             <li class="menu-item" data-page="reportes.html"><span>📊</span> Reportes</li>
+            <li class="menu-item" data-page="usuarios.html"><span>👨‍💼</span> Usuarios</li>
         </ul>
     `;
 }
@@ -88,7 +92,7 @@ render() {
 
  
         // 3. Configura eventos de clic para cada item
-     setupEvents() {
+    setupEvents() {
     document.querySelectorAll('.menu-item, .menu-logo').forEach(item => {
         item.addEventListener('click', () => {
             const page = item.getAttribute('data-page');

@@ -2,7 +2,7 @@ const cargarRol = () => {
 
     const sesion = new Sesiones().obtenerSesion();
 
-    if(!sesion || !sesion.rol || !sesion.rol) {
+    if(!sesion || !sesion.rol || !sesion.usuario) {
         alert("No tiene autorización.");
         sesion.cerrarSesion();
         window.location.href = "../pages/login.html";

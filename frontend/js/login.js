@@ -40,7 +40,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
       });
     }
   } catch (err) {
-    Swal.fire('Error al conectar con el servidor, intente más tarde');
+    Swal.fire({title:'Error al conectar con el servidor, intente más tarde', 
+      text: err, 
+      icon: "warning"
+    });
     console.error(err);
   }
 });

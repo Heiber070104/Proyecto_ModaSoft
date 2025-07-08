@@ -30,7 +30,7 @@ render() {
 }
 
 
- setupEvents() {
+setupEvents() {
   document.getElementById("logout")?.addEventListener("click", async () => {
 
     Swal.fire({
