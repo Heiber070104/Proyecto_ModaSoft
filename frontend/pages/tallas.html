@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="../css/tablas.css">
     <link rel="icon" href="../public/logo_modasoft.png">
     <title>Tallas</title>
-    <script src="../js/tallas.js"></script>
     <script src="../js/sesiones.js"></script>
+    <script src="../js/tallas.js"></script>
+    <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
+    <script src="../js/componentes/loader.js" defer></script>
     <script src="../js/componentes/menu.js" defer></script>
-    <script src="../js/componentes/topbar.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script> 
 </head>
 <body>
 
@@ -33,7 +35,7 @@
                <tr>
                   <th>Categoria</th>
                   <th>Nombre</th>
-                  <th>Acciones</th>
+                  <th class="rol">Acciones</th>
                </tr>
             </thead>
 
@@ -43,7 +45,7 @@
 
           </table>
 
-          <button id="btn-agregarFila" class="btn purple"><span>➕ Nueva talla</span></button>
+          <button id="btn-agregarFila" class="btn purple rol"><span>➕ Nueva talla</span></button>
 
         </section>
 

@@ -14,6 +14,7 @@ const cargarMaximo = async () => {
 
             maximo.textContent = parseFloat(consulta.monto_total) - parseFloat(consulta.monto_pagado);
             maximo.dataset.max = parseFloat(consulta.monto_total) - parseFloat(consulta.monto_pagado);
+            new loaderComponent().stopLoading();
 
         }else{
             console.log(consulta.message)
@@ -34,7 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const maximo = parseFloat(document.getElementById("maximo").dataset.max);
         
         if(parseFloat(input.value) > maximo){
-            alert("El monto abonado no puede ser mayor al monto de deuda restante")
+
+            Swal.fire("El monto abonado no puede ser mayor al monto de deuda restante")
+
             input.value = maximo;
         }
     }
@@ -53,7 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const monto = input.value;
             if(!monto || monto == 0){
-                alert("El monto no puede ser 0")
+
+                Swal.fire("El monto no puede ser 0")
+
             }
 
             const res = await fetch(`http://localhost:8000/compras/deudas/${id}`, {
@@ -70,15 +75,31 @@ document.addEventListener("DOMContentLoaded", () => {
             const consulta = await res.json();
             if(res.ok){
 
-                alert(consulta.message);
+                await Swal.fire({
+                    title: "Éxito",
+                    text: consulta.message,
+                    icon: "success"
+                });
+
                 window.location.href = "cuentas_pagar.html";
 
             }else{
                 console.log(consulta.message);
-                alert(consulta.message);
+
+                Swal.fire({
+                    title: "Error",
+                    text: consulta.message,
+                    icon: "warning"
+                });
             }
 
         }catch(e){
+            console.error(e)
+            Swal.fire({
+                    title: "Error",
+                    text: e,
+                    icon: "warning"
+            });
 
         }
 

@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nuevo producto</title>
 
-
-  <link rel="stylesheet" href="../css/tablas.css">
   <link rel="stylesheet" href="../css/topbar_menu.css">
   <script src="../js/sesiones.js"></script>
+  <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
+  <script src="../js/componentes/loader.js" defer></script>
   <script src="../js/componentes/menu.js" defer></script>
-  <script src="../js/componentes/topbar.js" defer></script>
+  <script src="../js/componentes/topbar.js"defer></script>
   <script src="../js/añadir_producto.js" defer></script>
 
 </head>
@@ -27,7 +27,7 @@
      <h1>Registro de Productos</h1>
 
       <div class="botones-acciones">
-            <a href="inventario.html"><button>⏪ Regresar</button></a>
+            <a href="proveedores.html"><button>⏪ Regresar</button></a>
       </div>
 
       <form id="formulario">
@@ -42,10 +42,10 @@
           <input type="text" id="descripcion"><br><br>
 
           <label>Coloque precio</label><br>
-          <input type="number" id="precio" min="0"><br><br>
+          <input type="number" value="0" id="precio" min="0"><br><br>
 
           <label>Coloque porcentaje de ganancia %</label><br>
-          <input type="number" max="35" id="porcentaje"><br><br>
+          <input type="number" value="0" max="35" id="porcentaje"><br><br>
 
           <label>Coloque categoria</label><br>
           <select id="categorias"></select><br><br>
@@ -56,8 +56,11 @@
           <input type="submit" value="Registrar" class="btn blue">
         </form>
 
+<<<<<<< HEAD
         <a href="proveedores.html"><button>Atrás</button></a>
 
+=======
+>>>>>>> 011e07050f6355195586d2dec9bcbcb1b0488efc
   </section>
 </main>
 

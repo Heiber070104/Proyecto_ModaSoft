@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/tablas.css">
+    <link rel="icon" href="../public/logo_modasoft.png">
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/usuarios.js"></script>
+    <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
+    <script src="../js/componentes/loader.js" defer></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script> 
+</head>
+<body>
+
+    <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+      <main class="main-content">
+        <header class="topbar"></header>
+
+        <section class="welcome">
+          <h1>Gestión de Usuarios</h1>
+
+            <div class="botones-acciones">
+                <a href="añadir_usuario.html" class="rol"><button>➕ Registrar nuevo usuario</button></a>
+                <button onclick="actualizarUsuario()">🔨 Modificar usuario actual</button>
+            </div>
+        
+          <table>
+
+            <thead>
+               <tr>
+                  <th>Nombre personal</th>
+                  <th>Usuario</th>
+                  <th>Rol de usuario</th>
+                  <th>Correo</th>
+                  <th>Estado</th>
+                  <!-- <th class="rol">Acciones</th> -->
+               </tr>
+            </thead>
+
+            <tbody class="cont-usuarios">
+
+            </tbody>
+
+          </table>
+
+        </section>
+
+      </main>
+
+  </div>
+    
+</body>
+</html>

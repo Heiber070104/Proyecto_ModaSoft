@@ -8,9 +8,11 @@
     <link rel="stylesheet" href="../css/tablas.css">
     <link rel="icon" href="../public/logo_modasoft.png">
     <script src="../js/sesiones.js"></script>
+    <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
+    <script src="../js/componentes/loader.js" defer></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
-    <script src="../js/compras.js"></script>
+    <script src="../js/compras.js" defer></script>
 </head>
 <body>
 
@@ -23,7 +25,7 @@
         <section class="welcome">
           <h1>Gestión de Compras</h1>
           <div class="botones-acciones">
-            <a href="añadir_compra.html"><button>➕ Nueva compra</button></a>
+            <a href="añadir_compra.html" class="rol"><button>➕ Nueva compra</button></a>
           </div>
 
           <table id="tabla">
@@ -36,7 +38,7 @@
                 <th>Total</th>
                 <th>Estado</th>
                 <th>Detalle de orden</th>
-                <th>Acciones</th>
+                <th class="rol">Acciones</th>
             </thead>
 
             <tbody class="cont-compras">

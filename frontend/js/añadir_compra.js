@@ -59,6 +59,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(e)
     }
 
+    new loaderComponent().stopLoading()
+
     btnAgregar.addEventListener('click', function() {
         const contenedor = document.querySelector(".cont-productos");
         const nuevoProducto = document.createElement('tr');
@@ -124,7 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 select.selectedIndex = "!"   
             }
 
-            cambio = new Event("change");
+            let cambio = new Event("change");
             select.dispatchEvent(cambio)
 
             select.querySelectorAll("option").forEach(option => {
@@ -193,7 +195,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const id_proveedor = document.getElementById("proveedores").value;
 
         if(!fecha || fecha=="" || !id_proveedor || id_proveedor=="" || !total || total===0){
-            alert("Rellene los campos vacios")
+            Swal.fire("Rellene los campos vacios")
             return false;
         }
 
@@ -206,7 +208,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const precio_compra = prod.querySelector(".subtotal").textContent;
 
             if(!id_producto || id_producto==="!" || !cantidad || cantidad===0 || !precio_compra || precio_compra===0){
-                alert("Por favor seleccione un producto en el campo vacío")
+                Swal.fire("Por favor seleccione un producto en el campo vacío")
             }
 
             productos.push({"id_producto": id_producto, "cantidad": cantidad, "precio_compra": precio_compra});
@@ -235,13 +237,27 @@ document.addEventListener("DOMContentLoaded", async () => {
             const consulta = await res.json();
 
             if(res.ok){
-                alert(consulta.message);
+                await Swal.fire({
+                    title: "Exito",
+                    text: consulta.message,
+                    icon: "success"
+                });
                 window.location.href = "compras.html"
             }else{
-                console.log(consulta)
+                Swal.fire({
+                    title: "Error",
+                    text: consulta.message,
+                    icon: "warning"
+                });
+                console.log(consulta.message)
             }
 
         }catch(e){
+            Swal.fire({
+                title: "Error",
+                text: e,
+                icon: "warning"
+            });
             console.log(e)
         }
 
