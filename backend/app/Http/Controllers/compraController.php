@@ -96,9 +96,6 @@ class compraController extends Controller
                 return response()->json(['message' => 'Compra no encontrada'], 404);
             }
 
-            $compra->estado = 'confirmada';
-            $compra->save();
-
             if($compra->tipo_pago === "CONTADO"){
 
                 $pago = new pagoCompraModel();
@@ -155,6 +152,9 @@ class compraController extends Controller
                 ]);
 
             }
+
+            $compra->estado = 'confirmada';
+            $compra->save();
 
             return response()->json(['message' => 'Compra completada exitosamente, existencias actualizadas'], 200);
 
@@ -256,7 +256,7 @@ class compraController extends Controller
 
             $transaccionDebito = new transaccionModel();
             $transaccionDebito->factura = "F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT);
-            $transaccionDebito->descripcion = "Pago de deuda por compra F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT). " por monto de Bs " . number_format($data['monto_pagado'], 2);
+            $transaccionDebito->descripcion = "Pago de deuda por compra según F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT). " por monto de Bs " . number_format($data['monto_pagado'], 2);
             $transaccionDebito->fecha = now();
             $transaccionDebito->monto = $data['monto_pagado'];
             $transaccionDebito->tipo = 'DEBITO';
@@ -265,7 +265,7 @@ class compraController extends Controller
 
             $transaccionCredito = new transaccionModel();
             $transaccionCredito->factura = "F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT);
-            $transaccionCredito->descripcion = "Pago de deuda por compra F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT). " por monto de Bs " . number_format($data['monto_pagado'], 2);
+            $transaccionCredito->descripcion = "Pago de deuda por compra según F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT). " por monto de Bs " . number_format($data['monto_pagado'], 2);
             $transaccionCredito->fecha = now();
             $transaccionCredito->monto = $data['monto_pagado'];
             $transaccionCredito->tipo = 'CREDITO';

@@ -78,7 +78,8 @@ render() {
             <li class="menu-item" data-page="ventas.html"><span>💹</span> Ventas</li>
             <li class="menu-item" data-page="proveedores.html"><span>🤵</span> Proveedores</li>
             <li class="menu-item" data-page="clientes.html"><span>🧍‍♂️</span> Clientes</li>
-            <li class="menu-item" data-page="cuentas_pagar.html"><span>💲</span> Cuentas por Pagar</li>
+            <li class="menu-item" data-page="cuentas_pagar.html"><span>💸</span> Cuentas por Pagar</li>
+            <li class="menu-item" data-page="cuentas_cobrar.html"><span>💲</span> Cuentas por Cobrar</li>
             <li class="menu-item" data-page="devoluciones.html"><span>🧾</span> Devoluciones</li>
             <li class="menu-item" data-page="libro_diario.html"><span>📚</span> Libro Diario</li>
             <li class="menu-item" data-page="libro_mayor.html"><span>📚</span> Libro Mayor</li>

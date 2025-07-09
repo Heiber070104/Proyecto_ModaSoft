@@ -50,14 +50,15 @@ const cargarVentas = async () => {
                 const nuevaFila = document.createElement("tr")
                 nuevaFila.classList = "fila"
 
-                let col = "🔒 Venta cerrada"
+                let col = "🔒 Sin acciones";
                 let estado;
+                let pago;
 
                 switch(venta.estado){
                     case "en_proceso":
                         estado = "⌚ En proceso"
                          col = `
-                            <button onclick='completarVenta(${venta.id_venta})' class="rol">✅ Completar venta</button>
+                            <button onclick='completarVenta(${venta.id_venta}, "${venta.tipo_pago}")' class="rol">✅ Completar venta</button>
                             <button onclick='cancelarVenta(${venta.id_venta})' class="rol">❌ Cancelar venta</button>
                         ` 
                     break;
@@ -69,12 +70,23 @@ const cargarVentas = async () => {
                     break
                 }
 
+                switch (venta.tipo_pago) {
+                    case "CONTADO":
+                        pago = "Contado 💵";
+                    break;
+                    case "CREDITO":
+                        pago = "Crédito 💳";
+                    break;
+                }
+
+
                 html += `
                         <td>${venta.id_venta}</td>
                         <td>${venta.factura}</td>
                         <td>${venta.fecha}</td>
                         <td>${venta.cliente["nombre"]}</td>
                         <td>${venta.total}</td>
+                        <td>${pago}</td>
                         <td>${estado}</td>
                         <td>
                             <a href="http://localhost:8000/ventas/pdf/${venta.id_venta}" target="_blank" class="btn btn-danger"><button>📄 Detalles de venta</button></a>
@@ -99,27 +111,63 @@ const cargarVentas = async () => {
     }
 }
 
-const completarVenta = async id => {
+const completarVenta = async (id, metodo) => {
 
-    const confirm = await Swal.fire({
-        title: "¿Seguro quieres completar esta venta?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si",
-        cancelButtonText: "Cancelar"
-    })
-    if (!confirm.isConfirmed) {
-        return;
+    if(metodo === "CONTADO"){
+
+        const confirmacion = await Swal.fire({
+            title: 'Venta pagada a: ',
+            input: 'select',
+            inputOptions: {
+                'Formas de pago': {
+                    'EFECTIVO': 'Efectivo 💸',
+                    'BANCARIO': 'Bancario (tranferencia/cheque) 📃',
+                },
+   
+            },
+            inputPlaceholder: 'Selecciona...',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return '¡Debes seleccionar una opción!';
+                }
+            }
+        })
+        if(confirmacion.isDismissed){
+            return;
+        }
+
+        var metodo_pago = confirmacion.value;
+        
+    }else{
+        const confirmacion = await Swal.fire({
+            title: '¿Seguro quieres completar la compra?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, completar compra',
+            cancelButtonText: 'Cancelar'
+        })
+
+        if (!confirmacion.isConfirmed) {
+            return;
+        }
+
     }
 
         try{
 
             const res = await fetch(`http://localhost:8000/ventas/completar/${id}`, {
-                method: "GET"
-            })
-
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },body: JSON.stringify({
+                    metodo_pago: metodo_pago
+                })
+            });
             const consulta = await res.json();
 
             if(res.ok){

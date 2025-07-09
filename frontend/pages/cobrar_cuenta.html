@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="icon" href="../public/logo_modasoft.png">
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/tablas.css">
+    <script src="../js/sesiones.js"></script>
+    <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
+    <script src="../js/componentes/loader.js" defer></script>
+
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+    <script src="../js/cobrar_cuenta.js"></script>
+</head>
+<body>
+    
+     <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+      <main class="main-content">
+        <header class="topbar"></header>
+
+        <section class="welcome">
+          <h1>Abonar a cuenta por cobrar</h1>
+            <div class="botones-acciones">
+                <a href="cuentas_cobrar.html"><button>⏪ Regresar</button></a>
+            </div>
+
+         <form id="formulario">
+
+          <div style="display: flex; justify-content: center;">
+            <label>Monto restante: </label>
+            <div id="maximo" data-max>0.00</div>
+            <label>Bs</label>
+          </div><br>
+
+            <label>Monto a abonar</label><br>
+            <input type="number" id="monto_abono" value="0" placeholder="Ingrese el monto a abonar" min="0" required><br><br>
+
+            <label>Seleccione método de pago/abono</label><br>
+            <select id="metodo_pago">
+              <option value="EFECTIVO">Efectivo</option>
+              <option value="BANCARIO">Bancario (transacción/cheque)</option>
+            </select><br><br>
+
+            <input type="submit" value="Abonar" class="btn blue">
+
+         </form>
+
+        </section>
+      </main>
+
+  </div>
+
+</body>
+</html>
