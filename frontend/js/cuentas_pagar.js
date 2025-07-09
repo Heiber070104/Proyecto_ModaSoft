@@ -61,7 +61,7 @@ const cargarDeudas = async () => {
                 html += `
                     <td>${deuda.id_compra}</td>
                     <td>${deuda.compra["proveedor"]["nombre"]}</td>
-                    <td>${deuda.fecha_vencimiento}</td>
+                    <td>${deuda.fecha}</td>
                     <td>${deuda.monto_total}</td>
                     <td>${deuda.monto_pagado}</td>
                     <td>${estado}</td>

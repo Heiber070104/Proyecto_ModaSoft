@@ -52,33 +52,63 @@ const cargarCompras = async () => {
 
                 const nuevaFila = document.createElement("tr");
                 nuevaFila.classList = "fila";
+                nuevaFila.dataset.id = compra.id_compra;
 
-                let col = "🔒 Compra cerrada";
+                let col;
                 let estado;
+                let despacho;
+                let pago;
 
                 switch (compra.estado) {
-                    case "pendiente":
-                        estado = "⏳ Pendiente";
+                    case "por confirmar":
+                        estado = "⏳ Por confirmar";
                         col = `
-                            <button onclick='completarCompra(${compra.id_compra})'>✅ Completar orden</button>
+                            <button onclick='completarCompra(${compra.id_compra}, "${compra.tipo_pago}")'>✅ Confirmar orden</button>
                             <button onclick='cancelarCompra(${compra.id_compra})'>❌ Cancelar orden</button>
                         `;
-                        break;
-                    case "procesada":
-                        estado = "✅ Completada";
-                        break;
+                    break;
+                    case "confirmada":
+                        estado = "✅ Confirmado";
+                        col = `<button onclick="confirmarDespacho(${compra.id_compra})">🚚 Confimar despacho</button>`
+                    break;
                     case "cancelada":
-                        estado = "❌ Cancelada";
-                        break;
+                        estado = "❌ Cancelado";
+                        col = "🔒 Sin acciones";
+                    break;
+                }
+
+                switch (compra.tipo_pago) {
+                    case "CONTADO":
+                        pago = "Contado 💵";
+                    break;
+                    case "CREDITO":
+                        pago = "Crédito 💳";
+                    break;
+                }
+
+                switch (compra.estado_despacho) {
+
+                    case "pendiente":
+                        despacho = "⏳ Por despachar";
+                    break;
+                    case "completado":
+                        col = "🔒 Sin acciones";
+                        despacho = "✅ Despachado";
+                    break;
+                    case "cancelado":
+                        despacho = "❌ Cancelado";
+                    break
                 }
 
                 html += `
-                    <td>${compra.id_compra}</td>
+                    <td>${compra.factura}</td>
                     <td>${compra.fecha_creada}</td>
                     <td>${compra.fecha_vence}</td>
                     <td>${compra.proveedor["nombre"]}</td>
                     <td>${compra.total}</td>
+                    <td class="tipo_pago">${pago}</td>
                     <td>${estado}</td>
+                    <td>${despacho}</td>
                     <td>
                         <a href="http://localhost:8000/compras/pdf/${compra.id_compra}" target="_blank" class="btn btn-danger"><button>📄 Detalles de compra</button></a>
                     </td>
@@ -102,10 +132,12 @@ const cargarCompras = async () => {
 
 }
 
+
 const cancelarCompra = async id => {
 
     const confirm = await Swal.fire({
         title: "¿Seguro quieres cancelar esta compra?",
+        text: "Esta acción no se puede deshacer.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -116,7 +148,6 @@ const cancelarCompra = async id => {
     if (!confirm.isConfirmed) {
         return;
     }
-
 
     try {
         const res = await fetch(`http://localhost:8000/compras/cancelar/${id}`, {
@@ -150,10 +181,10 @@ const cancelarCompra = async id => {
     }
 }
 
-const completarCompra = async id => {
-
+const confirmarDespacho = async id => {
     const confirm = await Swal.fire({
-        title: "¿Seguro quieres completar esta compra?",
+        title: "¿Los productos ya fueron despachados?",
+        text: "Los productos se agragarán a las existencias.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -166,8 +197,94 @@ const completarCompra = async id => {
     }
 
     try {
-        const res = await fetch(`http://localhost:8000/compras/completar/${id}`, {
+        const res = await fetch(`http://localhost:8000/compras/confirmarDespacho/${id}`, {
             method: "GET"
+        });
+
+        const consulta = await res.json();
+
+        if (res.ok) {
+            Swal.fire({
+                title: "Exito",
+                text: consulta.message,
+                icon: "success"
+            });
+            cargarCompras();
+        } else {
+            Swal.fire({
+                title: "Error",
+                text: consulta.message,
+                icon: "warning"
+            });
+            console.log(consulta.message)
+        }
+    } catch (e) {
+        Swal.fire({
+            title: "Error",
+            text: e,
+            icon: "warning"
+        });
+        console.log(e);
+    }
+}
+
+const completarCompra = async (id, metodo) => {
+
+    // console.log(metodo_pago)
+
+    if(metodo === "CONTADO"){
+
+        const confirmacion = await Swal.fire({
+            title: 'Elija una forma de pago',
+            input: 'select',
+            inputOptions: {
+                'Formas de pago': {
+                    'EFECTIVO': 'Efectivo 💸',
+                    'BANCARIO': 'Bancario (tranferencia/cheque) 📃',
+                },
+   
+            },
+            inputPlaceholder: 'Selecciona...',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return '¡Debes seleccionar una opción!';
+                }
+            }
+        })
+        if(confirmacion.isDismissed){
+            return;
+        }
+
+        var metodo_pago = confirmacion.value;
+        
+    }else{
+        const confirmacion = await Swal.fire({
+            title: '¿Seguro quieres completar la compra?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, completar compra',
+            cancelButtonText: 'Cancelar'
+        })
+
+        if (!confirmacion.isConfirmed) {
+            return;
+        }
+
+    }
+
+    try {
+        const res = await fetch(`http://localhost:8000/compras/completar/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },body: JSON.stringify({
+                metodo_pago: metodo_pago
+            })
         });
 
         const consulta = await res.json();

@@ -55,10 +55,19 @@ document.addEventListener("DOMContentLoaded", () => {
         try{
 
             const monto = input.value;
+            const metodo_pago = document.getElementById("metodo_pago").value;
+
             if(!monto || monto == 0){
-
-                Swal.fire("El monto no puede ser 0")
-
+                Swal.fire("El monto abonado no puede ser cero o vacío");
+                return;
+            }
+            if(metodo_pago == ""){
+                Swal.fire({
+                    title: "Error",
+                    text: "Debe seleccionar un método de pago",
+                    icon: "warning"
+                });
+                return;
             }
 
             const res = await fetch(`http://localhost:8000/compras/deudas/${id}`, {
@@ -68,7 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Accept": "application/json"
                 },
                 body: JSON.stringify({
-                    "monto_pagado": monto
+                    "monto_pagado": monto,
+                    "metodo": metodo_pago
                 })
             })
 

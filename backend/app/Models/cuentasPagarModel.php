@@ -17,7 +17,7 @@ class cuentasPagarModel extends Model
         "id_compra",
         "monto_total",
         "monto_pagado",
-        "fecha_vencimiento",
+        "fecha",
         "estado"
     ];
 

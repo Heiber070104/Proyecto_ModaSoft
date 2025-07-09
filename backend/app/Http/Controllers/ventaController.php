@@ -10,6 +10,7 @@ use App\Models\productoModel;
 use App\Models\inventarioModel;
 use App\Models\tallaModel;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use App\Models\transaccionModel;
 
 class ventaController extends Controller
 {
@@ -276,17 +277,6 @@ class ventaController extends Controller
         $pdf->Ln(3);
         $pdf->SetFont('Arial', 'B', 12);
         $pdf->Cell(0, 10, 'Total General: Bs ' . number_format($venta->total, 2), 0, 1, 'R');
-
-        // Firma
-        // $pdf->Ln(20);
-        // $pdf->SetFont('Arial', '', 11);
-        // $pdf->Cell(60, 8, '__________________________', 0, 0, 'C');
-        // $pdf->Cell(60, 8, '__________________________', 0, 0, 'C');
-        // $pdf->Cell(60, 8, '__________________________', 0, 1, 'C');
-
-        // $pdf->Cell(60, 6, 'Receptor', 0, 0, 'C');
-        // $pdf->Cell(60, 6, 'Almacenista', 0, 0, 'C');
-        // $pdf->Cell(60, 6, 'Supervisor', 0, 1, 'C');
 
         $pdf->Output();
         exit;

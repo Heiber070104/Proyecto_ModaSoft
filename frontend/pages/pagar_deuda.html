@@ -38,7 +38,13 @@
           </div><br>
 
             <label>Monto a abonar</label><br>
-            <input type="number" id="monto_abono" value="0" placeholder="Ingrese el monto a abonar" required><br><br>
+            <input type="number" id="monto_abono" value="0" placeholder="Ingrese el monto a abonar" min="0" required><br><br>
+
+            <label>Seleccione método de pago/abono</label><br>
+            <select id="metodo_pago">
+              <option value="EFECTIVO">Efectivo</option>
+              <option value="BANCARIO">Bancario (transacción/cheque)</option>
+            </select><br><br>
 
             <input type="submit" value="Abonar" class="btn blue">
 
