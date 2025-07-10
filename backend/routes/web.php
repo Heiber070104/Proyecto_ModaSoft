@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\compraController;
+use App\Http\Controllers\ContabilidadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,10 @@ require __DIR__.'/tallaRoutes.php';
 require __DIR__.'/proveedorRoutes.php';
 require __DIR__.'/ventaRoutes.php';
 require __DIR__.'/clienteRoutes.php';
+
+Route::post('/transaccion', [ContabilidadController::class, 'registrarTransaccion']);
+Route::get('/libro-diario', [ContabilidadController::class, 'obtenerLibroDiario']);
+Route::get('/libro-mayor', [ContabilidadController::class, 'obtenerLibroMayor']);
+Route::get('/cuentas-contables', [ContabilidadController::class, 'obtenerCuentasContables']);
+
+
