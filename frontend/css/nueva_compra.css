@@ -1,106 +1,143 @@
-
-.botones-acciones button {
-  padding: 10px 15px;
-  background-color: #3f2b84;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+/* Estructura general */
+.welcome {
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  color: #39116e;
 }
 
-.botones-acciones button:hover {
-  background-color:  #3f2b84;;
+.welcome h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  color: #39116e;
+  margin-bottom: 1.5rem;
 }
 
-/* Formulario */
+/* Formulario de fecha y proveedor */
 form label {
-  display: block;
-  margin-top: 15px;
-  margin-bottom: 5px;
   font-weight: bold;
-  color: #1f1e1e;
+  display: block;
+  margin: 1rem 0 0.5rem;
+  color: #39116e;
 }
 
-input,select {
-  width: 50%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+form input[type="date"],
+form select {
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border-radius: 8px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Total general */
+#total-general {
+  display: inline-block;
+  font-size: 1.3rem;
+  color: #00796b;
+  margin-left: 0.5rem;
+  font-weight: bold;
 }
 
 /* Tabla de productos */
 #tabla {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  margin-bottom: 15px;
+  margin-top: 1.5rem;
 }
 
-#tabla thead {
-  background-color:#3f2b84;
-  color: #fff;
+#tabla th, #tabla td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  text-align: center;
 }
 
-#tabla th,
-#tabla td {
-  text-align: left;
-  padding: 10px;
-  border: 1px solid #ccc;
+#tabla th {
+  background-color: #5e35b1;
+  color: white;
 }
 
+#tabla select,
+#tabla input[type="number"] {
+  width: 100%;
+  padding: 0.4rem;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+}
+
+/* Subtotal estilo */
 .subtotal {
   font-weight: bold;
-  text-align: right;
+  color: #2e7d32;
 }
 
-button.eliminar {
-  background-color: #fa0000;
+/* Botón eliminar */
+.eliminar {
+  background-color: #e53935;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+.eliminar:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-button.eliminar.enabled {
-  cursor: pointer;
-}
-
-/* Total general */
-#total-general {
-  display: inline-block;
-  margin-top: 5px;
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-/* Botones inferiores */
-#agregar-producto,
-#btn-registrar,
-a button {
-  margin-top: 15px;
-  padding: 10px 15px;
-  background-color: #2ecc71;
+/* Botones generales */
+button {
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 10px;
   border: none;
+  background-color: #5e35b1;
   color: white;
-  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-#agregar-producto:hover,
-#btn-registrar:hover,
-a button:hover {
-  background-color: #27ae60;
+button:hover {
+  background-color: #4527a0;
 }
 
-/* Enlace "Atrás" */
+/* Botón añadir producto con ícono */
+#agregar-producto {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #007bff;
+}
+
+#agregar-producto:hover {
+  background-color: #2e7d32;
+}
+
+/* Botón atrás */
 a button {
-  background-color: #fa0000;
-  position: absolute; /* Cambia la posición a absoluta */
-  top: 80px; /* Ajusta la distancia desde la parte superior */
-  right: 30px; /* Ajusta la distancia desde la derecha */
+  background-color: #757575;
+  margin-left: 0.5rem;
 }
+
 a button:hover {
-  background-color: #f04c4c;
+  background-color: #616161;
+}
+
+#btn-registrar {
+  background-color: #2e7d32;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#btn-registrar:hover {
+  background-color: #1b5e20;
+  transform: scale(1.02);
 }

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\usuarioModel;
 
 class sesionModel extends Model
 {
@@ -21,6 +20,6 @@ class sesionModel extends Model
     ];
 
     public function usuario(){
-        return $this->hasOne(usuarioModel::class, 'id_usuario', 'id_usuario');
+        return $this->hasOne('App\Models\usuarioModel', 'id_usuario', 'id_usuario');
     } 
 }

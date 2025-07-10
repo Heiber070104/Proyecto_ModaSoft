@@ -38,4 +38,42 @@ class inventarioController extends Controller
         }
 
     }
+
+    public function filtrarInventario(Request $request)
+{
+    try {
+        $tipo = $request->input('tipo');
+        $valor = $request->input('valor');
+
+        switch ($tipo) {
+            case 'nombre':
+                $productos = productoModel::with(['categoria', 'talla', 'inventario'])
+                    ->where('nombre', 'LIKE', "%$valor%")->get();
+                break;
+
+            case 'categoria':
+                $productos = productoModel::with(['categoria', 'talla', 'inventario'])
+                    ->whereHas('categoria', function ($q) use ($valor) {
+                        $q->where('nombre', 'LIKE', "%$valor%");
+                    })->get();
+                break;
+
+            case 'talla':
+                $productos = productoModel::with(['categoria', 'talla', 'inventario'])
+                    ->whereHas('talla', function ($q) use ($valor) {
+                        $q->where('descripcion', 'LIKE', "%$valor%");
+                    })->get();
+                break;
+
+            default:
+                return response()->json(['message' => 'Filtro no válido'], 400);
+        }
+
+        return response()->json($productos, 200);
+
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al filtrar inventario: ' . $e->getMessage()], 500);
+    }
+}
+
 }

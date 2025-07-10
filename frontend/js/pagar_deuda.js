@@ -14,7 +14,6 @@ const cargarMaximo = async () => {
 
             maximo.textContent = parseFloat(consulta.monto_total) - parseFloat(consulta.monto_pagado);
             maximo.dataset.max = parseFloat(consulta.monto_total) - parseFloat(consulta.monto_pagado);
-            new loaderComponent().stopLoading();
 
         }else{
             console.log(consulta.message)
@@ -35,9 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const maximo = parseFloat(document.getElementById("maximo").dataset.max);
         
         if(parseFloat(input.value) > maximo){
-
-            Swal.fire("El monto abonado no puede ser mayor al monto de deuda restante")
-
+            alert("El monto abonado no puede ser mayor al monto de deuda restante")
             input.value = maximo;
         }
     }
@@ -55,19 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
         try{
 
             const monto = input.value;
-            const metodo_pago = document.getElementById("metodo_pago").value;
-
             if(!monto || monto == 0){
-                Swal.fire("El monto abonado no puede ser cero o vacío");
-                return;
-            }
-            if(metodo_pago == ""){
-                Swal.fire({
-                    title: "Error",
-                    text: "Debe seleccionar un método de pago",
-                    icon: "warning"
-                });
-                return;
+                alert("El monto no puede ser 0")
             }
 
             const res = await fetch(`http://localhost:8000/compras/deudas/${id}`, {
@@ -77,39 +63,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Accept": "application/json"
                 },
                 body: JSON.stringify({
-                    "monto_pagado": monto,
-                    "metodo": metodo_pago
+                    "monto_pagado": monto
                 })
             })
 
             const consulta = await res.json();
             if(res.ok){
 
-                await Swal.fire({
-                    title: "Éxito",
-                    text: consulta.message,
-                    icon: "success"
-                });
-
+                alert(consulta.message);
                 window.location.href = "cuentas_pagar.html";
 
             }else{
                 console.log(consulta.message);
-
-                Swal.fire({
-                    title: "Error",
-                    text: consulta.message,
-                    icon: "warning"
-                });
+                alert(consulta.message);
             }
 
         }catch(e){
-            console.error(e)
-            Swal.fire({
-                    title: "Error",
-                    text: e,
-                    icon: "warning"
-            });
 
         }
 

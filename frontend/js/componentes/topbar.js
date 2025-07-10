@@ -22,7 +22,7 @@ render() {
   return `
     <div class="topbar-content">
       <div class="user-info">
-        Usuario: <strong>${this.sesion.usuario}</strong> -- <strong>${this.sesion.rol}</strong>
+        Usuario: <strong>${this.sesion.usuario}</strong>
       </div>
       <button id="logout" class="logout-btn" aria-label="Cerrar sesión">🔚 Cerrar Sesion</button>
     </div>
@@ -30,53 +30,29 @@ render() {
 }
 
 
-setupEvents() {
+ setupEvents() {
   document.getElementById("logout")?.addEventListener("click", async () => {
+    const confirmacion = confirm("¿Estás seguro que deseas cerrar sesión?");
 
-    Swal.fire({
-      title: "¿Quieres cerrar sesión?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Cerrar sesión",
-      cancelButtonText: "Cancelar"
-    }).then((result) => {
-      if (result.isConfirmed) {
+    if (!confirmacion) return; // Si el usuario cancela, no hace nada
 
-        try {
-          fetch("http://localhost:8000/usuarios/logout", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id_sesion: this.sesion.id }),
-          }).then(async (res) => {
-            if (res.ok) {
-            await Swal.fire({
-              title: "¡Sesion cerrada!",
-              text: "Vuelva pronto",
-              icon: "success"
-            });
-            new Sesiones().cerrarSesion();
-            window.location.href = "../pages/login.html";
-          }  else {
-            Swal.fire({
-              title: "Hubo un problema al cerrar sesión",
-              icon: "warning"
-            });
-          }
-          })
+    try {
+      const res = await fetch("http://localhost:8000/usuarios/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_sesion: this.sesion.id }),
+      });
 
-        } catch (err) {
-          console.error("Error cerrando sesión:", err);
-          Swal.fire({
-              title: "Hubo un problema al cerrar sesion por un error de red",
-              icon: "warning"
-          });
-        }
+      if (res.ok) {
+        new Sesiones().cerrarSesion();
+        window.location.href = "../pages/login.html";
+      } else {
+        alert("Hubo un problema al cerrar la sesión.");
       }
-    });
-
-   
+    } catch (err) {
+      console.error("Error cerrando sesión:", err);
+      alert("No se pudo cerrar sesión por un error de red.");
+    }
   });
 }
 

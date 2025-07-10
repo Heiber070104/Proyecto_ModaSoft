@@ -8,8 +8,6 @@ use App\Models\compraModel;
 use App\Models\inventarioModel;
 use App\Models\productoModel;
 use App\Models\cuentasPagarModel;
-use App\Models\transaccionModel;
-use App\Models\pagoCompraModel;
 use Codedge\Fpdf\Fpdf\Fpdf;
 
 
@@ -37,20 +35,17 @@ class compraController extends Controller
             $data = $request->validate([
                 'fecha_vence' => 'required|date',
                 'id_proveedor' => 'required|integer',
-                'tipo_pago' => 'required|string',
+                'total' => 'required|numeric',
+                'estado' => 'required|string',
             ]);
 
             $compra = compraModel::create([
                 'fecha_creada' => now(),
                 'fecha_vence' => $data["fecha_vence"],
                 'id_proveedor' => $data['id_proveedor'],
-                'total' => 0,
-                'tipo_pago' => $data['tipo_pago'],
-                'estado' => "por confirmar",
-                "estado_despacho" => "pendiente"
+                'total' => $data['total'],
+                'estado' => $data['estado'],
             ]);
-
-            $total = 0;
 
             foreach ($request->productos as $producto) {
 
@@ -64,13 +59,7 @@ class compraController extends Controller
                     'precio_compra' => $producto['precio_compra'],
                 ]);
 
-                $total += $producto['precio_compra'];
-
             }
-
-            $compra->factura = "F-".str_pad($compra->id_compra, 8, "0", STR_PAD_LEFT);
-            $compra->total = $total;
-            $compra->save();
 
             return response()->json(['message' => 'Compra creada exitosamente'], 201);
 
@@ -82,10 +71,6 @@ class compraController extends Controller
     public function completarCompra(Request $request, $id){
 
         try{
-
-            $data = $request->validate([
-                'metodo_pago' => 'nullable|string',
-            ]);
             
             if(!$id){
                 return response()->json(['message' => 'ID de compra no proporcionado'], 400);
@@ -96,68 +81,27 @@ class compraController extends Controller
                 return response()->json(['message' => 'Compra no encontrada'], 404);
             }
 
-            if($compra->tipo_pago === "CONTADO"){
+            $productos = $compra->producto->toArray();
 
-                $pago = new pagoCompraModel();
-                $pago->id_compra = $compra->id_compra;
-                $pago->monto = $compra->total;
-                $pago->fecha = now();
-                $pago->metodo = $data["metodo_pago"] ?? 'EFECTIVO'; // Asignar un método de pago por defecto si no se proporciona
-                $pago->save();
-
-                $transaccionDebito = new transaccionModel();
-                $transaccionDebito->factura = "F-".str_pad($compra->id_compra, 8, "0", STR_PAD_LEFT);
-                $transaccionDebito->descripcion = "Compra al contado según factura ".str_pad($compra->id_compra, 8, "0", STR_PAD_LEFT)." por monto de Bs " . number_format($compra->total, 2);
-                $transaccionDebito->fecha = now();
-                $transaccionDebito->monto = $compra->total;
-                $transaccionDebito->tipo = 'DEBITO';
-                $transaccionDebito->id_cuenta = 80;// Asumiendo que la cuenta de compras es la cuenta 3 y caja es la cuenta 1
-                $transaccionDebito->save();
-
-                $transaccionCredito = new transaccionModel();
-                $transaccionCredito->factura = "F-".str_pad($compra->id_compra, 8, "0", STR_PAD_LEFT);
-                $transaccionCredito->descripcion = "Compra al contado según factura F-".str_pad($compra->id_compra, 8, "0", STR_PAD_LEFT)." por monto de Bs " . number_format($compra->total, 2);
-                $transaccionCredito->fecha = now();
-                $transaccionCredito->monto = $compra->total;
-                $transaccionCredito->tipo = 'CREDITO';
-                $transaccionCredito->id_cuenta = ($data["metodo_pago"] == "EFECTIVO") ? 1 : 3; 
-                $transaccionCredito->save();
-
-            }else{
-
-                $transaccionDebito = new transaccionModel();
-                $transaccionDebito->factura = "F-".str_pad($compra->id_compra, 8, "0", STR_PAD_LEFT);
-                $transaccionDebito->descripcion = "Compra a crédito según factura F-".str_pad($compra->id_compra, 8, "0", STR_PAD_LEFT). " por monto de Bs " . number_format($compra->total, 2);
-                $transaccionDebito->fecha = now();
-                $transaccionDebito->monto = $compra->total;
-                $transaccionDebito->tipo = 'DEBITO';
-                $transaccionDebito->id_cuenta = 80;
-                $transaccionDebito->save();
-
-                $transaccionCredito = new transaccionModel();
-                $transaccionCredito->factura = "F-".str_pad($compra->id_compra, 8, "0", STR_PAD_LEFT);
-                $transaccionCredito->descripcion = "Compra a crédito según factura F-".str_pad($compra->id_compra, 8, "0", STR_PAD_LEFT). " por monto de Bs " . number_format($compra->total, 2);
-                $transaccionCredito->fecha = now();
-                $transaccionCredito->monto = $compra->total;
-                $transaccionCredito->tipo = 'CREDITO';
-                $transaccionCredito->id_cuenta = 51;
-                $transaccionCredito->save();
-
-                $cuentaPagar = cuentasPagarModel::create([
-                    'id_compra' => $compra->id_compra,
-                    'monto_total' => $compra->total,
-                    'monto_pagado' => 0,
-                    'fecha' => now(),
-                    'estado' => 'pendiente',
-                ]);
-
+            foreach ($productos as $producto) {
+                $stock = inventarioModel::where("id_producto", $producto["id_producto"])->first();
+                $stock->cantidad_disponible += $producto["pivot"]["cantidad"];
+                $stock->save();
             }
 
-            $compra->estado = 'confirmada';
+            $compra->estado = 'procesada';
             $compra->save();
 
-            return response()->json(['message' => 'Compra completada exitosamente, existencias actualizadas'], 200);
+            // Crear la cuenta por pagar
+            $cuentaPagar = cuentasPagarModel::create([  
+                'id_compra' => $compra->id_compra,
+                'monto_total' => $compra->total,
+                'monto_pagado' => 0, // Inicialmente no se ha pagado nada
+                'fecha_vencimiento' => now()->addDays(15), // Fecha de vencimiento 30 días después
+                'estado' => 'pendiente',
+            ]);
 
+            return response()->json(['message' => 'Compra completada exitosamente, existencias actualizadas'], 200);
         }catch(\Exception $e){
             return response()->json(['message' => 'Error al completar compra: ' . $e->getMessage()], 500);
 
@@ -172,36 +116,10 @@ class compraController extends Controller
                 return response()->json(['message' => 'Compra no encontrada'], 404);
             }
             $compra->estado = 'cancelada';
-            $compra->estado_despacho = 'cancelado';
             $compra->save();
             return response()->json(['message' => 'Compra cancelada exitosamente'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al cancelar la compra: ' . $e->getMessage()], 500);
-        }
-    }
-
-    public function confirmarDespacho(Request $request, $id){
-        try{
-            if (!$id) {
-                return response()->json(['message' => 'ID de compra no proporcionado'], 400);
-            }
-            $compra = compraModel::find($id);
-            if (!$compra){
-                return response()->json(['message' => 'Compra no encontrada'], 404);
-            }
-            $productos = $compra->producto->toArray();
-
-            foreach ($productos as $producto) {
-                $stock = inventarioModel::where("id_producto", $producto["id_producto"])->first();
-                $stock->cantidad_disponible += $producto["pivot"]["cantidad"];
-                $stock->save();
-            }
-            $compra->estado_despacho = 'completado';
-            $compra->save();
-
-            return response()->json(['message' => 'Despacho confirmado exitosamente'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al confirmar el despacho: ' . $e->getMessage()], 500);
         }
     }
 
@@ -224,11 +142,9 @@ class compraController extends Controller
     }
 
     public function pagarDeuda(Request $request, $id){
-
         try {
             $data = $request->validate([
                 'monto_pagado' => 'required|numeric',
-                'metodo' => 'required|string',
             ]);
 
             $cuentaPagar = cuentasPagarModel::find($id);
@@ -236,48 +152,57 @@ class compraController extends Controller
                 return response()->json(['message' => 'Cuenta por pagar no encontrada'], 404);
             }
 
-            $pago = pagoCompraModel::create([
-                'id_compra' => $cuentaPagar->id_compra,
-                'monto' => $data['monto_pagado'],
-                'fecha' => now(),
-                'metodo' => $data['metodo'],
-            ]);
-
-            $pagos = pagoCompraModel::where('id_compra', $cuentaPagar->id_compra)->get();
-            $totalPagado = $pagos->sum('monto');
-            $cuentaPagar->monto_pagado = $totalPagado;
-            
-            if ($totalPagado >= $cuentaPagar->monto_total) {
+            $cuentaPagar->monto_pagado += $data['monto_pagado'];
+            if ($cuentaPagar->monto_pagado >= $cuentaPagar->monto_total) {
                 $cuentaPagar->monto_pagado = $cuentaPagar->monto_total; // Asegurarse de no exceder el total
                 $cuentaPagar->estado = 'pagado';
             }
-
             $cuentaPagar->save();
 
-            $transaccionDebito = new transaccionModel();
-            $transaccionDebito->factura = "F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT);
-            $transaccionDebito->descripcion = "Pago de deuda por compra según F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT). " por monto de Bs " . number_format($data['monto_pagado'], 2);
-            $transaccionDebito->fecha = now();
-            $transaccionDebito->monto = $data['monto_pagado'];
-            $transaccionDebito->tipo = 'DEBITO';
-            $transaccionDebito->id_cuenta = 51; // Asumiendo que la cuenta de caja es la cuenta 1 y la cuenta bancaria es la cuenta 3
-            $transaccionDebito->save();
-
-            $transaccionCredito = new transaccionModel();
-            $transaccionCredito->factura = "F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT);
-            $transaccionCredito->descripcion = "Pago de deuda por compra según F-".str_pad($cuentaPagar->id_compra, 8, "0", STR_PAD_LEFT). " por monto de Bs " . number_format($data['monto_pagado'], 2);
-            $transaccionCredito->fecha = now();
-            $transaccionCredito->monto = $data['monto_pagado'];
-            $transaccionCredito->tipo = 'CREDITO';
-            $transaccionCredito->id_cuenta = ($data['metodo'] == "EFECTIVO") ? 1 : 3; // Asumiendo que la cuenta de caja es la cuenta 1 y la cuenta bancaria es la cuenta 3
-            $transaccionCredito->save();
-
             return response()->json(['message' => 'Pago registrado exitosamente'], 200);
-
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al registrar el pago: ' . $e->getMessage()], 500);
         }
     }
+     public function filtrarCompras(Request $request)
+{
+    try {
+        $tipo = $request->input('tipo');
+
+        switch ($tipo) {
+            case 'fecha':
+                $inicio = $request->input('inicio');
+                $fin = $request->input('fin');
+                $compras = compraModel::with('proveedor', 'producto')
+                    ->whereBetween('fecha_creada', [$inicio, $fin])
+                    ->get();
+                break;
+
+            case 'estado':
+                $estado = $request->input('estado');
+                $compras = compraModel::with('proveedor', 'producto')
+                    ->where('estado', $estado)
+                    ->get();
+                break;
+
+            case 'proveedor':
+                $proveedor = $request->input('proveedor');
+                $compras = compraModel::with('proveedor', 'producto')
+                    ->whereHas('proveedor', function ($q) use ($proveedor) {
+                        $q->where('nombre', 'LIKE', '%' . $proveedor . '%');
+                    })
+                    ->get();
+                break;
+
+            default:
+                return response()->json(['message' => 'Tipo de filtro no válido'], 400);
+        }
+
+        return response()->json($compras, 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al filtrar compras: ' . $e->getMessage()], 500);
+    }
+}
 
     // funcion PDF
     public function generarPDF($id){
@@ -285,9 +210,6 @@ class compraController extends Controller
 
         $pdf = new Fpdf();
         $pdf->AddPage();
-
-        $pdf->setTitle('Detalle de Compra #' . $compra->id_compra);
-
 
         // Colores y fuentes
         $pdf->SetFont('Arial', 'B', 18);

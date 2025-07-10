@@ -5,53 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario de Ropa</title>
     <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/tablas.css">
+    <link rel="stylesheet" href="../css/acciones.css">
     <link rel="icon" href="../public/logo_modasoft.png">
     <script src="../js/sesiones.js"></script>
-    <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
-    <script src="../js/componentes/loader.js" defer></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
     <script src="../js/inventario.js" defer></script>
 </head>
 <body>
-
     <div class="container">
-      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+        <aside class="sidebar"></aside>
+        <main class="main-content">
+            <header class="topbar"></header>
+            <section class="welcome">
+                <h1>Inventario</h1>
 
-      <main class="main-content">
-        <header class="topbar"></header>
-
-        <section class="welcome">
-          <h1>Inventario</h1>
-          <div class="botones-acciones rol">
-            <a href="tallas.html"><button>📏 Gestor de tallas</button></a>
-            <a href="categoria.html"><button>👚 Gestor de categorias</button></a>
-          </div>
-
-           <table id="tabla">
-
-                <thead>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio proveedor</th>
-                    <th>Precio de venta</th>
-                    <th>% Ganancia</th>
-                    <th>Categoria</th>
-                    <th>Talla</th>
-                    <th>Cantidad Actual (stock)</th>
-                    <th class="rol">Acciones</th>
-                </thead>
-
-            <tbody id="datos">
-
-            </tbody>
-
-            </table>
-        </section>
-      </main>
-
+                <div class="filtro-contenedor">
+  <div class="filtro-horizontal">
+    <label for="tipoFiltro">Filtrar por:</label>
+    <select id="tipoFiltro">
+      <option value="">Seleccione una opción</option>
+      <option value="nombre">Nombre</option>
+      <option value="categoria">Categoría</option>
+      <option value="talla">Talla</option>
+    </select>
   </div>
 
+  <div id="inputsFiltro" class="filtro-dinamico"></div>
+
+  <div class="botones-filtro">
+    <button id="btnBuscar">🔍 Buscar</button>
+    <button id="btnLimpiar">🧹 Limpiar</button>
+  </div>
+</div>
+
+
+                <div class="botones-acciones">
+                    <a href="tallas.html"><button>📏 Gestor de tallas</button></a>
+                    <a href="categoria.html"><button>👚 Gestor de categorias</button></a>
+                </div>
+
+                <table id="tabla">
+                    <thead>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio proveedor</th>
+                        <th>Precio de venta</th>
+                        <th>% Ganancia</th>
+                        <th>Categoria</th>
+                        <th>Talla</th>
+                        <th>Cantidad Actual (stock)</th>
+                        <th>Acciones</th>
+                    </thead>
+                    <tbody id="datos"></tbody>
+                </table>
+            </section>
+        </main>
+    </div>
 </body>
 </html>

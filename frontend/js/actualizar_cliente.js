@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("direccion").value = consulta.direccion;
             document.getElementById("telefono").value = consulta.telefono;
             document.getElementById("correo").value = consulta.correo;
-            new loaderComponent().stopLoading();
 
         }
             
@@ -36,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const correo = document.getElementById("correo").value;
 
         if(!nombre || !cedula || !direccion || !telefono || !correo){
-            Swal.fire("Rellene todos los campos");
+            alert("Rellene todos los campos");
             return false;
         }
 
@@ -61,29 +60,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if(res.ok){
             
-                await Swal.fire({
-                    title: "Éxito",
-                    text: consulta.message,
-                    icon: "success"
-                });
+                alert(consulta.message)
                 window.location.href = "clientes.html"
 
             }else{
                 console.log("Error al actualizar el cliente: " + consulta.message);
-                Swal.fire({
-                    title: "Error",
-                    text: consulta.message,
-                    icon: "warning"
-                }); 
+                alert("Error al actulizar el cliente, intente nuevamente" + consulta.message);  
             }
 
         }catch(error){
             console.log(error)
-            Swal.fire({
-                title: "Error",
-                text: error,
-                icon: "warning"
-            });
+            alert("Error al actualizar el cliente, intente nuevamente" + error); 
         }
 
     })    

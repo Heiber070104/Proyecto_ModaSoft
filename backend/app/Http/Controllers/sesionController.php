@@ -77,24 +77,4 @@ class sesionController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
-
-    public function comprobarContraseña(Request $request)
-    {
-        try {
-            $data = $request->validate([
-                'id_usuario' => 'required|integer',
-                'password' => 'required'
-            ]);
-
-            $usuario = usuarioModel::find($data['id_usuario']);
-            if ($usuario && password_verify($data['password'], $usuario->password)) {
-                return response()->json(['message' => 'Contraseña correcta'], 200);
-            } else {
-                return response()->json(['message' => 'Contraseña de usuario actual incorrecta'], 401);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        }
-    }
-
 }
