@@ -40,6 +40,15 @@ const actualizarTabla = async () => {
         if (res.ok) {
             let html = "";
 
+            if(Object.keys(consulta).length === 0){
+                document.getElementById("datos").innerHTML = `
+                    <tr class="sin-datos">
+                        <td colspan="2">Sin datos</td>
+                    <tr>
+                `;
+                return;
+            }
+
             Object.values(consulta).forEach(producto => {
                 let precio_total = parseFloat(producto.precio_unitario * producto.porcentaje_ganancia / 100);
                 precio_total += parseFloat(producto.precio_unitario);

@@ -152,3 +152,25 @@ form{
   align-items: center;
   border-radius: 20px;
 }
+
+.mi-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mi-tabla th, .mi-tabla td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.sin-datos {
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.sin-datos td {
+  padding: 20px;
+  font-style: italic;
+  color: #777;
+}
