@@ -1,0 +1,35 @@
+.welcome {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 900px;
+  margin: auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #6c3aad;
+}
+
+canvas {
+  display: block;
+  margin: auto;
+  max-width: 100%;
+  height: auto;
+}
+#btn-regresar {
+  padding: 0.6rem 1.2rem;
+  background-color: #7e22ce; /* morado del sistema */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#btn-regresar:hover {
+  background-color: #6b21a8;
+}

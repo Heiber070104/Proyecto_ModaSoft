@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reporte de Devoluciones</title>
+  <link rel="stylesheet" href="../css/topbar_menu.css" />
+  <link rel="stylesheet" href="../css/reporte_devoluciones.css" />
+    <link rel="icon" href="../public/logo_modasoft.png">
+  <script src="../js/sesiones.js"></script>
+  <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../js/componentes/menu.js" defer></script>
+  <script src="../js/componentes/topbar.js" defer></script>
+  <script src="../js/reporte_devoluciones.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="main-content">
+      <header class="topbar"></header>
+      <section class="welcome">
+        <h1>Reporte de Productos Devueltos</h1>
+        <a href="devoluciones.html">
+  <button id="btn-regresar" style="margin-bottom: 1rem;">⬅ Regresar</button>
+</a>
+        <canvas id="grafico-devoluciones" width="400" height="400"></canvas>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

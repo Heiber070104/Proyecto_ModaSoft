@@ -13,7 +13,9 @@ Route::prefix("ventas")->group(function (){
     Route::get("/cancelar/{id}", [Venta::class, "cancelarVenta"]);
     Route::get("/{id}", [Venta::class, "buscarVenta"]);
     Route::post("/", [Venta::class, "crearVenta"]);
-    
+    // VentaRoutes.php (dentro de prefix 'ventas')
+    Route::get("/factura/{factura}", [Venta::class, "buscarPorFactura"]);
+
 })
 
 ?>

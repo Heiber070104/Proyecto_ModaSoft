@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registrar Devolución</title>
+  <link rel="stylesheet" href="../css/topbar_menu.css" />
+  <link rel="stylesheet" href="../css/anadir_devoluciones.css" />
+  <link rel="icon" href="../public/logo_modasoft.png" />
+  <script src="../js/sesiones.js"></script>
+  <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
+  <script src="../js/componentes/menu.js" defer></script>
+  <script src="../js/componentes/topbar.js" defer></script>
+  <script src="../js/añadir_devolucion.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="main-content">
+      <header class="topbar"></header>
+      <section class="welcome">
+        <h1>Registrar Devolución</h1>
+
+        <div id="info-venta">
+          <p><strong>Factura:</strong> <span id="factura-info"></span></p>
+          <p><strong>Cliente:</strong> <span id="cliente-info"></span></p>
+        </div>
+
+        <h3>Productos vendidos:</h3>
+        <table id="tabla-productos">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Talla</th>
+              <th>Cantidad vendida</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody class="cuerpo-tabla-productos"></tbody>
+        </table>
+        <hr>
+
+        <form id="form-devolucion">
+          <label>Producto seleccionado:</label>
+          <div id="producto-seleccionado">Ninguno</div>
+          <input type="hidden" id="id_detalle_venta" />
+          <input type="hidden" id="id_venta" />
+          <input type="hidden" id="cantidad_vendida" />
+
+          <label for="cantidad">Cantidad a devolver</label>
+          <input type="number" id="cantidad" min="1" required />
+
+          <label for="motivo">Motivo</label>
+          <input type="text" id="motivo" required />
+
+          <label for="fecha">Fecha</label>
+          <input type="date" id="fecha" required />
+
+          <button type="submit">Registrar devolución</button>
+          <a href="devoluciones.html"><button type="button">Cancelar</button></a>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

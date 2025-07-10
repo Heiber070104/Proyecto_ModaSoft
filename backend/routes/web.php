@@ -29,3 +29,5 @@ require __DIR__.'/tallaRoutes.php';
 require __DIR__.'/proveedorRoutes.php';
 require __DIR__.'/ventaRoutes.php';
 require __DIR__.'/clienteRoutes.php';
+require __DIR__.'/devolucionRoutes.php';
+

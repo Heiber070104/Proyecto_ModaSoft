@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\productoModel;
+use App\Models\tallaModel;
 use App\Models\inventarioModel;
 
 class productoController extends Controller
@@ -123,5 +124,16 @@ public function eliminarProducto(Request $request, $id)
     }
 }
 
+public function talla()
+{
+    return $this->belongsTo(tallaModel::class, 'id_talla');
+}
+ public function inventario()
+{
+    return $this->hasOne(inventarioModel::class, 'id_producto');
+}
 
 }
+
+
+

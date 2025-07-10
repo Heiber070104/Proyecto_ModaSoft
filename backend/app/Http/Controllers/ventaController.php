@@ -9,6 +9,7 @@ use App\Models\ventaModel;
 use App\Models\productoModel;
 use App\Models\inventarioModel;
 use App\Models\tallaModel;
+use App\Models\detalleventaModel;
 use Codedge\Fpdf\Fpdf\Fpdf;
 
 class ventaController extends Controller
@@ -32,7 +33,7 @@ class ventaController extends Controller
 
         // Validar los datos de la solicitud
             $data = $request->validate([
-                'factura' => 'required|string|max:20',
+               'factura' => 'required|string|max:20|unique:venta,factura',
                 'id_cliente' => 'required|integer',
             ]);
 
@@ -122,6 +123,41 @@ class ventaController extends Controller
             return response()->json(['message' => 'Error al cancelar la venta: ' . $e->getMessage()], 500);
         }
     }
+
+public function buscarPorFactura($factura)
+{
+    try {
+        $venta = ventaModel::with(['cliente', 'detalles.producto.talla'])
+            ->where('factura', $factura)
+            ->first();
+
+        if (!$venta) {
+            return response()->json(['message' => 'Venta no encontrada.'], 404);
+        }
+
+        $response = [
+            'id_venta' => $venta->id_venta,
+            'factura' => $venta->factura,
+            'cliente' => $venta->cliente->nombre,
+            'detalles' => $venta->detalles->map(function ($detalle) {
+                return [
+                    'id_detalle_venta' => $detalle->id_detalle_venta,
+                    'id_producto' => $detalle->producto->id_producto,
+                    'nombre' => $detalle->producto->nombre,
+                    'talla' => $detalle->producto->talla->descripcion,
+                    'precio' => $detalle->precio,
+                    'cantidad' => $detalle->cantidad
+                ];
+            })
+        ];
+
+        return response()->json($response);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al buscar factura: ' . $e->getMessage()], 500);
+    }
+}
+
+
 
     public function productosMasVendidos(){
 
