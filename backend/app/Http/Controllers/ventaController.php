@@ -10,9 +10,11 @@ use App\Models\productoModel;
 use App\Models\inventarioModel;
 use App\Models\tallaModel;
 use Codedge\Fpdf\Fpdf\Fpdf;
+
 use App\Models\transaccionModel;
 use App\Models\cuentasCobrarModel;
 use App\Models\pagoVentaModel;
+
 
 class ventaController extends Controller
 {
@@ -105,8 +107,8 @@ class ventaController extends Controller
                 }
 
                 $pago = new pagoVentaModel();
-                $pago->id_venta = $compra->id_venta;
-                $pago->monto = $compra->total;
+                $pago->id_venta = $venta->id_venta;
+                $pago->monto = $venta->total;
                 $pago->fecha = now();
                 $pago->metodo = $data["metodo_pago"] ?? 'EFECTIVO'; // Asignar un método de pago por defecto si no se proporciona
                 $pago->save();
@@ -421,6 +423,44 @@ class ventaController extends Controller
         }
 
     }
+ public function filtrarVentas(Request $request)
+{
+    try {
+        $tipo = $request->input('tipo');
+
+        switch ($tipo) {
+            case 'fecha':
+                $inicio = $request->input('inicio');
+                $fin = $request->input('fin');
+                $ventas = ventaModel::with('cliente', 'producto')
+                    ->whereBetween('fecha', [$inicio, $fin])
+                    ->get();
+                break;
+
+            case 'estado':
+                $estado = $request->input('estado');
+                $ventas = ventaModel::with('cliente', 'producto')
+                    ->where('estado', $estado)
+                    ->get();
+                break;
+
+            case 'cliente':
+                $cliente = $request->input('cliente');
+                $ventas = ventaModel::with('cliente', 'producto')
+                    ->whereHas('cliente', function ($q) use ($cliente) {
+                        $q->where('nombre', 'LIKE', '%' . $cliente . '%');
+                    })->get();
+                break;
+
+            default:
+                return response()->json(['message' => 'Tipo de filtro no válido'], 400);
+        }
+
+        return response()->json($ventas, 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al filtrar ventas: ' . $e->getMessage()], 500);
+    }
+}
 
     public function generarPDF($id){
         $venta = ventaModel::with(['cliente', 'producto'])->findOrFail($id);

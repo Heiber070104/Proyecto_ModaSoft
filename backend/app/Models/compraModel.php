@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\productoModel;
 use App\Models\proveedorModel;
 use App\Models\cuentasPagarModel;
+
 use App\Models\pagoCompraModel;
+
 
 
 class compraModel extends Model
@@ -31,9 +33,11 @@ class compraModel extends Model
         return $this->belongsTo(proveedorModel::class, 'id_proveedor', 'id_proveedor');
     }
 
+
     public function pagoCompra(){
         return $this->hasMany(pagoCompraModel::class, 'id_compra', 'id_compra');
     }
+
 
     public function cuentasPagar(){
         return $this->hasOne(cuentasPagarModel::class, "id_compra", "id_compra");

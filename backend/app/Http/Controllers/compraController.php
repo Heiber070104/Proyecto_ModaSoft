@@ -8,8 +8,10 @@ use App\Models\compraModel;
 use App\Models\inventarioModel;
 use App\Models\productoModel;
 use App\Models\cuentasPagarModel;
+
 use App\Models\transaccionModel;
 use App\Models\pagoCompraModel;
+
 use Codedge\Fpdf\Fpdf\Fpdf;
 
 
@@ -151,6 +153,7 @@ class compraController extends Controller
                     'estado' => 'pendiente',
                 ]);
 
+
             }
 
             $compra->estado = 'confirmada';
@@ -179,6 +182,7 @@ class compraController extends Controller
             return response()->json(['message' => 'Error al cancelar la compra: ' . $e->getMessage()], 500);
         }
     }
+
 
     public function confirmarDespacho(Request $request, $id){
         try{
@@ -225,10 +229,12 @@ class compraController extends Controller
 
     public function pagarDeuda(Request $request, $id){
 
+
         try {
             $data = $request->validate([
                 'monto_pagado' => 'required|numeric',
                 'metodo' => 'required|string',
+
             ]);
 
             $cuentaPagar = cuentasPagarModel::find($id);
@@ -274,10 +280,52 @@ class compraController extends Controller
 
             return response()->json(['message' => 'Pago registrado exitosamente'], 200);
 
+
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al registrar el pago: ' . $e->getMessage()], 500);
         }
     }
+
+     public function filtrarCompras(Request $request)
+    {
+    try {
+        $tipo = $request->input('tipo');
+
+        switch ($tipo) {
+            case 'fecha':
+                $inicio = $request->input('inicio');
+                $fin = $request->input('fin');
+                $compras = compraModel::with('proveedor', 'producto')
+                    ->whereBetween('fecha_creada', [$inicio, $fin])
+                    ->get();
+                break;
+
+            case 'estado':
+                $estado = $request->input('estado');
+                $compras = compraModel::with('proveedor', 'producto')
+                    ->where('estado', $estado)
+                    ->get();
+                break;
+
+            case 'proveedor':
+                $proveedor = $request->input('proveedor');
+                $compras = compraModel::with('proveedor', 'producto')
+                    ->whereHas('proveedor', function ($q) use ($proveedor) {
+                        $q->where('nombre', 'LIKE', '%' . $proveedor . '%');
+                    })
+                    ->get();
+                break;
+
+            default:
+                return response()->json(['message' => 'Tipo de filtro no válido'], 400);
+        }
+
+        return response()->json($compras, 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al filtrar compras: ' . $e->getMessage()], 500);
+    }
+    }
+
 
     // funcion PDF
     public function generarPDF($id){
@@ -287,7 +335,6 @@ class compraController extends Controller
         $pdf->AddPage();
 
         $pdf->setTitle('Detalle de Compra #' . $compra->id_compra);
-
 
         // Colores y fuentes
         $pdf->SetFont('Arial', 'B', 18);

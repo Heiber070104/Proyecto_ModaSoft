@@ -1,37 +1,3 @@
-
-const cargarRol = () => {
-
-    const sesion = new Sesiones().obtenerSesion();
-
-    if(!sesion || !sesion.rol || !sesion.rol) {
-        alert("No tiene autorización.");
-        sesion.cerrarSesion();
-        window.location.href = "../pages/login.html";
-    }
-
-    switch(sesion.rol){
-        
-        case "Vendedor":
-
-            alert("Los vendedores no tienen autorización para acceder a esta página.");
-            window.location.href = "../pages/dashboard.html";
-            
-        break;
-        case "Gerente":
-        case "Contador":
-
-            const ocultar = document.querySelectorAll(".rol");
-            // console.log(ocultar)
-            ocultar.forEach(element => {
-                element.style.display = "none";
-            })
-
-        break;
-    }
-        
-
-}
-
 const cargarCompras = async () => {
 
     try {
@@ -42,11 +8,31 @@ const cargarCompras = async () => {
             method: "GET"
         });
 
+        const consulta = await res.json();
+
         if (res.ok) {
 
-            const consulta = await res.json();
 
-            Object.values(consulta).forEach(compra => {
+                consulta.forEach(compra => {
+                    const fila = document.createElement("tr");
+                    let acciones = "🔒 Compra cerrada";
+                    let estadoTexto;
+
+                    switch (compra.estado) {
+                        case "pendiente":
+                            estadoTexto = "⏳ Pendiente";
+                            acciones = `
+                                <button onclick='completarCompra(${compra.id_compra})'>✅ Completar orden</button>
+                                <button onclick='cancelarCompra(${compra.id_compra})'>❌ Cancelar orden</button>
+                            `;
+                            break;
+                        case "procesada":
+                            estadoTexto = "✅ Completada";
+                            break;
+                        case "cancelada":
+                            estadoTexto = "❌ Cancelada";
+                            break;
+                    }
 
                 let html = "";
 
@@ -101,13 +87,13 @@ const cargarCompras = async () => {
                 }
 
                 html += `
-                    <td>${compra.factura}</td>
-                    <td>${compra.fecha_creada}</td>
-                    <td>${compra.fecha_vence}</td>
-                    <td>${compra.proveedor["nombre"]}</td>
+                    <td class="factura">${compra.factura}</td>
+                    <td class="fcreada">${compra.fecha_creada}</td>
+                    <td class="fvence">${compra.fecha_vence}</td>
+                    <td class="prov">${compra.proveedor["nombre"]}</td>
                     <td>${compra.total}</td>
                     <td class="tipo_pago">${pago}</td>
-                    <td>${estado}</td>
+                    <td class="estado">${estado}</td>
                     <td>${despacho}</td>
                     <td>
                         <a href="http://localhost:8000/compras/pdf/${compra.id_compra}" target="_blank" class="btn btn-danger"><button>📄 Detalles de compra</button></a>
@@ -314,7 +300,196 @@ const completarCompra = async (id, metodo) => {
     }
 }
 
+ const cargarRol = () => {
+
+    const sesion = new Sesiones().obtenerSesion();
+
+    if(!sesion || !sesion.rol || !sesion.rol) {
+        alert("No tiene autorización.");
+        sesion.cerrarSesion();
+        window.location.href = "../pages/login.html";
+    }
+
+    switch(sesion.rol){
+        
+        case "Vendedor":
+
+            alert("Los vendedores no tienen autorización para acceder a esta página.");
+            window.location.href = "../pages/dashboard.html";
+            
+        break;
+        case "Gerente":
+        case "Contador":
+
+            const ocultar = document.querySelectorAll(".rol");
+            // console.log(ocultar)
+            ocultar.forEach(element => {
+                element.style.display = "none";
+            })
+
+        break;
+    }
+        
+
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
+    const tipoBusqueda = document.getElementById("tipoBusqueda");
+    const btnBuscar = document.getElementById("btnBuscar");
+    const btnLimpiar = document.getElementById("btnLimpiar");
+    const inputsDinamicos = document.getElementById("inputsDinamicos");
+
+    tipoBusqueda.addEventListener("change", () => {
+        inputsDinamicos.innerHTML = "";
+
+        switch (tipoBusqueda.value) {
+            case "fecha":
+                inputsDinamicos.innerHTML = `
+                    <label>Desde:</label>
+                    <input type="date" id="fechaInicio"><br>
+                    <label>Hasta:</label>
+                    <input type="date" id="fechaFin">
+                `;
+                break;
+            case "estado":
+                inputsDinamicos.innerHTML = `
+                    <label>Estado:</label>
+                    <select id="estado">
+                        <option value="Por confirmar">Por confirmar</option>
+                        <option value="Confirmado">Confirmada</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                `;
+                break;
+            case "proveedor":
+                inputsDinamicos.innerHTML = `
+                    <label>Proveedor:</label>
+                    <input type="text" id="nombreProveedor" placeholder="Ej: Distribuidora Lara">
+                `;
+                break;
+            case "factura":
+                inputsDinamicos.innerHTML = `
+                    <label>Factura:</label>
+                    <input type="text" id="numFactura" placeholder="F-00000001">
+                `
+                break;
+        }
+    });
+
+    btnBuscar.addEventListener("click", async () => {
+
+        const tipo = tipoBusqueda.value
+        let i = 0;
+
+        switch(tipo){
+            case "fecha":
+
+                const inicio = new Date(document.getElementById("fechaInicio").value);
+                const fin = new Date(document.getElementById("fechaFin").value);
+       
+                if (inicio == "Invalid Date"|| fin == "Invalid Date"){Swal.fire("Debe seleccionar ambas fechas"); return};
+        
+                document.querySelectorAll(".fila").forEach(fila => {
+
+                    const fechaCreada = new Date(fila.querySelector(".fcreada").textContent.trim());
+                    
+                    if(fechaCreada >= inicio && fechaCreada <= fin){
+                        i++;
+                        fila.hidden = false;
+                    }else{
+                        fila.hidden = true;
+                    }
+
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                     cargarCompras();
+                }
+ 
+            break;
+            case "estado":
+
+                const estado = document.getElementById("estado").value.trim();
+                if(estado == ""){Swal.fire("Debe selecionar una opción"); return}
+
+                document.querySelectorAll(".fila").forEach(fila => {
+
+                    const estFila = fila.querySelector(".estado").textContent.trim();
+
+                    if(estFila.includes(estado)){
+                        i++;
+                        fila.hidden = false;
+                    }else{
+                        fila.hidden = true;
+                    }
+
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                }
+    
+            break;
+            case "proveedor":
+
+                const prov = document.getElementById("nombreProveedor").value.trim();
+
+                document.querySelectorAll(".fila").forEach(fila => {
+
+                    const provFila = fila.querySelector(".prov").textContent.trim();
+
+                    if(!provFila.includes(prov)){
+                        fila.hidden = true
+                    }else{
+                        i++
+                        fila.hidden = false
+                    }
+            
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                     cargarCompras();
+                }
+
+            break;
+            case "factura":
+
+                const factura = document.getElementById("numFactura").value.trim();
+
+                document.querySelectorAll(".fila").forEach(fila => {
+
+                    const facFila = fila.querySelector(".factura").textContent.trim();
+
+                    if(facFila !== factura){
+                        fila.hidden = true
+                    }else{
+                        i++
+                        fila.hidden = false
+                    }
+            
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                     cargarCompras();
+                }
+
+             break;
+
+        }
+
+    });
+
+    btnLimpiar.addEventListener("click", () => {
+        cargarCompras();
+        tipoBusqueda.value = "";
+        inputsDinamicos.innerHTML = "";
+    });
+
     cargarCompras()
     cargarRol();
-});
+
+})

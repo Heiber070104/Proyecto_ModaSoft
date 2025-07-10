@@ -1,4 +1,5 @@
 
+
 const cargarRol = () => {
 
     const sesion = new Sesiones().obtenerSesion();
@@ -31,6 +32,7 @@ const cargarRol = () => {
         
 
 }
+
 
 const cargarDeudas = async () => {
 
@@ -66,6 +68,7 @@ const cargarDeudas = async () => {
                     <td>${deuda.monto_pagado}</td>
                     <td>${estado}</td>
                     <td class="rol">${col}</td>
+
                 `
 
                 fila.innerHTML = html;
@@ -78,6 +81,7 @@ const cargarDeudas = async () => {
 
         }else{
             console.log(consulta.message);
+
         }
 
     }catch(e){
@@ -86,5 +90,7 @@ const cargarDeudas = async () => {
 
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {cargarRol(); cargarDeudas()})
+
 

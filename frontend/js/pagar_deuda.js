@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if(parseFloat(input.value) > maximo){
 
+
             Swal.fire("El monto abonado no puede ser mayor al monto de deuda restante")
 
             input.value = maximo;
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try{
 
             const monto = input.value;
+
             const metodo_pago = document.getElementById("metodo_pago").value;
 
             if(!monto || monto == 0){
@@ -68,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     icon: "warning"
                 });
                 return;
+
             }
 
             const res = await fetch(`http://localhost:8000/compras/deudas/${id}`, {
@@ -79,11 +82,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({
                     "monto_pagado": monto,
                     "metodo": metodo_pago
+
                 })
             })
 
             const consulta = await res.json();
             if(res.ok){
+
 
                 await Swal.fire({
                     title: "Éxito",

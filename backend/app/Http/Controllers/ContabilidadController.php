@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
+
 use App\Models\transaccionModel as Transaccion;
 use App\Models\cuentaContableModel as CuentaContable;
+
 use Illuminate\Http\Request;
 
 class ContabilidadController extends Controller
