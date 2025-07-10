@@ -2,6 +2,57 @@ class MenuComponent {
     constructor() {
         // 1. Al crear instancia, verifica la sesión inmediatamente
         this.sesion = new Sesiones().obtenerSesion();
+        if (!this.sesion || !this.sesion.id || !this.sesion.usuario || !this.sesion.rol) {
+            window.location.href = '../pages/login.html';
+            alert("Error de Sesión");
+            return
+        }
+    }
+
+    sessions(){
+        // 2. Verifica si la sesión está activa
+    
+        switch (this.sesion.rol) {
+            case "Comprador":
+                document.querySelectorAll("li").forEach(item => {
+                    const vistas = item.getAttribute("data-page");
+                    if(
+                        vistas === "ventas.html" || 
+                        vistas === "clientes.html" || 
+                        vistas === "devoluciones.html" || 
+                        vistas === "reportes.html"
+                    ){
+                        item.style.display = "none";
+                    }
+                })
+            break;
+            case "Vendedor":
+                document.querySelectorAll("li").forEach(item => {
+                    const vistas = item.getAttribute("data-page");
+                    if(
+                        vistas === "compras.html" ||
+                        vistas === "proveedores.html" || 
+                        vistas === "cuentas_pagar.html" || 
+                        vistas === "reportes.html"
+                    ){
+                        item.style.display = "none";
+                    }
+                })    
+            break;
+            case "Contador":
+                document.querySelectorAll("li").forEach(item => {
+                    const vistas = item.getAttribute("data-page");
+                    if(
+                        vistas === "inventario.html" || 
+                        vistas === "reportes.html"
+                    ){
+                        item.style.display = "none";
+                    }
+                })
+            break;
+
+        }
+
     }
 
     mount() {
@@ -10,6 +61,7 @@ class MenuComponent {
         if (container) {
             container.insertAdjacentHTML("afterbegin", this.render());
             this.setupEvents();
+            this.sessions();
         } else {
             console.error("Contenedor .container no encontrado para insertar el menú.");
         }
@@ -26,12 +78,13 @@ render() {
             <li class="menu-item" data-page="ventas.html"><span>💹</span> Ventas</li>
             <li class="menu-item" data-page="proveedores.html"><span>🤵</span> Proveedores</li>
             <li class="menu-item" data-page="clientes.html"><span>🧍‍♂️</span> Clientes</li>
-            <li class="menu-item" data-page="cuentas_pagar.html"><span>💲</span> Cuentas por Pagar</li>
+            <li class="menu-item" data-page="cuentas_pagar.html"><span>💸</span> Cuentas por Pagar</li>
+            <li class="menu-item" data-page="cuentas_cobrar.html"><span>💲</span> Cuentas por Cobrar</li>
             <li class="menu-item" data-page="devoluciones.html"><span>🧾</span> Devoluciones</li>
-            <li class="menu-item" data-page="registro_contable.html"><span>📄</span> Registro Contable</li>
             <li class="menu-item" data-page="libro_diario.html"><span>📚</span> Libro Diario</li>
             <li class="menu-item" data-page="libro_mayor.html"><span>📚</span> Libro Mayor</li>
             <li class="menu-item" data-page="reportes.html"><span>📊</span> Reportes</li>
+            <li class="menu-item" data-page="usuarios.html"><span>👨‍💼</span> Usuarios</li>
         </ul>
     `;
 }
@@ -40,7 +93,7 @@ render() {
 
  
         // 3. Configura eventos de clic para cada item
-     setupEvents() {
+    setupEvents() {
     document.querySelectorAll('.menu-item, .menu-logo').forEach(item => {
         item.addEventListener('click', () => {
             const page = item.getAttribute('data-page');

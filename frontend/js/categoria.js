@@ -1,5 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    const cargarRol = () => {
+
+        const sesion = new Sesiones().obtenerSesion();
+
+        if(!sesion || !sesion.rol || !sesion.rol) {
+            alert("No tiene autorización.");
+            sesion.cerrarSesion();
+            window.location.href = "../pages/login.html";
+        }
+        
+
+        switch(sesion.rol){
+        
+            case "Vendedor":
+            case "Contador":
+                alert("EL usuario actual no tienen autorización para acceder a esta página.");
+                window.location.href = "../pages/dashboard.html";  
+            break;
+            case "Gerente":
+                const ocultar = document.querySelectorAll(".rol");
+                ocultar.forEach(element => {
+                    element.style.display = "none";
+                })
+            break;
+        }
+        
+
+    }
+
+    cargarRol()
+
     const btnAgregarFila = document.getElementById("btn-agregarCateg");
 
     const cargarCateg = async () => {
@@ -26,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td class="prCol" style="width: 50%" data-id="${categ.id_categoria}">
                             ${categ.nombre}
                         </td>
-                        <td>
+                        <td class="rol">
                             <button class="btn-modificar">🔨 Modificar</button>
                             <button class="btn-registrar" hidden>✅ Registrar</button>
                             <button class="btn-cancelar" hidden>❌ Cancelar</button>
@@ -37,7 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     eventosFila(nuevaFila);
                 })
 
-
+                new loaderComponent().stopLoading();
+                cargarRol();
             }else{
                 console.log(consulta.message)
             }
@@ -96,22 +128,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const nombre = fila.querySelector(".nombre").value;
             if(nombre == ""){
-                alert("La nombre de la categoria está vacia, rellénelo")
+                Swal.fire("La nombre de la categoria está vacia, rellénelo");
                 return false;
             }
 
             if(fila.classList.contains("modify")){
-                const respuesta = confirm("¿Estas seguro que quieres modificar el nombre esta categoria?")
-                if(!respuesta){
-                    return false;
+                const confirm = await Swal.fire({
+                    title: "¿Seguro quieres modificar esta categoria?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si",
+                    cancelButtonText: "Cancelar"
+                })
+                if (confirm.isConfirmed) {
+                    var id = fila.querySelector(".prCol").getAttribute("data-id");
+                    var method = "PUT"
+                    var link = `http://localhost:8000/categorias/${id}`;
+                }else{
+                    return;
                 }
 
-                id = fila.querySelector(".prCol").getAttribute("data-id");
-                method = "PUT"
-                link = `http://localhost:8000/categorias/${id}`;
             }else{
-                method = "POST"
-                link = `http://localhost:8000/categorias`;
+                var method = "POST"
+                var link = `http://localhost:8000/categorias`;
             }
 
             try{
@@ -130,13 +171,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 const consulta = await res.json();
 
                 if(res.ok){
-                    alert(consulta.message);
-                    cargarTallas();
+                    Swal.fire({
+                        title: "Éxito",
+                        text: consulta.message,
+                        icon: "success"
+                    });
+                    cargarCateg();
                 }else{
+                    Swal.fire({
+                        title: "Error",
+                        text: consulta.message,
+                        icon: "warning"
+                    })              
                     console.log(consulta.message)
                 }
 
             }catch(e){
+                                        
+                Swal.fire({
+                        title: "Error",
+                        text: e,
+                        icon: "warning"
+                })
+                    
                 console.log(e)
             }
 

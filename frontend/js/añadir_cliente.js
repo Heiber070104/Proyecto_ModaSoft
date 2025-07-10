@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Validación de campos vacíos
         if (!nombre || !cedula || !direccion || !telefono || !correo) {
-            alert("Debe rellenar todos los campos.");
+            Swal.fire("Debe rellenar todos los campos.");
             return false;
         }
 
@@ -22,17 +22,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const correoVal = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!cedulaVal.test(cedula)) {
-            alert("La cédula debe contener solo números, entre 7 y 9 dígitos.");
+            Swal.fire("La cédula debe contener solo números, entre 7 y 9 dígitos.");
             return false;
         }
 
         if (!telefonoVal.test(telefono)) {
-            alert("El teléfono debe tener exactamente 11 dígitos.");
+            Swal.fire("El teléfono debe tener exactamente 11 dígitos.");
             return false;
         }
 
         if (!correoVal.test(correo)) {
-            alert("El correo debe tener un formato válido (ej. usuario@correo.com).");
+            Swal.fire("El correo debe tener un formato válido (ej. usuario@correo.com).");
             return false;
         }
 
@@ -54,7 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const consulta = await res.json();
 
             if (res.ok) {
-                alert("🎉 ¡Cliente registrado exitosamente!");
+                await Swal.fire({
+                    title: "Exito",
+                    text: consulta.message,
+                    icon: "success"
+}               );
                 window.location.href = "clientes.html";
                 return;
             }
@@ -62,30 +66,30 @@ document.addEventListener("DOMContentLoaded", () => {
             // Validación fallida desde Laravel (422)
             if (res.status === 422 && consulta.errors) {
                 if (consulta.errors.cedula) {
-                    alert("⚠️ La cédula ya está registrada o no es válida.");
+                   Swal.fire("⚠️ La cédula ya está registrada o no es válida.");
                     return;
                 }
 
                 if (consulta.errors.telefono) {
-                    alert("⚠️ El teléfono ya está registrado o no es válido.");
+                   Swal.fire("⚠️ El teléfono ya está registrado o no es válido.");
                     return;
                 }
 
                 if (consulta.errors.correo) {
-                    alert("⚠️ El correo ya está registrado o tiene formato inválido.");
+                   Swal.fire("⚠️ El correo ya está registrado o tiene formato inválido.");
                     return;
                 }
 
                 const errores = Object.values(consulta.errors).flat().join("\n");
-                alert("Errores en el formulario:\n" + errores);
+               Swal.fire("Errores en el formulario:\n" + errores);
                 return;
             }
 
-            alert("❌ Ocurrió un error inesperado. Intenta nuevamente.");
+           Swal.fire("❌ Ocurrió un error inesperado. Intenta nuevamente.");
 
         } catch (error) {
             console.error(error);
-            alert("💥 Error de red o del servidor. Verifica tu conexión o intenta más tarde.");
+           Swal.fire("💥 Error de red o del servidor. Verifica tu conexión o intenta más tarde.");
         }
 
     });

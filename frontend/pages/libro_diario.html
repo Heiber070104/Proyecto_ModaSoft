@@ -10,6 +10,7 @@
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
+    <script src="../js/libro_diario.js"></script>
 </head>
 <body>
         <div class="container">
@@ -24,10 +25,11 @@
         <thead>
             <tr>
                 <th>Fecha</th>
+                <th>Factura</th>
                 <th>Descripcion</th>
-                <th>referencia</th>
+                <th>Referencia</th>
                 <th>Debe</th>
-                <th>haber</th>
+                <th>Haber</th>
             </tr>
         </thead>
         <tbody>
@@ -39,22 +41,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        axios.get('/api/libro-diario')
-            .then(response => {
-                const tbody = document.querySelector('#libroDiario tbody');
-                response.data.forEach(transaccion => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${transaccion.fecha}</td>
-                        <td>${transaccion.cuentaContable.nombre}</td>
-                        <td>${transaccion.tipo === 'DEBITO' ? transaccion.monto : ''}</td>
-                        <td>${transaccion.tipo === 'CREDITO' ? transaccion.monto : ''}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            })
-            .catch(error => console.error('Error al cargar el libro diario:', error));
-    </script>
+
 </body>
 </html>
