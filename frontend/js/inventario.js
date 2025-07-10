@@ -44,19 +44,23 @@ const actualizarTabla = async () => {
                 let precio_total = parseFloat(producto.precio_unitario * producto.porcentaje_ganancia / 100);
                 precio_total += parseFloat(producto.precio_unitario);
 
-                html += `<tr>
-                    <td>${producto.nombre}</td>
-                    <td>${producto.descripcion}</td>
-                    <td>${producto.precio_unitario}</td>
-                    <td>${precio_total.toFixed(2)}</td>
-                    <td>${producto.porcentaje_ganancia}%</td>
-                    <td>${producto.categoria.nombre}</td>
-                    <td>${producto.talla.descripcion}</td>
-                    <td>${producto.inventario.cantidad_disponible}</td>
-                    <td>
-                        <a href="actualizar_producto.html?id=${producto.id_producto}"><button>🔨 Modificar</button></a>
-                        <a href="añadir_producto.html?id=${producto.id_producto}"><button>➕ Nueva talla</button></a>
-                    </td>
+                console.log(producto)
+
+                html += `
+                    <tr class="fila">
+                        <td class="nombre">${producto.nombre}</td>
+                        <td>${producto.descripcion}</td>
+                        <td>${producto.precio_unitario}</td>
+                        <td>${precio_total.toFixed(2)}</td>
+                        <td>${producto.porcentaje_ganancia}%</td>
+                        <td class="categ">${producto.categoria.nombre}</td>
+                        <td class="talla">${producto.talla.descripcion}</td>
+                        <td>${producto.inventario.cantidad_disponible}</td>
+                        <td>
+                            <a href="actualizar_producto.html?id=${producto.id_producto}"><button>🔨 Modificar</button></a>
+                            <a href="añadir_producto.html?id=${producto.id_producto}"><button>➕ Nueva talla</button></a>
+                        </td>
+                    </tr>
                 `
             })
           document.getElementById("datos").innerHTML = html;
@@ -89,7 +93,7 @@ document.getElementById("tipoFiltro").addEventListener("change", function () {
         case "categoria":
             contenedor.innerHTML = `
                 <label>Categoría:</label>
-                <input type="text" id="filtroCategoria" placeholder="Ej: Caballero">
+                <input type="text" id="filtroCategoria" placeholder="Ej: Camisa">
             `;
             break;
         case "talla":
@@ -105,27 +109,78 @@ document.getElementById("btnBuscar").addEventListener("click", () => {
     const tipo = document.getElementById("tipoFiltro").value;
     if (!tipo) return alert("Seleccione un tipo de filtro");
 
-    let url = `http://localhost:8000/productos/filtrar?tipo=${tipo}`;
+    let i = 0;
 
     switch (tipo) {
         case "nombre":
             const nombre = document.getElementById("filtroNombre").value.trim();
             if (!nombre) return alert("Debe ingresar un nombre");
-            url += `&valor=${encodeURIComponent(nombre)}`;
-            break;
+
+                document.querySelectorAll(".fila").forEach(fila => {
+
+                    const nomFila = fila.querySelector(".nombre").textContent.trim();
+
+                    if(!nomFila.includes(nombre)){
+                        fila.hidden = true
+                    }else{
+                        i++
+                        fila.hidden = false
+                    }
+            
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                     actualizarTabla();
+                }
+        break;
         case "categoria":
             const categoria = document.getElementById("filtroCategoria").value.trim();
-            if (!categoria) return alert("Debe ingresar una categoría");
-            url += `&valor=${encodeURIComponent(categoria)}`;
-            break;
+            if (!categoria) return alert("Debe ingresar un nombre")
+
+            document.querySelectorAll(".fila").forEach(fila => {
+
+                    const nomCateg = fila.querySelector(".categ").textContent.trim();
+
+                    if(!nomCateg.includes(categoria)){
+                        fila.hidden = true
+                    }else{
+                        i++
+                        fila.hidden = false
+                    }
+            
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                    actualizarTabla();
+                }
+        break;
         case "talla":
             const talla = document.getElementById("filtroTalla").value.trim();
             if (!talla) return alert("Debe ingresar una talla");
-            url += `&valor=${encodeURIComponent(talla)}`;
-            break;
+
+            document.querySelectorAll(".fila").forEach(fila => {
+
+                    const tallaFila = fila.querySelector(".fila").textContent.trim();
+
+                    if(!tallaFila.includes(talla)){
+                        fila.hidden = true
+                    }else{
+                        i++
+                        fila.hidden = false
+                    }
+            
+            })
+
+            if(i === 0){
+                Swal.fire("No hay coinsidencias")
+                actualizarTabla();
+            }
+
+        break;
     }
 
-    actualizarTabla(url);
 });
 
 document.getElementById("btnLimpiar").addEventListener("click", () => {

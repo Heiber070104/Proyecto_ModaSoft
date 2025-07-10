@@ -34,7 +34,8 @@
          <div class="filtro-horizontal">
           <label for="tipoBusqueda">Buscar por:</label>
           <select id="tipoBusqueda">
-             <option value="">Seleccione una opción</option>
+             <option value="" hidden selected>Seleccione una opción</option>
+             <option value="factura">Factura</option>
              <option value="fecha">Rango de fecha</option>
              <option value="estado">Estado</option>
              <option value="proveedor">Proveedor</option>
@@ -56,7 +57,7 @@
         <table id="tabla">
           <thead>
             <tr>
-              <th>N° compra</th>
+              <th>N° factura</th>
               <th>Fecha creación</th>
               <th>Fecha Despacho</th>
               <th>Proveedor</th>

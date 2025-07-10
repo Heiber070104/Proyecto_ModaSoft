@@ -11,6 +11,7 @@ Route::prefix("compras")->group(function (){
     Route::get('/pdf/{id}', [Compra::class, 'generarPDF']);
 
     Route::get("/cancelar/{id}", [Compra::class, 'cancelarCompra']);
+    Route::get('filtrar', [Compra::class, 'filtrarCompras']);
     Route::get("/confirmarDespacho/{id}", [Compra::class, 'confirmarDespacho']);
     Route::post("/", [Compra::class, 'crearCompra']);
 

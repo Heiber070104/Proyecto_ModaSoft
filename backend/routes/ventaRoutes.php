@@ -12,6 +12,7 @@ Route::prefix("ventas")->group(function (){
     Route::get("/cancelar/{id}", [Venta::class, "cancelarVenta"]);
     Route::get("/cobrar", [Venta::class, "consultarCuentasCobrar"]);
     Route::get("/cobrar/{id}", [Venta::class, "consultarCuentasCobrar"]);
+    Route::get('filtrar', [ventaController::class, 'filtrarVentas']);
     Route::get("/{id}", [Venta::class, "buscarVenta"]);
     Route::put("/completar/{id}", [Venta::class, "completarVenta"]);
     Route::put("/cobrar/pagar/{id}", [Venta::class, "pagarCuentaCobrar"]);

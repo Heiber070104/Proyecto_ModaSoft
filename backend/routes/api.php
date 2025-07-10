@@ -18,6 +18,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/ventas/filtrar', [ventaController::class, 'filtrarVentas']);
-Route::get('/compras/filtrar', [compraController::class, 'filtrarCompras']);
-Route::get('/productos/filtrar', [inventarioController::class, 'filtrarInventario']);
+
+
+

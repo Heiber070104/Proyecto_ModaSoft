@@ -1,3 +1,31 @@
+const cargarRol = () => {
+
+    const sesion = new Sesiones().obtenerSesion();
+
+    if(!sesion || !sesion.rol || !sesion.usuario) {
+        alert("No tiene autorización.");
+        sesion.cerrarSesion();
+        window.location.href = "../pages/login.html";
+    }
+
+    switch(sesion.rol){
+        
+        case "Comprador":
+            alert("Los compradores no tienen autorización para acceder a esta página.");
+            window.location.href = "../pages/dashboard.html";  
+        break;
+        case "Gerente":
+        case "Contador":
+            const ocultar = document.querySelectorAll(".rol");
+            ocultar.forEach(element => {
+                element.style.display = "none";
+            })
+        break;
+    }
+        
+
+}
+
 
 const completarVenta = async (id, metodo) => {
 
@@ -139,6 +167,7 @@ const cancelarVenta = async id => {
 
         Object.values(consulta).forEach(venta => {
             const fila = document.createElement("tr");
+            fila.classList = "fila"
             let acciones = "🔒 Venta cerrada";
             let estadoTexto;
 
@@ -161,13 +190,12 @@ const cancelarVenta = async id => {
             }
 
             fila.innerHTML = `
-                <td>${venta.id_venta}</td>
-                <td>${venta.factura}</td>
-                <td>${venta.fecha}</td>
-                <td>${venta.cliente.nombre}</td>
+                <td class="factura">${venta.factura}</td>
+                <td class="fecha">${venta.fecha}</td>
+                <td class="nombre">${venta.cliente.nombre}</td>
                 <td>${venta.total}</td>
-                <td>${venta.tipo_pago}</td>
-                <td>${estadoTexto}</td>
+                <td class="tipoPago">${venta.tipo_pago}</td>
+                <td class="estado">${estadoTexto}</td>
                 <td>
                     <a href="http://localhost:8000/ventas/pdf/${venta.id_venta}" target="_blank">
                         <button>📄 Ver</button>
@@ -196,39 +224,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnLimpiar = document.getElementById("btnLimpiar");
     const inputsDinamicos = document.getElementById("inputsDinamicos");
 
-const cargarRol = () => {
-
-    const sesion = new Sesiones().obtenerSesion();
-
-    if(!sesion || !sesion.rol || !sesion.usuario) {
-        alert("No tiene autorización.");
-        sesion.cerrarSesion();
-        window.location.href = "../pages/login.html";
-    }
-
-    switch(sesion.rol){
-        
-        case "Comprador":
-            alert("Los compradores no tienen autorización para acceder a esta página.");
-            window.location.href = "../pages/dashboard.html";  
-        break;
-        case "Gerente":
-        case "Contador":
-            const ocultar = document.querySelectorAll(".rol");
-            ocultar.forEach(element => {
-                element.style.display = "none";
-            })
-        break;
-    }
-        
-
-}
-
-
-    
-
-   
-
     tipoBusqueda.addEventListener("change", function () {
         inputsDinamicos.innerHTML = "";
 
@@ -245,9 +240,9 @@ const cargarRol = () => {
                 inputsDinamicos.innerHTML = `
                     <label>Estado:</label>
                     <select id="estado">
-                        <option value="en_proceso">En proceso</option>
-                        <option value="completada">Completada</option>
-                        <option value="cancelada">Cancelada</option>
+                        <option value="En proceso">En proceso</option>
+                        <option value="Completada">Completada</option>
+                        <option value="Cancelada">Cancelada</option>
                     </select>
                 `;
                 break;
@@ -257,6 +252,13 @@ const cargarRol = () => {
                     <input type="text" id="clienteNombre" placeholder="Ej: Ana López">
                 `;
                 break;
+            case "factura":
+                inputsDinamicos.innerHTML = `
+                    <label>Factura:</label>
+                    <input type="text" id="numFactura" placeholder="F-00000001">
+                `
+                break;
+            
         }
     });
 
@@ -264,38 +266,104 @@ const cargarRol = () => {
         const tipo = tipoBusqueda.value;
         if (!tipo) return alert("Seleccione un tipo de búsqueda");
 
-        let url = `http://localhost:8000/ventas/filtrar?tipo=${tipo}`;
+        let i = 0;
 
         switch (tipo) {
             case "fecha":
-                const inicio = document.getElementById("fechaInicio").value;
-                const fin = document.getElementById("fechaFin").value;
-                if (!inicio || !fin) return alert("Debe seleccionar ambas fechas");
-                url += `&inicio=${inicio}&fin=${fin}`;
-                break;
+                const inicio = new Date(document.getElementById("fechaInicio").value);
+                const fin = new Date(document.getElementById("fechaFin").value);
+                if (inicio == "Invalid Date"|| fin == "Invalid Date"){Swal.fire("Debe seleccionar ambas fechas"); return};
+
+                document.querySelectorAll(".fila").forEach(fila => {
+
+                    const fecha = new Date(fila.querySelector(".fecha").textContent.trim());
+               
+                    if(fecha >= inicio && fecha <= fin){
+                        i++;
+                        fila.hidden = false;
+                    }else{
+                        fila.hidden = true;
+                    }
+
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                     cargarVentas();
+                }
+ 
+            break;
             case "estado":
                 const estado = document.getElementById("estado").value;
-                url += `&estado=${estado}`;
-                break;
+                if(estado == ""){Swal.fire("Debe selecionar una opción"); return}
+
+                document.querySelectorAll(".fila").forEach(fila => {
+
+                    const estFila = fila.querySelector(".estado").textContent.trim();
+
+                    if(estFila.includes(estado)){
+                        i++;
+                        fila.hidden = false;
+                    }else{
+                        fila.hidden = true;
+                    }
+
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                     cargarVentas();
+                }
+            
+            break;
             case "cliente":
                 const cliente = document.getElementById("clienteNombre").value.trim();
-                if (!cliente) return alert("Debe ingresar el nombre del cliente");
-                url += `&cliente=${encodeURIComponent(cliente)}`;
-                break;
+                if (!cliente) return Swal.fire("Debe ingresar el nombre del cliente");
+
+                document.querySelectorAll(".fila").forEach(fila => {
+
+                    const clienteFila = fila.querySelector(".nombre").textContent.trim();
+
+                    if(!clienteFila.includes(cliente)){
+                        fila.hidden = true
+                    }else{
+                        i++
+                        fila.hidden = false
+                    }
+            
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                     cargarVentas();
+                }
+            break;
+            case "factura":
+
+                const factura = document.getElementById("numFactura").value.trim();
+                if(factura == ""){Swal.fire("El campo factura no puede estar vacio"); return}
+
+                document.querySelectorAll(".fila").forEach(fila => {
+
+                    const facFila = fila.querySelector(".factura").textContent.trim();
+
+                    if(facFila !== factura){
+                        fila.hidden = true
+                    }else{
+                        i++
+                        fila.hidden = false
+                    }
+            
+                })
+
+                if(i === 0){
+                     Swal.fire("No hay coinsidencias")
+                     cargarVentas();
+                }
+
+            break;
         }
 
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            if (res.ok) {
-                renderizarVentas(data);
-            } else {
-                alert(data.message || "No se encontraron resultados");
-            }
-        } catch (e) {
-            console.error(e);
-
-        }
     });
 
     btnLimpiar.addEventListener("click", () => {
