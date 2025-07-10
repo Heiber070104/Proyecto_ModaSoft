@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("direccion").value = consulta.direccion;
             document.getElementById("telefono").value = consulta.telefono;
             document.getElementById("correo").value = consulta.correo;
+            new loaderComponent().stopLoading();
 
         }
             
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const correo = document.getElementById("correo").value;
 
         if(!nombre || !direccion || !telefono || !correo){
-            alert("Rellene todos los campos");
+            Swal.fire("Rellene todos los campos");
             return false;
         }
 
@@ -58,17 +59,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if(res.ok){
             
-                alert(consulta.message)
+                await Swal.fire({
+                    title: "Exito",
+                    text: consulta.message,
+                    icon: "success"
+                });
                 window.location.href = "proveedores.html"
 
             }else{
                 console.log("Error al actualizar el producto: " + consulta.message);
-                alert("Error al actulizar el producto, intente nuevamente" + consulta.message);  
+                Swal.fire({
+                    title: "Error",
+                    text: consulta.message,
+                    icon: "warning"
+                });
             }
 
         }catch(error){
             console.log(error)
-            alert("Error al actualizar el producto, intente nuevamente" + error); 
+            Swal.fire({
+                title: "Error",
+                text: error,
+                icon: "warning"
+            });
         }
 
     })    

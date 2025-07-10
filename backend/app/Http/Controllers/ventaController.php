@@ -10,6 +10,9 @@ use App\Models\productoModel;
 use App\Models\inventarioModel;
 use App\Models\tallaModel;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use App\Models\transaccionModel;
+use App\Models\cuentasCobrarModel;
+use App\Models\pagoVentaModel;
 
 class ventaController extends Controller
 {
@@ -26,21 +29,21 @@ class ventaController extends Controller
 
     public function crearVenta(Request $request){
 
-      try{
+        DB::beginTransaction();
 
-        // DB::beginTransaction();
+        try{
 
-        // Validar los datos de la solicitud
+            // Validar los datos de la solicitud
             $data = $request->validate([
-                'factura' => 'required|string|max:20',
                 'id_cliente' => 'required|integer',
+                "tipo_pago" => 'required|string',
             ]);
 
             $venta = ventaModel::create([
-                'factura' => $data["factura"],
                 'fecha' => now(),
                 'id_cliente' => $data['id_cliente'],
                 'total' => 0,
+                "tipo_pago" => $data["tipo_pago"],
                 'estado' => "en_proceso",
             ]);
 
@@ -50,7 +53,7 @@ class ventaController extends Controller
 
                 $stock = inventarioModel::where("id_producto", $producto["id_producto"])->first();
                 if($producto["cantidad"] > $stock->cantidad_disponible){
-                    // DB::rollBack();
+                    DB::rollBack();
                     return response()->json(["message" => "La cantidad del producto ID:".$producto["id_producto"]." supera a la cantidad disponible"], 400);
                 }
 
@@ -65,13 +68,16 @@ class ventaController extends Controller
             
             }
 
-            $venta->update(["total" => $total]);
+            $venta->update(["total" => $total, "factura" => "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT)]);
 
-            return response()->json(['message' => 'Venta creada exitosamente'], 201);
-            // DB::commit();
+            DB::commit();
+            return response()->json([
+                'message' => 'Venta creada exitosamente', 
+                "factura" => "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT)
+            ], 201);
 
         }catch(\Exception $e){
-            // DB::rollBack();
+            DB::rollBack();
             return response()->json(['message' => 'Error al crear la venta: ' . $e->getMessage()], 500);
         }
 
@@ -79,14 +85,124 @@ class ventaController extends Controller
 
     public function completarVenta(Request $request, $id){
 
+        DB::beginTransaction();
+
         try{
+
+            $data = $request->validate([
+                'metodo_pago' => 'nullable|string',
+            ]);
             
-            $venta = ventaModel::findOrFail($id);
+            $venta = ventaModel::with("cliente")->findOrFail($id);
+            if (!$venta) {
+                return response()->json(['message' => 'Venta no encontrada'], 404);
+            }
+
+            if($venta->tipo_pago == "CONTADO"){
+
+                if(!$data["metodo_pago"] || $data["metodo_pago"] == null){
+                    return response()->json(['message' => 'Método de pago no proporcionado'], 400);
+                }
+
+                $pago = new pagoVentaModel();
+                $pago->id_venta = $compra->id_venta;
+                $pago->monto = $compra->total;
+                $pago->fecha = now();
+                $pago->metodo = $data["metodo_pago"] ?? 'EFECTIVO'; // Asignar un método de pago por defecto si no se proporciona
+                $pago->save();
+
+                $transaccionDebito = new transaccionModel();
+                $transaccionDebito->factura = "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT);
+
+                $transaccionDebito->descripcion  = 
+                    "Venta de mercacia según F-".
+                    str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT).
+                    " por monto de Bs ". 
+                    number_format($venta->monto, 2).
+                    " al cliente ". 
+                    $venta->cliente->nombre 
+                ;
+
+                $transaccionDebito->fecha = now();
+                $transaccionDebito->monto = $venta->total;
+                $transaccionDebito->tipo = 'DEBITO';
+                $transaccionDebito->id_cuenta = ($data["metodo_pago"] === "BANCARIO") ? 3 : 1;
+                $transaccionDebito->save();
+
+                $transaccionCredito = new transaccionModel();
+                $transaccionCredito->factura = "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT);
+
+                $transaccionCredito->descripcion  = 
+                    "Venta de mercacia según F-".
+                    str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT).
+                    " por monto de Bs ". 
+                    number_format($venta->monto, 2).
+                    " al cliente ". 
+                    $venta->cliente->nombre 
+                ;
+
+                $transaccionCredito->fecha = now();
+                $transaccionCredito->monto = $venta->total;
+                $transaccionCredito->tipo = 'CREDITO';
+                $transaccionCredito->id_cuenta = 69;
+                $transaccionCredito->save();
+                
+            }else{
+
+                $transaccionDebito = new transaccionModel();
+                $transaccionDebito->factura = "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT);
+
+                $transaccionDebito->descripcion  = 
+                    "Venta de mercacia a crédito según F-".
+                    str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT).
+                    " por monto de Bs ". 
+                    number_format($venta->monto, 2).
+                    " al cliente ". 
+                    $venta->cliente->nombre 
+                ;
+
+                $transaccionDebito->fecha = now();
+                $transaccionDebito->monto = $venta->total;
+                $transaccionDebito->tipo = 'DEBITO';
+                $transaccionDebito->id_cuenta = 5;
+                $transaccionDebito->save();
+
+                $transaccionCredito = new transaccionModel();
+                $transaccionCredito->factura = "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT);
+
+                $transaccionCredito->descripcion  = 
+                    "Venta de mercacia a crédito según F-".
+                    str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT).
+                    " por monto de Bs ". 
+                    number_format($venta->monto, 2).
+                    " al cliente ". 
+                    $venta->cliente->nombre 
+                ;
+
+                $transaccionCredito->fecha = now();
+                $transaccionCredito->monto = $venta->total;
+                $transaccionCredito->tipo = 'CREDITO';
+                $transaccionCredito->id_cuenta = 69;
+                $transaccionCredito->save();
+
+                $cuentaCobrar = cuentasCobrarModel::create([
+                    'id_venta' => $venta->id_venta,
+                    'monto_total' => $venta->total,
+                    'monto_pagado' => 0,
+                    'fecha' => now(),
+                    'estado' => 'pendiente',
+                ]);
+
+            }
+
             $venta->estado = "completada";
             $venta->save();
 
+            DB::commit();
             return response()->json(['message' => 'Venta completada exitosamente'], 200);
         }catch(\Exception $e){
+
+            DB::rollBack();
             return response()->json(['message' => 'Error al completar venta: ' . $e->getMessage()], 500);
         }
 
@@ -94,7 +210,9 @@ class ventaController extends Controller
 
     public function cancelarVenta(Request $request, $id)
     {
+        DB::beginTransaction();
         try {
+
             if(!$id){
                 return response()->json(['message' => 'ID de venta no proporcionado'], 400);
             }
@@ -117,8 +235,10 @@ class ventaController extends Controller
             $venta->estado = 'cancelada';
             $venta->save();
            
+            DB::commit();
             return response()->json(['message' => 'Venta cancelada exitosamente, existencias actualizadas'], 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['message' => 'Error al cancelar la venta: ' . $e->getMessage()], 500);
         }
     }
@@ -301,44 +421,7 @@ class ventaController extends Controller
         }
 
     }
- public function filtrarVentas(Request $request)
-{
-    try {
-        $tipo = $request->input('tipo');
 
-        switch ($tipo) {
-            case 'fecha':
-                $inicio = $request->input('inicio');
-                $fin = $request->input('fin');
-                $ventas = ventaModel::with('cliente', 'producto')
-                    ->whereBetween('fecha', [$inicio, $fin])
-                    ->get();
-                break;
-
-            case 'estado':
-                $estado = $request->input('estado');
-                $ventas = ventaModel::with('cliente', 'producto')
-                    ->where('estado', $estado)
-                    ->get();
-                break;
-
-            case 'cliente':
-                $cliente = $request->input('cliente');
-                $ventas = ventaModel::with('cliente', 'producto')
-                    ->whereHas('cliente', function ($q) use ($cliente) {
-                        $q->where('nombre', 'LIKE', '%' . $cliente . '%');
-                    })->get();
-                break;
-
-            default:
-                return response()->json(['message' => 'Tipo de filtro no válido'], 400);
-        }
-
-        return response()->json($ventas, 200);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Error al filtrar ventas: ' . $e->getMessage()], 500);
-    }
-}
     public function generarPDF($id){
         $venta = ventaModel::with(['cliente', 'producto'])->findOrFail($id);
 
@@ -401,20 +484,8 @@ class ventaController extends Controller
         $pdf->SetFont('Arial', 'B', 12);
         $pdf->Cell(0, 10, 'Total General: Bs ' . number_format($venta->total, 2), 0, 1, 'R');
 
-        // Firma
-        // $pdf->Ln(20);
-        // $pdf->SetFont('Arial', '', 11);
-        // $pdf->Cell(60, 8, '__________________________', 0, 0, 'C');
-        // $pdf->Cell(60, 8, '__________________________', 0, 0, 'C');
-        // $pdf->Cell(60, 8, '__________________________', 0, 1, 'C');
-
-        // $pdf->Cell(60, 6, 'Receptor', 0, 0, 'C');
-        // $pdf->Cell(60, 6, 'Almacenista', 0, 0, 'C');
-        // $pdf->Cell(60, 6, 'Supervisor', 0, 1, 'C');
-
         $pdf->Output();
         exit;
     }
 
-    
 }
