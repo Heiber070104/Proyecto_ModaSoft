@@ -263,12 +263,16 @@ public function buscarPorFactura($factura)
             'factura' => $venta->factura,
             'cliente' => $venta->cliente->nombre,
             'detalles' => $venta->detalles->map(function ($detalle) {
+
+                $total = $detalle->producto->precio_unitario * $detalle->producto->porcentaje_ganancia / 100;
+                $total += $detalle->producto->precio_unitario;
+
                 return [
                     'id_detalle_venta' => $detalle->id_detalle_venta,
                     'id_producto' => $detalle->producto->id_producto,
                     'nombre' => $detalle->producto->nombre,
                     'talla' => $detalle->producto->talla->descripcion,
-                    'precio' => $detalle->precio,
+                    'precio' => $total,
                     'cantidad' => $detalle->cantidad
                 ];
             })
@@ -326,7 +330,7 @@ public function buscarPorFactura($factura)
             
             if ($totalPagado >= $cuentaCobrar->monto_total) {
                 $cuentaCobrar->monto_pagado = $cuentaCobrar->monto_total; // Asegurarse de no exceder el total
-                $cuentaCobrar->estado = 'pagado';
+                $cuentaCobrar->estado = 'cobrado';
             }
 
             $cuentaCobrar->save();

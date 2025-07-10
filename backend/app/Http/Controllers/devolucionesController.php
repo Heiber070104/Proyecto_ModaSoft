@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\productoModel;
 use App\Models\devolucionesModel;
 use App\Models\detalleventaModel;
+use App\Models\ventaModel;
+use App\Models\transaccionModel;
+use App\Models\cuentasCobrarModel;
 use Illuminate\Support\Facades\DB;
 
 class devolucionesController extends Controller
@@ -18,7 +22,9 @@ class devolucionesController extends Controller
                 'id_detalle_venta' => 'required|integer|exists:detalle_venta,id_detalle_venta',
                 'motivo' => 'required|string',
                 'cantidad' => 'required|integer|min:1',
-                'fecha' => 'required|date',
+                "monto" => "required",
+                "estado_mercancia" => "required|string",
+                'fecha' => 'required|date'
             ]);
 
             $detalle = detalleventaModel::findOrFail($data['id_detalle_venta']);
@@ -34,6 +40,7 @@ class devolucionesController extends Controller
                 'id_detalle_venta' => $data['id_detalle_venta'],
                 'motivo' => $data['motivo'],
                 'cantidad' => $data['cantidad'],
+                'monto' => $data["monto"],
                 'fecha' => $data['fecha'],
                 'estado' => 'pendiente'
             ]);
@@ -49,7 +56,7 @@ class devolucionesController extends Controller
     public function listarDevoluciones()
     {
         try {
-            $devoluciones = devolucionesModel::with(['venta.cliente', 'detalle.producto.talla'])
+            $devoluciones = devolucionesModel::with(['venta.cliente', 'detalle.producto'])
                 ->orderBy('fecha', 'DESC')
                 ->get();
 
@@ -66,7 +73,7 @@ class devolucionesController extends Controller
                     ],
                     'producto' => [
                         'nombre' => $dev->detalle->producto->nombre ?? '',
-                        'talla' => $dev->detalle->producto->talla->descripcion ?? ''
+                        'talla' => $dev->detalle->producto->talla->descripcion ?? '',
                     ]
                 ];
             });
@@ -81,6 +88,7 @@ class devolucionesController extends Controller
     // 🔁 Cambiar estado de una devolución y reponer stock si es aceptada
 public function cambiarEstado(Request $request, $id)
 {
+    DB::beginTransaction();
     try {
         $data = $request->validate([
             'estado' => 'required|in:pendiente,aceptada,rechazada'
@@ -90,8 +98,12 @@ public function cambiarEstado(Request $request, $id)
         $devolucion->estado = $data['estado'];
         $devolucion->save();
 
+        if($data["estado"] == "rechazada"){
+            return response()->json(["message"=>"Devolucion rechazada exitosamente"], 200);
+        }
+
         // ✅ Reponer stock si se acepta la devolución
-        if ($data['estado'] === 'aceptada') {
+        if ($data['estado'] === 'aceptada' && $devolucion->estado_mercancia == "BUENO") {
             $inventario = $devolucion->detalle->producto->inventario;
             if ($inventario) {
                 $inventario->cantidad_disponible += $devolucion->cantidad;
@@ -99,9 +111,108 @@ public function cambiarEstado(Request $request, $id)
             }
         }
 
+        $venta = ventaModel::findOrFail($devolucion->id_venta);
+
+        if($venta->tipo_pago === "CONTADO"){
+
+            $transaccionDebito = new transaccionModel();
+            $transaccionDebito->factura = "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT);
+
+            $transaccionDebito->descripcion  = 
+                "Devolución de mercacia de venta al contado según F-".
+                str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT).
+                " por monto de Bs ". 
+                number_format($devolucion->monto, 2).
+                " por parte del cliente ". 
+                $venta->cliente->nombre.
+                " pagado con efectivo" 
+            ;
+
+            $transaccionDebito->fecha = now();
+            $transaccionDebito->monto = $venta->total;
+            $transaccionDebito->tipo = 'DEBITO';
+            $transaccionDebito->id_cuenta = 69;
+            $transaccionDebito->save();
+
+
+            $transaccionCredito = new transaccionModel();
+            $transaccionCredito->factura = "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT);
+
+            $transaccionCredito->descripcion  = 
+                "Devolución de mercacia de venta al contado según F-".
+                str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT).
+                " por monto de Bs ". 
+                number_format($devolucion->monto, 2).
+                " por parte del cliente ". 
+                $venta->cliente->nombre.
+                " pagado con efectivo"  
+            ;
+
+            $transaccionCredito->fecha = now();
+            $transaccionCredito->monto = $venta->total;
+            $transaccionCredito->tipo = 'CREDITO';
+            $transaccionCredito->id_cuenta = 1;
+            $transaccionCredito->save();
+
+        }else{
+
+            $transaccionDebito = new transaccionModel();
+            $transaccionDebito->factura = "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT);
+
+            $transaccionDebito->descripcion  = 
+                "Devolución de mercacia de venta a crédito según F-".
+                str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT).
+                " por monto de Bs ". 
+                number_format($devolucion->monto, 2).
+                " por parte del cliente ". 
+                $venta->cliente->nombre.
+                " pagado con efectivo" 
+            ;
+
+            $transaccionDebito->fecha = now();
+            $transaccionDebito->monto = $venta->total;
+            $transaccionDebito->tipo = 'DEBITO';
+            $transaccionDebito->id_cuenta = 69;
+            $transaccionDebito->save();
+
+
+            $transaccionCredito = new transaccionModel();
+            $transaccionCredito->factura = "F-".str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT);
+
+            $transaccionCredito->descripcion  = 
+                "Devolución de mercacia de venta a crédito según F-".
+                str_pad($venta->id_venta, 8, "0", STR_PAD_LEFT).
+                " por monto de Bs ". 
+                number_format($devolucion->monto, 2).
+                " por parte del cliente ". 
+                $venta->cliente->nombre.
+                " pagado con efectivo"  
+            ;
+
+            $transaccionCredito->fecha = now();
+            $transaccionCredito->monto = $venta->total;
+            $transaccionCredito->tipo = 'CREDITO';
+            $transaccionCredito->id_cuenta = 5;
+            $transaccionCredito->save();
+
+            $cuentaCobrar = cuentasCobrarModel::where("id_venta", $venta->id_venta)->first();
+            $cuentaCobrar->monto_total -= $devolucion->monto;
+
+            if($cuentaCobrar->monto_pagado > $cuentaCobrar->monto_total){
+                $cuentaCobrar->monto_pagado = $cuentaCobrar_monto_total;
+                $cuentaCobrar->estado = "cobrado";
+            }
+
+            $cuentaCobrar->save();
+
+        }
+
+        DB::commit();
+
         return response()->json(['message' => 'Estado actualizado con éxito.']);
 
     } catch (\Exception $e) {
+        DB::rollback();
         return response()->json(['message' => 'Error al actualizar estado: ' . $e->getMessage()], 500);
     }
 }

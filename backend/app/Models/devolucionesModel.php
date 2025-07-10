@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ventaModel;
@@ -20,7 +21,9 @@ class devolucionesModel extends Model
         'id_detalle_venta',
         'fecha',
         'motivo',
+        "monto",
         'cantidad',
+        "estado_mercancia",
         'estado',
     ];
 

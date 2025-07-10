@@ -6,7 +6,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const cuerpoTabla = document.querySelector(".cuerpo-tabla-productos");
   const productoSeleccionado = document.getElementById("producto-seleccionado");
   const form = document.getElementById("form-devolucion");
+  const precio = document.getElementById("precio");
 
+  const inputMonto = document.getElementById("monto"); 
   const idVentaInput = document.getElementById("id_venta");
   const idDetalleInput = document.getElementById("id_detalle_venta");
   const cantidadVendidaInput = document.getElementById("cantidad_vendida");
@@ -30,12 +32,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     cuerpoTabla.innerHTML = "";
 
     data.detalles.forEach(det => {
+
+      console.log(det)
       const fila = document.createElement("tr");
       fila.innerHTML = `
         <td>${det.nombre}</td>
         <td>${det.talla}</td>
         <td>${det.cantidad}</td>
-        <td><button type="button" class="seleccionar" data-id="${det.id_detalle_venta}" data-nombre="${det.nombre}" data-cantidad="${det.cantidad}">Seleccionar</button></td>
+        <td>${det.precio.toFixed(2)}</td>
+        <td><button type="button" class="seleccionar" data-id="${det.id_detalle_venta}" data-nombre="${det.nombre}" data-cantidad="${det.cantidad}" data-precio="${det.precio}">Seleccionar</button></td>
       `;
       cuerpoTabla.appendChild(fila);
     });
@@ -45,18 +50,40 @@ document.addEventListener("DOMContentLoaded", async () => {
         const nombre = boton.dataset.nombre;
         const cantidad = boton.dataset.cantidad;
         const idDetalle = boton.dataset.id;
+        const precioProd = boton.dataset.precio;
 
         productoSeleccionado.textContent = nombre;
         idDetalleInput.value = idDetalle;
         cantidadVendidaInput.value = cantidad;
         cantidadInput.max = cantidad;
         cantidadInput.value = 1;
+        precio.value = precioProd;
       });
     });
+
+
 
   } catch (err) {
     Swal.fire("Error", err.message, "error");
   }
+
+  function colocarMonto(){
+    const precioProducto = precio.value;
+    const cantidadDevuelto = cantidadInput.value;
+
+    const montoTotal = parseFloat(precioProducto) * parseFloat(cantidadDevuelto);
+
+    if(montoTotal == NaN){
+      inputMonto.textContent = "0.00";
+      inputMonto.dataset.total = 0.00;
+      return
+    }
+    inputMonto.textContent = montoTotal.toFixed(2);
+    inputMonto.dataset.total = montoTotal.toFixed(2);
+  }
+
+ cantidadInput.addEventListener("change", colocarMonto)
+ cantidadInput.addEventListener("input", colocarMonto)
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
@@ -66,7 +93,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       id_detalle_venta: idDetalleInput.value,
       cantidad: cantidadInput.value,
       motivo: document.getElementById("motivo").value,
+      monto: inputMonto.dataset.total,
       fecha: document.getElementById("fecha").value,
+      estado_mercancia: document.getElementById("estado_mercancia").value
     };
 
     if (!devolucion.id_detalle_venta) {

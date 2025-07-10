@@ -33,6 +33,7 @@
               <th>Producto</th>
               <th>Talla</th>
               <th>Cantidad vendida</th>
+              <th>Precio C/U</th>
               <th>Acción</th>
             </tr>
           </thead>
@@ -46,6 +47,7 @@
           <input type="hidden" id="id_detalle_venta" />
           <input type="hidden" id="id_venta" />
           <input type="hidden" id="cantidad_vendida" />
+          <input type="hidden" id="precio" />
 
           <label for="cantidad">Cantidad a devolver</label>
           <input type="number" id="cantidad" min="1" required />
@@ -53,8 +55,17 @@
           <label for="motivo">Motivo</label>
           <input type="text" id="motivo" required />
 
+          <label for="">Estado de la mercancia</label>
+          <select id="estado_mercancia">
+            <option value="DAÑADO">Dañada</option>
+            <option value="BUENO">En buenas condiciones</option>
+          </select>
+
           <label for="fecha">Fecha</label>
           <input type="date" id="fecha" required />
+
+          <label for="">Monto de devolución</label>
+          <div id="monto" data-total>0.00</div>
 
           <button type="submit">Registrar devolución</button>
           <a href="devoluciones.html"><button type="button">Cancelar</button></a>
