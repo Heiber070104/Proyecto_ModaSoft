@@ -17,7 +17,9 @@ Route::prefix("ventas")->group(function (){
     Route::put("/completar/{id}", [Venta::class, "completarVenta"]);
     Route::put("/cobrar/pagar/{id}", [Venta::class, "pagarCuentaCobrar"]);
     Route::post("/", [Venta::class, "crearVenta"]);
-    
+    // VentaRoutes.php (dentro de prefix 'ventas')
+    Route::get("/factura/{factura}", [Venta::class, "buscarPorFactura"]);
+
 })
 
 ?>

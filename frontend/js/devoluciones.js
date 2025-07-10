@@ -1,67 +1,120 @@
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('✅ DOM cargado');
+document.addEventListener("DOMContentLoaded", () => {
+  cargarDevoluciones();
+  configurarBuscadorFactura();
+});
 
-    const btn = document.getElementById('btnBuscarVenta');
-    if (!btn) {
-        console.error('❌ No se encontró el botón con id btnBuscarVenta');
-        return;
-    }
+// 📦 Cargar todas las devoluciones
+async function cargarDevoluciones() {
+  try {
+    const res = await fetch("http://localhost:8000/devoluciones", {
+      method: "GET"
+    });
 
-    btn.addEventListener('click', function () {
-        console.log('🟡 Botón clickeado');
+    const data = await res.json();
 
-        const idVenta = document.getElementById('buscarVenta').value.trim();
-        console.log('🟡 ID Venta:', idVenta);
+    if (res.ok && data.devoluciones) {
+      const tbody = document.querySelector(".cuerpo-tabla-devoluciones");
+      tbody.innerHTML = "";
 
-        if (!idVenta) {
-            console.warn('⚠️ ID vacío');
-            return;
+      data.devoluciones.forEach(dev => {
+        const fila = document.createElement("tr");
+
+        let estadoFormateado = "";
+        switch (dev.estado) {
+          case "pendiente":
+            estadoFormateado = "⌛ Pendiente";
+            break;
+          case "aceptada":
+            estadoFormateado = "✅ Aceptada";
+            break;
+          case "rechazada":
+            estadoFormateado = "❌ Rechazada";
+            break;
         }
 
-        const url = `http://127.0.0.1:8000/venta/${idVenta}`;
-        console.log('📡 Haciendo fetch a:', url);
+        fila.innerHTML = `
+          <td>${dev.venta.factura}</td>
+          <td>${dev.venta.cliente}</td>
+          <td>${dev.producto.nombre} (${dev.producto.talla})</td>
+          <td>${dev.motivo}</td>
+          <td>${dev.cantidad}</td>
+          <td>${dev.fecha}</td>
+          <td>${estadoFormateado}</td>
+          <td>
+            ${dev.estado === "pendiente" ? `
+              <button onclick="cambiarEstado(${dev.id_devolucion}, 'aceptada')">Aceptar</button>
+              <button onclick="cambiarEstado(${dev.id_devolucion}, 'rechazada')">Rechazar</button>
+            ` : "—"}
+          </td>
+        `;
 
-        fetch(url)
-            .then(response => {
-                console.log('🔁 Respuesta fetch:', response.status);
-                if (!response.ok) throw new Error('Venta no encontrada');
-                return response.json();
-            })
-            .then(data => {
-                console.log('✅ Datos recibidos:', data);
+        tbody.appendChild(fila);
+      });
+    } else {
+      console.error("Error en respuesta:", data);
+    }
+  } catch (error) {
+    console.error("Error al cargar devoluciones:", error);
+  }
+}
 
-                // Mostrar datos de la venta
-                document.getElementById('fechaVenta').textContent = data.venta.fecha;
-                document.getElementById('clienteVenta').textContent = data.venta.id_cliente;
-                document.getElementById('totalVenta').textContent = data.venta.total;
-                document.getElementById('estadoVenta').textContent = data.venta.estado;
+// Cambiar estado
+async function cambiarEstado(id, nuevoEstado) {
+  const confirm = await Swal.fire({
+    title: `¿Deseas marcar esta devolución como ${nuevoEstado}?`,
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Sí, confirmar",
+    cancelButtonText: "Cancelar",
+  });
 
-                const tbody = document.querySelector('#tablaDevoluciones tbody');
-                tbody.innerHTML = '';
+  if (!confirm.isConfirmed) return;
 
-                // Verificar que devoluciones sea un array válido
-                if (!data.devolucion || !Array.isArray(data.devolucion)) {
-                    console.warn('⚠️ La propiedad "devoluciones" no existe o no es un arreglo. Se usará arreglo vacío.');
-                    data.devolucion = [];
-                }
+  try {
+  const res = await fetch(`http://localhost:8000/devoluciones/estado/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ estado: nuevoEstado })
+  });
 
-                data.devolucion.forEach(dev => {
-                    const fila = `<tr>
-                        <td>${dev.id_devolucion}</td>
-                        <td>${dev.id_venta}</td>
-                        <td>${dev.fecha}</td>
-                        <td>${dev.motivo}</td>
-                    </tr>`;
-                    tbody.innerHTML += fila;
-                });
+  const contentType = res.headers.get("content-type");
 
-                document.getElementById('resultadoVenta').style.display = 'block';
-                document.getElementById('mensajeError').style.display = 'none';
-            })
-            .catch(error => {
-                console.error('❌ Error en fetch:', error);
-                document.getElementById('resultadoVenta').style.display = 'none';
-                document.getElementById('mensajeError').style.display = 'block';
-            });
-    });
-});
+  if (!res.ok) {
+    const text = await res.text(); // <-- lee el texto crudo del error
+    throw new Error(`Error ${res.status}: ${text}`);
+  }
+
+  if (contentType && contentType.includes("application/json")) {
+    const data = await res.json();
+    Swal.fire("Éxito", data.message, "success");
+    cargarDevoluciones();
+  } else {
+    throw new Error("Respuesta no válida del servidor.");
+  }
+
+} catch (e) {
+  Swal.fire("Error", e.message, "error");
+  console.error("Error detallado:", e);
+}
+}
+
+// 🔎 Buscar factura y redirigir a añadir_devolucion.html
+function configurarBuscadorFactura() {
+
+  const input = document.getElementById('inputFactura');
+  const btn = document.getElementById('btnBuscar');
+  const mensaje = document.getElementById('mensaje');
+
+  btn.addEventListener('click', () => {
+    const factura = input.value.trim();
+    if (!factura) {
+      mensaje.textContent = 'Ingrese una factura.';
+      return;
+    }
+    mensaje.textContent = '';
+    window.location.href = `añadir_devolucion.html?factura=${encodeURIComponent(factura)}`;
+  });
+
+}
