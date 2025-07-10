@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes</title>
-    <link rel="stylesheet" href="../css/topbar_menu.css">
+
+    <title>Cuentas por pagar</title>
+
     <link rel="stylesheet" href="../css/tablas.css">
+    <link rel="stylesheet" href="../css/topbar_menu.css">
     <link rel="icon" href="../public/logo_modasoft.png">
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
-    <script src="../js/clientes.js"></script>
+    <script src="../js/cuentas_pagar.js"></script>
+
 </head>
 <body>
 
-    
     <div class="container">
       <aside class="sidebar"></aside> <!-- Aquí va el menú -->
 
@@ -22,33 +24,31 @@
         <header class="topbar"></header>
 
         <section class="welcome">
-          <h1>Gestión de Clientes</h1>
-          <div class="botones-acciones">
-            <a href="añadir_cliente.html"><button>➕ Nuevo cliente</button></a>
-            <!-- <a href="compras.html"><button>⏪ Regresar</button></a> -->
-          </div>
+          <h1>Gestión de cuentas por pagar</h1>
 
           <table id="tabla">
-            
+
             <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Cédula</th>
-                <th>Dirección</th>
-                <th>Telefono</th>
-                <th>Correo</th>
+
+                <th>ID de compra</th>
+                <th>Proveedor</th>
+                <th>Fecha de vencimiento</th>
+                <th>Monto total</th>
+                <th>Monto pagado</th>
+                <th>Estado</th>
                 <th>Acciones</th>
-              </tr>
             </thead>
 
-            <tbody class="cont-clientes"></tbody>
+            <tbody class="cont-deudas">
 
-          </table>
-          
+            </tbody>
+
+           </table>
+
         </section>
       </main>
 
-    </div>
+  </div>
     
 </body>
 </html>

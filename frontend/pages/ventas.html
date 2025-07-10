@@ -5,50 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Ventas</title>
     <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/tablas.css">
+    <link rel="stylesheet" href="../css/acciones.css">
+    <link rel="icon" href="../public/logo_modasoft.png">
     <script src="../js/sesiones.js"></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
-    <script src="../js/ventas.js"></script>
-   
 </head>
 <body>
 
-     <div class="container">
-      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+  <div class="container">
+    <aside class="sidebar"></aside>
 
-      <main class="main-content">
-        <header class="topbar"></header>
+    <main class="main-content">
+      <header class="topbar"></header>
 
-        <section class="welcome">
-          <h1>Gestión de Ventas</h1>
-          <div class="botones-acciones">
-            <a href="añadir_venta.html"><button>➕ Nueva venta</button></a>
-            <a href="clientes.html"><button>Gestor de clientes</button></a>
-          </div>
+      <section class="welcome">
+        <h1>Gestión de Ventas</h1>
+
+        <div class="filtro-horizontal">
+          <label for="tipoBusqueda">Buscar por:</label>
+            <select id="tipoBusqueda">
+              <option value="">Seleccione una opción</option>
+              <option value="fecha">Rango de fecha</option>
+              <option value="estado">Estado</option>
+         <!-- <option value="cliente">Cliente</option> -->
+            </select>
+        </div>
+
+        <div id="inputsDinamicos" style="margin-bottom: 1rem;"></div>
+
+       <div class="botones-filtro">
+            <button id="btnBuscar">🔍 Buscar</button>
+             <button id="btnLimpiar">🧹 Limpiar</button>
+       </div>
+
+
+        <div class="botones-acciones">
+          <a href="añadir_venta.html"><button>➕ Nueva venta</button></a>
+        </div>
 
         <table class="tablaVentas">
-        <thead>
+          <thead>
             <tr>
-                <th>N° de venta</th>
-                <th>N° Factura</th>
-                <th>Fecha creado</th>
-                <th>Cliente</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th>Detalles de venta</th>     
-                <th>Acciones</th>     
+              <th>N° de venta</th>
+              <th>N° Factura</th>
+              <th>Fecha creado</th>
+              <th>Cliente</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Detalles de venta</th>
+              <th>Acciones</th>     
             </tr>
-        </thead>
-        <tbody class="cont-ventas">
-            <!-- Filas con ventas -->
-        </tbody>
+          </thead>
+          <tbody class="cont-ventas"></tbody>
         </table>
 
-        </section>
-      </main>
-
+      </section>
+    </main>
   </div>
 
+  <script src="../js/ventas.js"></script>
 </body>
 </html>

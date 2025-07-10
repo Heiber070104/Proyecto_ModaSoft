@@ -4,119 +4,66 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Devoluciones de Ventas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/devoluciones.css"> <!-- Asegúrate de que esta ruta sea correcta -->
-  <script src="../js/devoluciones.js" defer></script> <!-- Carga del JS externo -->
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f4f6f8;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
+  <link rel="icon" href="../public/logo_modasoft.png">
 
-    .container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      max-width: 700px;
-      margin: 40px auto;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
+  <!-- Estilos globales -->
+  <link rel="stylesheet" href="../css/topbar_menu.css" />
+  <link rel="stylesheet" href="../css/tablas.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
-    h1, h3 {
-      color: #2c3e50;
-    }
+  <!-- Scripts para menú y topbar -->
+  <script src="../js/sesiones.js"></script>
+  <script src="../js/componentes/menu.js" defer></script>
+  <script src="../js/componentes/topbar.js" defer></script>
 
-    .devolucion-search-box {
-      margin-top: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    input[type="text"] {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-
-    button {
-      background-color: #3498db;
-      border: none;
-      color: white;
-      padding: 10px 14px;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #2980b9;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #ecf0f1;
-    }
-
-    #mensajeError {
-      color: red;
-      margin-top: 15px;
-    }
-  </style>
+  <!-- Script propio -->
+  <script src="../js/devoluciones.js" defer></script>
 </head>
 <body>
+
   <div class="container">
-    <h1>Devoluciones</h1>
-    <h3>Buscar venta para devolución</h3>
-    <p>Escribe el número de la venta que deseas localizar para aplicar una devolución.</p>
+    <aside class="sidebar"></aside> <!-- Menú lateral cargado dinámicamente -->
+    
+    <main class="main-content">
+      <header class="topbar"></header> <!-- Topbar cargada dinámicamente -->
 
-    <div class="devolucion-search-box">
-      <label for="buscarVenta">N° Venta:</label>
-      <input type="text" id="buscarVenta" name="venta_id" placeholder="Ej: 12345" />
-      <button type="button" id="btnBuscarVenta">🔍</button>
-    </div>
+      <section class="welcome">
+        <h1>Devoluciones</h1>
+        <p>Escribe el número de la venta que deseas localizar para aplicar una devolución.</p>
 
-    <div id="resultadoVenta" style="display: none; margin-top: 20px;">
-      <h3>Detalles de la Venta</h3>
-      <ul>
-        <li><strong>Fecha:</strong> <span id="fechaVenta"></span></li>
-        <li><strong>Cliente:</strong> <span id="clienteVenta"></span></li>
-        <li><strong>Total:</strong> <span id="totalVenta"></span></li>
-        <li><strong>Estado:</strong> <span id="estadoVenta"></span></li>
-      </ul>
+        <div class="devolucion-search-box" style="margin: 15px 0;">
+          <label for="buscarVenta">N° Venta:</label>
+          <input type="text" id="buscarVenta" name="venta_id" placeholder="Ej: 12345" />
+          <button type="button" id="btnBuscarVenta">🔍</button>
+        </div>
 
-      <h3>Devoluciones asociadas</h3>
-      <table id="tablaDevoluciones">
-        <thead>
-          <tr>
-            <th>ID Devolución</th>
-            <th>ID Venta</th>
-            <th>Fecha</th>
-            <th>Motivo</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+        <p id="mensajeError" style="color: red; display: none;">Venta no encontrada</p>
 
-    <p id="mensajeError" style="display: none;">Venta no encontrada</p>
+        <div id="resultadoVenta" style="display: none;">
+          <h3>Detalles de la Venta</h3>
+          <ul>
+            <li><strong>Fecha:</strong> <span id="fechaVenta"></span></li>
+            <li><strong>Cliente:</strong> <span id="clienteVenta"></span></li>
+            <li><strong>Total:</strong> <span id="totalVenta"></span></li>
+            <li><strong>Estado:</strong> <span id="estadoVenta"></span></li>
+          </ul>
+
+          <h3>Devoluciones asociadas</h3>
+          <table id="tabla">
+            <thead>
+              <tr>
+                <th>ID Devolución</th>
+                <th>ID Venta</th>
+                <th>Fecha</th>
+                <th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
   </div>
 </body>
 </html>

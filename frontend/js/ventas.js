@@ -1,142 +1,159 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const tipoBusqueda = document.getElementById("tipoBusqueda");
+    const btnBuscar = document.getElementById("btnBuscar");
+    const btnLimpiar = document.getElementById("btnLimpiar");
+    const inputsDinamicos = document.getElementById("inputsDinamicos");
 
-const cargarVentas = async () => {
+    const renderizarVentas = (consulta) => {
+        const contenedor = document.querySelector(".cont-ventas");
+        contenedor.innerHTML = "";
 
-    try{
+        Object.values(consulta).forEach(venta => {
+            const fila = document.createElement("tr");
+            let acciones = "🔒 Venta cerrada";
+            let estadoTexto;
 
-        const res = await fetch("http://localhost:8000/ventas", {
-            method: "GET"
-        })
-
-        const consulta = await res.json();
-
-        console.log(consulta)
-
-        if(res.ok){
-
-            const contenedor = document.querySelector(".cont-ventas");
-            contenedor.innerHTML = "";
-
-            Object.values(consulta).forEach(venta => {
-
-                let html = "";
-                const nuevaFila = document.createElement("tr")
-                nuevaFila.classList = "fila"
-
-                let col = "🔒 Venta cerrada"
-                let estado;
-
-                switch(venta.estado){
-                    case "en_proceso":
-                        estado = "⌚ En proceso"
-                         col = `
-                            <button onclick='completarVenta(${venta.id_venta})'>✅ Completar venta</button>
-                            <button onclick='cancelarVenta(${venta.id_venta})'>❌ Cancelar venta</button>
-                        ` 
+            switch (venta.estado) {
+                case "en_proceso":
+                    estadoTexto = "⌚ En proceso";
+                    acciones = `
+                        <button onclick='completarVenta(${venta.id_venta})'>✅ Completar</button>
+                        <button onclick='cancelarVenta(${venta.id_venta})'>❌ Cancelar</button>
+                    `;
                     break;
-                    case "completada":
-                        estado = "💲 Completada"
+                case "completada":
+                    estadoTexto = "💲 Completada";
                     break;
-                    case "cancelada":
-                        estado = "💸 Cancelada"
-                    break
-                }
-
-                html += `
-                        <td>${venta.id_venta}</td>
-                        <td>${venta.factura}</td>
-                        <td>${venta.fecha}</td>
-                        <td>${venta.cliente["nombre"]}</td>
-                        <td>${venta.total}</td>
-                        <td>${estado}</td>
-                        <td>
-
-                            <select class="productos">
-
-                                <option value="0" selected disabled hidden>Lista de productos</option>
-                `
-
-                for(producto of venta.producto){
-                    html += `
-                        <option class="disabled">
-                            Producto: ${producto.nombre} ${producto.id_talla} --  
-                            Cantidad: ${producto.pivot["cantidad"]} -- 
-                            Precio total: ${producto.pivot["precio_venta"]} 
-                        </option>
-                    `
-                }
-
-                html += `
-                          </select>
-                        </td>
-                        <td>${col}</td>
-                `
-
-                nuevaFila.innerHTML = html;
-                contenedor.appendChild(nuevaFila)
-        
-            })
-
-        }else{
-            console.log(consulta.message)
-        }
-
-    }catch(e){
-            console.log(e)
-    }
-}
-
-const completarVenta = async id => {
-
-    const confirmar = confirm("¿Seguro quiere completar esta venta?");
-    if(!confirmar){
-        return;
-    }
-
-        try{
-
-            const res = await fetch(`http://localhost:8000/ventas/completar/${id}`, {
-                method: "GET"
-            })
-
-            const consulta = await res.json();
-
-            if(res.ok){
-                alert(consulta.message);
-                cargarVentas();
-            }else{
-                alert(consulta.message);
+                case "cancelada":
+                    estadoTexto = "💸 Cancelada";
+                    break;
             }
-        }catch(e){
-            console.log(e)
+
+            fila.innerHTML = `
+                <td>${venta.id_venta}</td>
+                <td>${venta.factura}</td>
+                <td>${venta.fecha}</td>
+                <td>${venta.cliente.nombre}</td>
+                <td>${venta.total}</td>
+                <td>${estadoTexto}</td>
+                <td>
+                    <a href="http://localhost:8000/ventas/pdf/${venta.id_venta}" target="_blank">
+                        <button>📄 Ver</button>
+                    </a>
+                </td>
+                <td>${acciones}</td>
+            `;
+            contenedor.appendChild(fila);
+        });
+    };
+
+    const cargarVentas = async () => {
+        try {
+            const res = await fetch("http://localhost:8000/ventas");
+            const data = await res.json();
+            if (res.ok) renderizarVentas(data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const completarVenta = async id => {
+        if (!confirm("¿Confirmar completar esta venta?")) return;
+        try {
+            const res = await fetch(`http://localhost:8000/ventas/completar/${id}`);
+            const data = await res.json();
+            alert(data.message);
+            if (res.ok) cargarVentas();
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const cancelarVenta = async id => {
+        if (!confirm("¿Confirmar cancelar esta venta?")) return;
+        try {
+            const res = await fetch(`http://localhost:8000/ventas/cancelar/${id}`);
+            const data = await res.json();
+            alert(data.message);
+            if (res.ok) cargarVentas();
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    tipoBusqueda.addEventListener("change", function () {
+        inputsDinamicos.innerHTML = "";
+
+        switch (this.value) {
+            case "fecha":
+                inputsDinamicos.innerHTML = `
+                    <label>Desde:</label>
+                    <input type="date" id="fechaInicio">
+                    <label>Hasta:</label>
+                    <input type="date" id="fechaFin">
+                `;
+                break;
+            case "estado":
+                inputsDinamicos.innerHTML = `
+                    <label>Estado:</label>
+                    <select id="estado">
+                        <option value="en_proceso">En proceso</option>
+                        <option value="completada">Completada</option>
+                        <option value="cancelada">Cancelada</option>
+                    </select>
+                `;
+                break;
+            case "cliente":
+                inputsDinamicos.innerHTML = `
+                    <label>Cliente:</label>
+                    <input type="text" id="clienteNombre" placeholder="Ej: Ana López">
+                `;
+                break;
+        }
+    });
+
+    btnBuscar.addEventListener("click", async () => {
+        const tipo = tipoBusqueda.value;
+        if (!tipo) return alert("Seleccione un tipo de búsqueda");
+
+        let url = `http://localhost:8000/ventas/filtrar?tipo=${tipo}`;
+
+        switch (tipo) {
+            case "fecha":
+                const inicio = document.getElementById("fechaInicio").value;
+                const fin = document.getElementById("fechaFin").value;
+                if (!inicio || !fin) return alert("Debe seleccionar ambas fechas");
+                url += `&inicio=${inicio}&fin=${fin}`;
+                break;
+            case "estado":
+                const estado = document.getElementById("estado").value;
+                url += `&estado=${estado}`;
+                break;
+            case "cliente":
+                const cliente = document.getElementById("clienteNombre").value.trim();
+                if (!cliente) return alert("Debe ingresar el nombre del cliente");
+                url += `&cliente=${encodeURIComponent(cliente)}`;
+                break;
         }
 
-}
-
-const cancelarVenta = async id => {
-
-    const confirmar = confirm("¿Seguro quiere cancelar esta venta?");
-    if(!confirmar){
-        return;
-    }
-
-        try{
-
-            const res = await fetch(`http://localhost:8000/ventas/cancelar/${id}`, {
-                method: "GET"
-            })
-
-            const consulta = await res.json();
-
-            if(res.ok){
-                alert(consulta.message);
-                cargarVentas();
-            }else{
-                alert(consulta.message);
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            if (res.ok) {
+                renderizarVentas(data);
+            } else {
+                alert(data.message || "No se encontraron resultados");
             }
-        }catch(e){
-            console.log(e)
+        } catch (e) {
+            console.error(e);
         }
+    });
 
-}
+    btnLimpiar.addEventListener("click", () => {
+        cargarVentas();
+        tipoBusqueda.value = "";
+        inputsDinamicos.innerHTML = "";
+    });
 
-document.addEventListener('DOMContentLoaded', cargarVentas);
+    cargarVentas(); // inicial
+});

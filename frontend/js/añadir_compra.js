@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function validarProveedor(camProv){
 
+
         let id = document.getElementById("proveedores").value;
         document.querySelectorAll(".select-productos").forEach(select => {
 
