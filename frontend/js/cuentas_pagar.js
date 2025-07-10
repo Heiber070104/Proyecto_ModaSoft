@@ -40,7 +40,7 @@ const cargarDeudas = async () => {
             })
 
         }else{
-            consulta.log(consulta.message);
+            console.log(consulta.message);
         }
 
     }catch(e){
