@@ -1,4 +1,3 @@
-
 const cargarRol = () => {
 
     const sesion = new Sesiones().obtenerSesion();
@@ -11,9 +10,9 @@ const cargarRol = () => {
 
     switch(sesion.rol){
         
-        case "Vendedor":
+        case "Comprador":
 
-            alert("Los vendedores no tienen autorización para acceder a esta página.");
+            alert("Los Compradores no tienen autorización para acceder a esta página.");
             window.location.href = "../pages/dashboard.html";
             
         break;
@@ -32,20 +31,20 @@ const cargarRol = () => {
 
 }
 
-const cargarDeudas = async () => {
+const cargarCuentas = async () => {
 
     try{
 
-        const contenedor = document.querySelector(".cont-deudas")
+        const contenedor = document.querySelector(".cont-cuentas")
 
-        const res = await fetch("http://localhost:8000/compras/deudas");
+        const res = await fetch("http://localhost:8000/ventas/cobrar");
         const consulta = await res.json();
 
         console.log(consulta)
 
         if(res.ok){
 
-            Object.values(consulta).forEach(deuda => {
+            Object.values(consulta).forEach(cuenta => {
 
                     const fila = document.createElement("tr");
                     fila.classList = "fila";
@@ -53,17 +52,17 @@ const cargarDeudas = async () => {
 
                 let estado = "✅ Pagado"
                 let col = "🔒 Deuda cerrada"
-                if(deuda.estado == "pendiente"){
-                    col = `<a href='pagar_deuda.html?id=${deuda.id_cuenta_pagar}'><button>💸 Abonar</button></a>`
+                if(cuenta.estado == "pendiente"){
+                    col = `<a href='cobrar_cuenta.html?id=${cuenta.id_cuenta_cobrar}'><button>💹 Registrar pago</button></a>`
                     estado = "❗ Pendiente"
                 }
 
                 html += `
-                    <td>${deuda.id_compra}</td>
-                    <td>${deuda.compra["proveedor"]["nombre"]}</td>
-                    <td>${deuda.fecha}</td>
-                    <td>${deuda.monto_total}</td>
-                    <td>${deuda.monto_pagado}</td>
+                    <td>${cuenta.id_venta}</td>
+                    <td>${cuenta.venta["cliente"]["nombre"]}</td>
+                    <td>${cuenta.fecha}</td>
+                    <td>${cuenta.monto_total}</td>
+                    <td>${cuenta.monto_pagado}</td>
                     <td>${estado}</td>
                     <td class="rol">${col}</td>
                 `
@@ -81,10 +80,9 @@ const cargarDeudas = async () => {
         }
 
     }catch(e){
-        console.error("Error al cargar el script de cuentas por pagar:", e);
+        console.error("Error al cargar el script de cuentas por cobrar:", e);
     }
 
 }
 
-document.addEventListener("DOMContentLoaded", () => {cargarRol(); cargarDeudas()})
-
+document.addEventListener("DOMContentLoaded", () => {cargarRol(); cargarCuentas()})

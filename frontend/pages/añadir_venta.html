@@ -27,11 +27,15 @@
           <h1>Nueva orden de venta</h1>
           <form id="formulario" action="">
 
-            <label>Coloque factura de venta</label><br>
-            <input type="text" id="factura" placeholder="F-001"><br>
-
             <label>Seleccione cliente</label>
             <select id="clientes"></select><br>
+
+            <label>La venta se pagará al: </label>
+            <select id="tipo_pago">
+                <option value="CONTADO">Contado</option>
+                <option value="CREDITO">Crédito</option>
+            </select><br>
+            <div id="aviso" hidden><label>Una vez confirmada la venta se agregará a cuentas por cobrar</label></div><br>
 
             <label>Cantidad total : <div id="total-general">0.00</div></label>
 
@@ -79,8 +83,8 @@
     <a href="ventas.html"><button>Atrás</button></a>
 
 
-        </section>
-      </main>
+    </section>
+    </main>
 
   </div>
 

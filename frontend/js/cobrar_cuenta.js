@@ -7,7 +7,7 @@ const cargarMaximo = async () => {
 
         // console.log("hola")
         const maximo = document.getElementById("maximo");
-        const res = await fetch(`http://localhost:8000/compras/deudas/${id}`);
+        const res = await fetch(`http://localhost:8000/ventas/cobrar/${id}`);
         const consulta = await res.json(); 
 
         if(res.ok){
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const res = await fetch(`http://localhost:8000/compras/deudas/${id}`, {
+            const res = await fetch(`http://localhost:8000/ventas/cobrar/pagar/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     icon: "success"
                 });
 
-                window.location.href = "cuentas_pagar.html";
+                window.location.href = "cuentas_cobrar.html";
 
             }else{
                 console.log(consulta.message);

@@ -10,18 +10,5 @@ class cuentasPagarModel extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-    public $table = "cuentas_pagar";
-    public $primaryKey = "id_cuenta_pagar";
-    public $fillable = [
-        "id_compra",
-        "monto_total",
-        "monto_pagado",
-        "fecha_vencimiento",
-        "estado"
-    ];
-
-    public function compra(){
-        return $this->hasOne(compraModel::class, "id_compra", "id_compra");
-    }
+    
 }

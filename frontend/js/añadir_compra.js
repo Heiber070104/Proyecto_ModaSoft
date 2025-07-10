@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
     const date = new Date();
+    const tipoPago = document.getElementById("tipo_pago")
     const btnAgregar = document.getElementById('agregar-producto');
     const prov = document.getElementById("proveedores");
     var opcionesProductos;
@@ -193,8 +194,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const fecha = document.getElementById("fecha_vence").value;
         const id_proveedor = document.getElementById("proveedores").value;
-
-        if(!fecha || fecha=="" || !id_proveedor || id_proveedor=="" || !total || total===0){
+        const tipo_pago = document.getElementById("tipo_pago").value;
+  
+        if(!fecha || fecha=="" || !id_proveedor || id_proveedor=="" || !total || total===0 || !tipo_pago || tipo_pago == ""){
             Swal.fire("Rellene los campos vacios")
             return false;
         }
@@ -216,8 +218,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         })
 
-        console.log(productos)
-
         try{
 
             const res = await fetch("http://localhost:8000/compras", {
@@ -228,8 +228,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 body: JSON.stringify({
                     fecha_vence: fecha,
                     id_proveedor: id_proveedor,
-                    total: total,
-                    estado: "pendiente",
+                    tipo_pago: tipo_pago,
                     productos: productos
                 })
             })
@@ -237,6 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const consulta = await res.json();
 
             if(res.ok){
+                console.log(consulta)
                 await Swal.fire({
                     title: "Exito",
                     text: consulta.message,
@@ -260,6 +260,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
             console.log(e)
         }
+
+    })
+
+    tipoPago.addEventListener("change", () => {
+
+        const aviso = document.getElementById("aviso");
+
+        if(tipoPago.value === "CONTADO"){
+            aviso.hidden = true;
+        }else{
+            aviso.hidden = false;
+        } 
 
     })
     
