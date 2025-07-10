@@ -10,37 +10,15 @@ class usuarioController extends Controller
     public function consultarTodo(Request $request)
     {
         try {
-            $usuarios = usuarioModel::with("sesion")->get();
-            return response()->json($usuarios, 200);
+            $usuarios = usuarioModel::all();
+            return response()->json($usuarios);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al consultar usuarios: ' . $e->getMessage()], 500);
         }
     }
 
-    public function consultarUsuario(Request $request, $id)
+    public function buscarUsuario(Request $request, $id)
     {
-
-        try{
-
-            if(!is_numeric($id)) {
-                $usuario = usuarioModel::where('nombre_usuario', $id)->with("sesion")->first();
-                if (!$usuario) {
-                    return response()->json(['message' => 'Usuario no encontrado'], 404);
-                }
-                return response()->json([$usuario], 200);
-            }else{
-                $usuario = usuarioModel::where("id_usuario", $id)->with("sesion")->first();
-                if (!$usuario) {
-                    return response()->json(['message' => 'Usuario no encontrado'], 404);
-                }
-                return response()->json([$usuario],);
-            }
-
-        }catch(\Exception $e){
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);   
-        }
-        
-
         $usuario = usuarioModel::find($id);
         if ($usuario) {
             return response()->json($usuario);
@@ -77,35 +55,6 @@ class usuarioController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);   
         }
 
-    }
-
-    public function actualizarUsuario(Request $request, $id)
-    {
-        try {
-            $usuario = usuarioModel::find($id);
-            if (!$usuario) {
-                return response()->json(['message' => 'Usuario no encontrado'], 404);
-            }
-
-            $data = $request->validate([
-                'nombre_usuario' => 'required|string|max:25',
-                'nombre_personal' => 'required|string|max:255',
-                'correo' => 'required|email',
-                'password' => 'nullable|string',
-            ]);
-
-            if (isset($data['password'])) {
-                $data['password'] = bcrypt($data['password']);
-            } else {
-                unset($data['password']);
-            }
-
-            $usuario->update($data);
-            return response()->json($usuario, 200);
-
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        }
     }
 
 }

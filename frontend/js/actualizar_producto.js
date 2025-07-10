@@ -1,4 +1,3 @@
-
 const params = new URLSearchParams(window.location.search);
 var id = params.get("id");
 
@@ -34,30 +33,54 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         const consulta = await res.json(); 
 
         if(res.ok){
-            await Swal.fire({
-                title: "Exito",
-                text: consulta.message,
-                icon: "success"
-            });
+            alert(consulta.message)
             window.location.href = "inventario.html"
         }else{
-            Swal.fire({
-                title: "Error",
-                text: consulta.message,
-                icon: "warning"
-            });
-            console.log("Error al actulizar el producto, intente nuevamente" + consulta.message);  
+            console.log("Error al actualizar el producto: " + consulta.message);
+            alert("Error al actulizar el producto, intente nuevamente" + consulta.message);  
         }
 
     }catch(error){
-        Swal.fire({
-            title: "Error",
-            text: error,
-            icon: "warning"
-        });
-        console.log("Error al actualizar el producto, intente nuevamente" + error);
+        console.log(error)
+        alert("Error al actualizar el producto, intente nuevamente" + error);
     }
 })
+
+// const cargarSelect = async (direccion) => {
+
+//     try{
+
+//        const res = await fetch(`http://localhost:8000/${direccion}`, {
+//             method: "GET"
+//        })
+
+//        const consulta = await res.json();
+
+//        if(res.ok){
+// ;
+//             let html = "";
+
+//             Object.values(consulta).forEach(datos => {
+
+//                 let arrayDatos = Object.values(datos);
+
+               
+
+//                 html += `
+//                     <option value="${arrayDatos[0]}">
+//                         ${arrayDatos[1]}
+//                     </option>
+//                 `
+//             })
+
+//             document.getElementById(direccion).innerHTML = html;
+
+//        }
+
+//     }catch(error){
+//         console.log(error);
+//     }
+// }
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -77,7 +100,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             // document.getElementById("categorias").value = consulta.id_categoria;
             // document.getElementById("tallas").value = consulta.id_talla;
             // document.getElementById("cantidad").value = consulta.cantidad;
-            new loaderComponent().stopLoading()
 
         }
             

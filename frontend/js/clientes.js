@@ -1,30 +1,3 @@
-const cargarRol = () => {
-
-    const sesion = new Sesiones().obtenerSesion();
-
-    if(!sesion || !sesion.rol || !sesion.rol) {
-        alert("No tiene autorización.");
-        sesion.cerrarSesion();
-        window.location.href = "../pages/login.html";
-    }
-
-    switch(sesion.rol){
-        
-        case "Comprador":
-            alert("Los compradores no tienen autorización para acceder a esta página.");
-            window.location.href = "../pages/dashboard.html";  
-        break;
-        case "Gerente":
-        case "Contador":
-            const ocultar = document.querySelectorAll(".rol");
-            ocultar.forEach(element => {
-                element.style.display = "none";
-            })
-        break;
-    }
-        
-}
-
 async function cargarClientes() {
   try {
     const res = await fetch('http://localhost:8000/clientes');
@@ -41,16 +14,13 @@ async function cargarClientes() {
         <td>${cliente.direccion}</td>
         <td>${cliente.telefono}</td>
         <td>${cliente.correo}</td>
-        <td class="rol">
+        <td>
           <button onclick="editarCliente(${cliente.id_cliente})">✏️ Modificar</button>
           <button onclick="eliminarCliente(${cliente.id_cliente})">🗑️ Eliminar</button>
         </td>
       `;
       tbody.appendChild(fila);
     });
-
-    new loaderComponent().stopLoading();
-    cargarRol();
 
   } catch (error) {
     console.error("Error al cargar cliente:", error);
@@ -63,55 +33,25 @@ function editarCliente(id) {
   window.location.href = `actualizar_cliente.html?id=${id}`;
 }
 
-async function eliminarCliente(id) {
-  const confirm = await Swal.fire({
-        title: "¿Seguro quieres borrar este cliente?",
-        text: "Las ventas realizadas a este cliente se mantedrán",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si",
-        cancelButtonText: "Cancelar"
-  })
-  if (!confirm.isConfirmed) {
-      return;
-  }
-
+function eliminarCliente(id) {
+  const confirmar = confirm("¿Estás seguro que deseas eliminar este cliente?");
+  if (!confirmar) return;
 
   fetch(`http://localhost:8000/clientes/${id}`, {
     method: "DELETE"
   })
     .then(res => {
-
-      const consulta = res.json();
       if (res.ok) {
-
-        Swal.fire({
-          title: "Exito",
-          text: consulta.message,
-          icon: "warning"
-        });
+        alert("Cliente eliminado correctamente.");
         cargarClientes();
       } else {
-        Swal.fire({
-          title: "Error",
-          text: consulta.message,
-          icon: "warning"
-        });
+        alert("Error al eliminar cliente.");
       }
     })
     .catch(err => {
       console.error("Error al eliminar:" + err);
-      Swal.fire({
-        title: "Error",
-        text: err,
-        icon: "warning"
-      });
+      alert("No se pudo eliminar el cliente." + err);
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  cargarRol();
-  cargarClientes(); 
-});
+document.addEventListener("DOMContentLoaded", cargarClientes);

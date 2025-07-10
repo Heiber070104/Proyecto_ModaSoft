@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
     const date = new Date();
-    const tipoPago = document.getElementById("tipo_pago")
     const btnAgregar = document.getElementById('agregar-producto');
     const prov = document.getElementById("proveedores");
     var opcionesProductos;
@@ -59,8 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }catch(e){
         console.log(e)
     }
-
-    new loaderComponent().stopLoading()
 
     btnAgregar.addEventListener('click', function() {
         const contenedor = document.querySelector(".cont-productos");
@@ -127,7 +124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 select.selectedIndex = "!"   
             }
 
-            let cambio = new Event("change");
+            cambio = new Event("change");
             select.dispatchEvent(cambio)
 
             select.querySelectorAll("option").forEach(option => {
@@ -194,10 +191,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const fecha = document.getElementById("fecha_vence").value;
         const id_proveedor = document.getElementById("proveedores").value;
-        const tipo_pago = document.getElementById("tipo_pago").value;
-  
-        if(!fecha || fecha=="" || !id_proveedor || id_proveedor=="" || !total || total===0 || !tipo_pago || tipo_pago == ""){
-            Swal.fire("Rellene los campos vacios")
+
+        if(!fecha || fecha=="" || !id_proveedor || id_proveedor=="" || !total || total===0){
+            alert("Rellene los campos vacios")
             return false;
         }
 
@@ -210,13 +206,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             const precio_compra = prod.querySelector(".subtotal").textContent;
 
             if(!id_producto || id_producto==="!" || !cantidad || cantidad===0 || !precio_compra || precio_compra===0){
-                Swal.fire("Por favor seleccione un producto en el campo vacío")
+                alert("Por favor seleccione un producto en el campo vacío")
             }
 
             productos.push({"id_producto": id_producto, "cantidad": cantidad, "precio_compra": precio_compra});
             return false;
 
         })
+
+        console.log(productos)
 
         try{
 
@@ -228,7 +226,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 body: JSON.stringify({
                     fecha_vence: fecha,
                     id_proveedor: id_proveedor,
-                    tipo_pago: tipo_pago,
+                    total: total,
+                    estado: "pendiente",
                     productos: productos
                 })
             })
@@ -236,42 +235,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             const consulta = await res.json();
 
             if(res.ok){
-                console.log(consulta)
-                await Swal.fire({
-                    title: "Exito",
-                    text: consulta.message,
-                    icon: "success"
-                });
+                alert(consulta.message);
                 window.location.href = "compras.html"
             }else{
-                Swal.fire({
-                    title: "Error",
-                    text: consulta.message,
-                    icon: "warning"
-                });
-                console.log(consulta.message)
+                console.log(consulta)
             }
 
         }catch(e){
-            Swal.fire({
-                title: "Error",
-                text: e,
-                icon: "warning"
-            });
             console.log(e)
         }
-
-    })
-
-    tipoPago.addEventListener("change", () => {
-
-        const aviso = document.getElementById("aviso");
-
-        if(tipoPago.value === "CONTADO"){
-            aviso.hidden = true;
-        }else{
-            aviso.hidden = false;
-        } 
 
     })
     

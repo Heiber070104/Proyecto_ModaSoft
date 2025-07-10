@@ -17,6 +17,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const data = await res.json();
 
     if (res.ok) {
+      
+      console.log(data)
 
       const Sesion = new Sesiones();
       Sesion.iniciarSesion({
@@ -24,26 +26,14 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         usuario: data.usuario,
         rol: data.rol
       })
-      await Swal.fire({
-          title: "Inicio de sesión exitoso",
-          text: "Bienvenido " + data.nombre,
-          icon: "success",
-          confirmButtonText: "Ir al inicio"
-      }); 
+      alert('Bienvenido ' + data.nombre);  
       window.location.href = '../pages/dashboard.html'; // Aquí se redirige si login fue exitoso
     } else {
       console.log(data.message);
-      Swal.fire({
-          title: "Problema al iniciar sesión",
-          text: data.message,
-          icon: "warning"
-      });
+      alert(data.message);
     }
   } catch (err) {
-    Swal.fire({title:'Error al conectar con el servidor, intente más tarde', 
-      text: err, 
-      icon: "warning"
-    });
+    alert('Error al conectar con el servidor');
     console.error(err);
   }
 });

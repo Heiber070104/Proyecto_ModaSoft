@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="../css/nueva_compra.css"> 
     <link rel="stylesheet" href="../css/topbar_menu.css">
     <script src="../js/sesiones.js"></script>
-    <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
-    <script src="../js/componentes/loader.js" defer></script>
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
     <script src="../js/añadir_compra.js"></script>
@@ -32,14 +30,6 @@
         <label>Seleccione proveedor</label>
         <select id="proveedores"></select><br>
 
-        <label>Mercancia se pagará al: </label>
-        <select id="tipo_pago">
-            <option value="CONTADO">Contado</option>
-            <option value="CREDITO">Crédito</option>
-        </select>
-        <div id="aviso" hidden><label>Una vez confirmada la compra se agregará a cuentas por pagar</label></div><br>
-        
-    
         <label for="">Seleccion productos</label>
 
         <label>Cantidad total: <div id="total-general">0.00</div></label>

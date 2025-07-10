@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const tipoPago = document.getElementById("tipo_pago"); 
+    const date = new Date();
     const btnAgregar = document.getElementById('agregar-producto');
     var opcionesProductos;
     var total;
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             if(cant > stockOption){
-                Swal.fire("La cantidad del producto no puede superar las existencias");
+                alert("¡¡La cantidad del producto supera las existencias!!");
                 cantidad.value = stockOption;
             }
 
@@ -184,11 +184,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("btn-registrar").addEventListener("click", async () =>{
 
+        const factura = document.getElementById("factura").value;
         const id_cliente = document.getElementById("clientes").value;
-        const tipo_pago = document.getElementById("tipo_pago").value;
 
-        if(!tipo_pago || tipo_pago=="" || !id_cliente || id_cliente==""){
-            Swal.fire("Rellene los campos vacios")
+        if(!factura || factura=="" || !id_cliente || id_cliente=="" || !total || total===0){
+            alert("Rellene los campos vacios")
             return false;
         }
 
@@ -201,13 +201,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             const precio_venta = prod.querySelector(".subtotal").textContent;
 
             if(!id_producto || id_producto==="!" || !cantidad || cantidad===0 || !precio_venta || precio_venta===0){
-                Swal.fire("Por favor seleccione un producto en el campo vacío")
+                alert("Por favor seleccione un producto en el campo vacío")
             }
 
             productos.push({"id_producto": id_producto, "cantidad": cantidad, "precio_venta": precio_venta});
             return false;
 
         })
+
+        console.log(productos)
 
         try{
 
@@ -217,8 +219,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
+                    factura: factura,
                     id_cliente: id_cliente,
-                    tipo_pago: tipo_pago,
                     productos: productos
                 })
             })
@@ -226,41 +228,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             const consulta = await res.json();
 
             if(res.ok){
-                await Swal.fire({
-                    title: "Exito",
-                    text: "Venta se registró con factura "+consulta.factura,
-                    icon: "success"
-                });
+                alert(consulta.message);
                 window.location.href = "ventas.html"
             }else{
                 console.log(consulta.message)
-                Swal.fire({
-                    title: "Error",
-                    text: consulta.message,
-                    icon: "warning"
-                });
+                alert(consulta.message)
             }
 
         }catch(e){
             console.log(e)
-            Swal.fire({
-                title: "Error",
-                text: e,
-                icon: "warning"
-            });
         }
-
-    })
-
-    tipoPago.addEventListener("change", () => {
-
-        const aviso = document.getElementById("aviso");
-
-        if(tipoPago.value === "CONTADO"){
-            aviso.hidden = true;
-        }else{
-            aviso.hidden = false;
-        } 
 
     })
     
