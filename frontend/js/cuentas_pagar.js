@@ -77,7 +77,7 @@ const cargarDeudas = async () => {
             cargarRol();
 
         }else{
-            consulta.log(consulta.message);
+            console.log(consulta.message);
         }
 
     }catch(e){
