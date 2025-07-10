@@ -123,6 +123,93 @@ class ventaController extends Controller
         }
     }
 
+    public function consultarCuentasCobrar(Request $request, $id = null){
+        try {
+
+            if ($id) {
+                $deuda = cuentasCobrarModel::with('venta.cliente')->find($id);
+                if (!$deuda) {
+                    return response()->json(['message' => 'Cuenta no encontrada'], 404);
+                }
+                return response()->json($deuda, 200);
+            }
+
+            $deudas = cuentasCobrarModel::with("venta.cliente")->get();
+            return response()->json($deudas, 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al consultar deudas: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function pagarCuentaCobrar(Request $request, $id){
+
+        DB::beginTransaction();
+        try {
+            $data = $request->validate([
+                'monto_pagado' => 'required|numeric',
+                'metodo' => 'required|string',
+            ]);
+
+            $cuentaCobrar = cuentasCobrarModel::find($id);
+            if (!$cuentaCobrar) {
+                return response()->json(['message' => 'Cuenta por cobrar no encontrada'], 404);
+            }
+
+            $pago = pagoVentaModel::create([
+                'id_venta' => $cuentaCobrar->id_venta,
+                'monto' => $data['monto_pagado'],
+                'fecha' => now(),
+                'metodo' => $data['metodo'],
+            ]);
+
+            $pagos = pagoVentaModel::where('id_venta', $cuentaCobrar->id_venta)->get();
+            $totalPagado = $pagos->sum('monto');
+            $cuentaCobrar->monto_pagado = $totalPagado;
+            
+            if ($totalPagado >= $cuentaCobrar->monto_total) {
+                $cuentaCobrar->monto_pagado = $cuentaCobrar->monto_total; // Asegurarse de no exceder el total
+                $cuentaCobrar->estado = 'pagado';
+            }
+
+            $cuentaCobrar->save();
+
+            $transaccionDebito = new transaccionModel();
+            $transaccionDebito->factura = "F-".str_pad($cuentaCobrar->id_venta, 8, "0", STR_PAD_LEFT);
+            $transaccionDebito->descripcion = 
+                "Cliente de la venta a crédito F-".
+                str_pad($cuentaCobrar->id_venta, 8, "0", STR_PAD_LEFT). 
+                " realiza un pago por monto de Bs " . 
+                number_format($data['monto_pagado'], 2)
+            ;
+            $transaccionDebito->fecha = now();
+            $transaccionDebito->monto = $data['monto_pagado'];
+            $transaccionDebito->tipo = 'DEBITO';
+            $transaccionDebito->id_cuenta = ($data['metodo'] == "EFECTIVO") ? 1 : 3; // Asumiendo que la cuenta de caja es la cuenta 1 y la cuenta bancaria es la cuenta 3
+            $transaccionDebito->save();
+
+            $transaccionCredito = new transaccionModel();
+            $transaccionCredito->factura = "F-".str_pad($cuentaCobrar->id_venta, 8, "0", STR_PAD_LEFT);
+            $transaccionCredito->descripcion = 
+                "Cliente de la venta a crédito F-".
+                str_pad($cuentaCobrar->id_venta, 8, "0", STR_PAD_LEFT). 
+                " realiza un pago por monto de Bs " . 
+                number_format($data['monto_pagado'], 2)
+            ;
+            $transaccionCredito->fecha = now();
+            $transaccionCredito->monto = $data['monto_pagado'];
+            $transaccionCredito->tipo = 'CREDITO';
+            $transaccionCredito->id_cuenta = 5; 
+            $transaccionCredito->save();
+
+            DB::commit();   
+            return response()->json(['message' => 'Pago registrado exitosamente'], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Error al registrar el pago: ' . $e->getMessage()], 500);
+        }
+    }
+
     public function productosMasVendidos(){
 
         try{
