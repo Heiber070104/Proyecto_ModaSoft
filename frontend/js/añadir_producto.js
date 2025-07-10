@@ -11,10 +11,9 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
     const id_proveedor = document.getElementById("proveedores").value;
 
 
-
     if(!nombre || !descripcion || !precio || !porcentaje || id_categoria == "!" || id_talla == "!" || id_proveedor == "!")
     {
-        alert("Rellene todos los campos");
+        Swal.fire("Rellene todos los campos");
         return false;
     }
 
@@ -39,15 +38,27 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         const consulta = await res.json();
 
         if(res.ok){
-            alert(consulta.message);
+            await Swal.fire({
+                title: "Exito",
+                text: consulta.message,
+                icon: "success"
+            });
             window.location.href = "inventario.html";
         }else{
             console.log("Error al registrar el producto: " + consulta.message);
-            alert("Error al registrar el producto, intente nuevamente" + consulta.message);  
+            Swal.fire({
+                title: "Error",
+                text: consulta.message,
+                icon: "warning"
+            });  
         }
 
     }catch(error){
-        console.log(error)
+        Swal.fire({
+            title: "Error",
+            text: error,
+            icon: "warning"
+        });
         alert("Error al registrar el producto, intente nuevamente" + error); 
     }
 
@@ -113,9 +124,9 @@ const cargarSelect = async (direccion) => {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    cargarSelect("categorias"); 
-    cargarSelect("tallas");
-    cargarSelect("proveedores");
+    await cargarSelect("categorias"); 
+    await cargarSelect("tallas");
+    await cargarSelect("proveedores");
 
     const params = new URLSearchParams(window.location.search);
     if(params.get("id")){
@@ -142,12 +153,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const cambio = new Event("change")
                 document.getElementById("categorias").dispatchEvent(cambio)
+                new loaderComponent().stopLoading()
             }else{
                 console.log(consulta.message)
             }
         }catch(error){
             console.log(error);
         }
-    };
+    }else{
+        new loaderComponent().stopLoading()
+    }
 
 })

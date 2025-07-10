@@ -17,11 +17,12 @@ class cuentasPagarModel extends Model
         "id_compra",
         "monto_total",
         "monto_pagado",
-        "fecha_vencimiento",
+        "fecha",
         "estado"
     ];
 
     public function compra(){
         return $this->hasOne(compraModel::class, "id_compra", "id_compra");
     }
+
 }

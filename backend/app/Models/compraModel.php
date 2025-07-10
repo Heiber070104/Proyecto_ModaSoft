@@ -8,6 +8,10 @@ use App\Models\productoModel;
 use App\Models\proveedorModel;
 use App\Models\cuentasPagarModel;
 
+use App\Models\pagoCompraModel;
+
+
+
 class compraModel extends Model
 {
     use HasFactory;
@@ -19,6 +23,8 @@ class compraModel extends Model
         'fecha_creada',
         'fecha_vence',
         'id_proveedor',
+        'tipo_pago',
+        'estado_despacho',
         'total',
         'estado'
     ];
@@ -26,6 +32,12 @@ class compraModel extends Model
     public function proveedor(){
         return $this->belongsTo(proveedorModel::class, 'id_proveedor', 'id_proveedor');
     }
+
+
+    public function pagoCompra(){
+        return $this->hasMany(pagoCompraModel::class, 'id_compra', 'id_compra');
+    }
+
 
     public function cuentasPagar(){
         return $this->hasOne(cuentasPagarModel::class, "id_compra", "id_compra");

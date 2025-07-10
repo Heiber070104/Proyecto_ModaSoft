@@ -1,9 +1,138 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const tipoBusqueda = document.getElementById("tipoBusqueda");
-    const btnBuscar = document.getElementById("btnBuscar");
-    const btnLimpiar = document.getElementById("btnLimpiar");
-    const inputsDinamicos = document.getElementById("inputsDinamicos");
 
+const completarVenta = async (id, metodo) => {
+
+    if(metodo === "CONTADO"){
+
+        const confirmacion = await Swal.fire({
+            title: 'Venta pagada a: ',
+            input: 'select',
+            inputOptions: {
+                'Formas de pago': {
+                    'EFECTIVO': 'Efectivo 💸',
+                    'BANCARIO': 'Bancario (tranferencia/cheque) 📃',
+                },
+   
+            },
+            inputPlaceholder: 'Selecciona...',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return '¡Debes seleccionar una opción!';
+                }
+            }
+        })
+        if(confirmacion.isDismissed){
+            return;
+        }
+
+        var metodo_pago = confirmacion.value;
+        
+    }else{
+        const confirmacion = await Swal.fire({
+            title: '¿Seguro quieres completar la compra?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, completar compra',
+            cancelButtonText: 'Cancelar'
+        })
+
+        if (!confirmacion.isConfirmed) {
+            return;
+        }
+
+    }
+
+        try{
+
+            const res = await fetch(`http://localhost:8000/ventas/completar/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },body: JSON.stringify({
+                    metodo_pago: metodo_pago
+                })
+            });
+            const consulta = await res.json();
+
+            if(res.ok){
+                Swal.fire({
+                    title: "Exito",
+                    text: consulta.message,
+                    icon: "success"
+                });
+                cargarVentas();
+            }else{
+                Swal.fire({
+                    title: "Error",
+                    text: consulta.message,
+                    icon: "warning"
+                });
+                console.log(consulta.message)
+            }
+        }catch(e){
+            Swal.fire({
+                title: "Error",
+                text: e,
+                icon: "warning"
+            });
+            console.log(e)
+        }
+
+}
+
+const cancelarVenta = async id => {
+
+    const confirm = await Swal.fire({
+        title: "¿Seguro quieres cancelar esta venta?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si",
+        cancelButtonText: "Cancelar"
+    })
+    if (!confirm.isConfirmed) {
+        return;
+    }
+
+
+        try{
+
+            const res = await fetch(`http://localhost:8000/ventas/cancelar/${id}`, {
+                method: "GET"
+            })
+
+            const consulta = await res.json();
+
+            if(res.ok){
+                Swal.fire({
+                    title: "Exito",
+                    text: consulta.message,
+                    icon: "success"
+                });
+                cargarVentas();
+            }else{
+                Swal.fire({
+                    title: "Error",
+                    text: consulta.message,
+                    icon: "warning"
+                });
+                console.log(consulta.message);
+            }
+        }catch(e){
+            Swal.fire({
+                title: "Error",
+                text: e,
+                icon: "warning"
+            });
+            console.log(e)
+        }
+    }
+    
     const renderizarVentas = (consulta) => {
         const contenedor = document.querySelector(".cont-ventas");
         contenedor.innerHTML = "";
@@ -17,9 +146,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 case "en_proceso":
                     estadoTexto = "⌚ En proceso";
                     acciones = `
-                        <button onclick='completarVenta(${venta.id_venta})'>✅ Completar</button>
+                        <button onclick='completarVenta(${venta.id_venta}, "${venta.tipo_pago}")'>✅ Completar</button>
                         <button onclick='cancelarVenta(${venta.id_venta})'>❌ Cancelar</button>
                     `;
+
                     break;
                 case "completada":
                     estadoTexto = "💲 Completada";
@@ -27,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 case "cancelada":
                     estadoTexto = "💸 Cancelada";
                     break;
+
             }
 
             fila.innerHTML = `
@@ -35,6 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${venta.fecha}</td>
                 <td>${venta.cliente.nombre}</td>
                 <td>${venta.total}</td>
+                <td>${venta.tipo_pago}</td>
                 <td>${estadoTexto}</td>
                 <td>
                     <a href="http://localhost:8000/ventas/pdf/${venta.id_venta}" target="_blank">
@@ -45,6 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             contenedor.appendChild(fila);
         });
+        new loaderComponent().stopLoading();
     };
 
     const cargarVentas = async () => {
@@ -57,29 +190,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    const completarVenta = async id => {
-        if (!confirm("¿Confirmar completar esta venta?")) return;
-        try {
-            const res = await fetch(`http://localhost:8000/ventas/completar/${id}`);
-            const data = await res.json();
-            alert(data.message);
-            if (res.ok) cargarVentas();
-        } catch (e) {
-            console.error(e);
-        }
-    };
+document.addEventListener("DOMContentLoaded", () => {
+    const tipoBusqueda = document.getElementById("tipoBusqueda");
+    const btnBuscar = document.getElementById("btnBuscar");
+    const btnLimpiar = document.getElementById("btnLimpiar");
+    const inputsDinamicos = document.getElementById("inputsDinamicos");
 
-    const cancelarVenta = async id => {
-        if (!confirm("¿Confirmar cancelar esta venta?")) return;
-        try {
-            const res = await fetch(`http://localhost:8000/ventas/cancelar/${id}`);
-            const data = await res.json();
-            alert(data.message);
-            if (res.ok) cargarVentas();
-        } catch (e) {
-            console.error(e);
-        }
-    };
+const cargarRol = () => {
+
+    const sesion = new Sesiones().obtenerSesion();
+
+    if(!sesion || !sesion.rol || !sesion.usuario) {
+        alert("No tiene autorización.");
+        sesion.cerrarSesion();
+        window.location.href = "../pages/login.html";
+    }
+
+    switch(sesion.rol){
+        
+        case "Comprador":
+            alert("Los compradores no tienen autorización para acceder a esta página.");
+            window.location.href = "../pages/dashboard.html";  
+        break;
+        case "Gerente":
+        case "Contador":
+            const ocultar = document.querySelectorAll(".rol");
+            ocultar.forEach(element => {
+                element.style.display = "none";
+            })
+        break;
+    }
+        
+
+}
+
+
+    
+
+   
 
     tipoBusqueda.addEventListener("change", function () {
         inputsDinamicos.innerHTML = "";
@@ -146,6 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (e) {
             console.error(e);
+
         }
     });
 
@@ -155,5 +304,9 @@ document.addEventListener("DOMContentLoaded", () => {
         inputsDinamicos.innerHTML = "";
     });
 
-    cargarVentas(); // inicial
-});
+
+        cargarRol()
+        cargarVentas() 
+
+    
+})

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\sesionModel;
 
 class usuarioModel extends Model
 {
@@ -22,7 +23,7 @@ class usuarioModel extends Model
     ];
 
     public function sesion(){
-        return $this->hasMany('App\Models\sesionModel', 'id_usuario', 'id_usuario');  
+        return $this->hasOne(sesionModel::class, 'id_usuario', 'id_usuario');  
     }
 
 }

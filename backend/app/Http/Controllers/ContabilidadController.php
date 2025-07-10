@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Transaccion;
-use App\Models\CuentaContable;
+
+use App\Models\transaccionModel as Transaccion;
+use App\Models\cuentaContableModel as CuentaContable;
+
 use Illuminate\Http\Request;
 
 class ContabilidadController extends Controller
@@ -37,7 +39,7 @@ class ContabilidadController extends Controller
     // Obtener el libro mayor
     public function obtenerLibroMayor()
     {
-        $cuentas = CuentaContable::withSum('transacciones as saldo', 'monto')->get();
+        $cuentas = CuentaContable::withSum('transacciones as saldo', 'monto')->with("transacciones")->get();
         return response()->json($cuentas);
     }
 

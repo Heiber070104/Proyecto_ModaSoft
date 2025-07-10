@@ -1,6 +1,37 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    
+    const cargarRol = () => {
+
+        const sesion = new Sesiones().obtenerSesion();
+
+        if(!sesion || !sesion.rol || !sesion.rol) {
+            alert("No tiene autorización.");
+            sesion.cerrarSesion();
+            window.location.href = "../pages/login.html";
+        }
+        
+
+        switch(sesion.rol){
+        
+            case "Vendedor":
+            case "Contador":
+                alert("EL usuario actual no tienen autorización para acceder a esta página.");
+                window.location.href = "../pages/dashboard.html";  
+            break;
+            case "Gerente":
+                const ocultar = document.querySelectorAll(".rol");
+                ocultar.forEach(element => {
+                    element.style.display = "none";
+                })
+            break;
+        }
+        
+
+    }
+
+    cargarRol()
 
     const btnAgregarFila = document.getElementById("btn-agregarFila");
 
@@ -16,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if(res.ok){
 
-                html = "";
+                let html = "";
 
                 Object.values(consulta).forEach(categoria => {
                     html += `<option value="${categoria.id_categoria}">${categoria.nombre}</option>`;
@@ -61,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td class="desCol" style="width: 50%" data-id="${talla.id_talla}">
                             ${talla.descripcion}
                         </td>
-                        <td>
+                        <td class="rol">
                             <button class="btn-modificar">🔨 Modificar</button>
                             <button class="btn-registrar" hidden>✅ Registrar</button>
                             <button class="btn-cancelar" hidden>❌Cancelar</button>
@@ -72,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     eventosFila(nuevaFila);
                 })
 
+                new loaderComponent().stopLoading();
 
             }else{
                 console.log(consulta.message)
@@ -141,23 +173,31 @@ document.addEventListener("DOMContentLoaded", () => {
             const id_categoria = fila.querySelector(".categoria").value;
             const descripcion = fila.querySelector(".descripcion").value;
             if(id_categoria == "" || descripcion == ""){
-                alert("La descripcion de la talla está vacia, rellénelo")
-                return false;
+                Swal.fire("La descripcion de la talla está vacia, rellénelo")
+                return;
             }
 
             if(fila.classList.contains("modify")){
-                const respuesta = confirm("¿Estas seguro que quieres modificar el nombre esta talla?")
-                if(!respuesta){
-                    return false;
+                const confirm = await Swal.fire({
+                      title: "¿Seguro quieres modificar esta talla?",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Si",
+                      cancelButtonText: "Cancelar"
+                })
+                if (confirm.isConfirmed) {
+                    var id = fila.querySelector(".desCol").getAttribute("data-id");
+                    var method = "PUT"
+                    var link = `http://localhost:8000/tallas/${id}`;
+                }else{
+                    return;
                 }
-
-                id = fila.querySelector(".desCol").getAttribute("data-id");
-
-                method = "PUT"
-                link = `http://localhost:8000/tallas/${id}`;
+           
             }else{
-                method = "POST"
-                link = `http://localhost:8000/tallas`;
+                var method = "POST"
+                var link = `http://localhost:8000/tallas`;
             }
 
             try{
@@ -177,13 +217,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 const consulta = await res.json();
 
                 if(res.ok){
-                    alert(consulta.message);
+                    Swal.fire({
+                        title: "Éxito",
+                        text: consulta.message,
+                        icon: "success"
+                    });
                     cargarTallas();
                 }else{
+                    Swal.fire({
+                        title: "Error",
+                        text: consulta.message,
+                        icon: "warning"
+                    });
                     console.log(consulta.message)
                 }
 
             }catch(e){
+                Swal.fire({
+                        title: "Error",
+                        text: e,
+                        icon: "warning"
+                });
                 console.log(e)
             }
 
@@ -192,9 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btnCancelar.addEventListener("click", () => {
 
             if(fila.classList.contains("modify")){
-
                 cargarTallas();
-
             }
 
             fila.remove();

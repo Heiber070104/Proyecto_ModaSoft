@@ -5,8 +5,8 @@ table {
   overflow: hidden;
   background-color: white;
   margin: 30px auto;
-  width: 100%; /* o ajusta según el contenedor */
-  max-width: 1000px;
+  width: 95%; /* o ajusta según el contenedor */
+  /* max-width: 1000px; */
   box-shadow: 0 8px 24px rgba(63, 43, 132, 0.25);
 }
 
@@ -52,6 +52,7 @@ tbody td:last-child {
 
 /* Botones en tabla */
 button {
+
   background-color: transparent;
   border: none;
   font-size: 18px;

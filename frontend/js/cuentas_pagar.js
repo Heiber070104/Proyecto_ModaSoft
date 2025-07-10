@@ -1,3 +1,39 @@
+
+
+const cargarRol = () => {
+
+    const sesion = new Sesiones().obtenerSesion();
+
+    if(!sesion || !sesion.rol || !sesion.rol) {
+        alert("No tiene autorización.");
+        sesion.cerrarSesion();
+        window.location.href = "../pages/login.html";
+    }
+
+    switch(sesion.rol){
+        
+        case "Vendedor":
+
+            alert("Los vendedores no tienen autorización para acceder a esta página.");
+            window.location.href = "../pages/dashboard.html";
+            
+        break;
+        case "Gerente":
+        case "Contador":
+
+            const ocultar = document.querySelectorAll(".rol");
+            // console.log(ocultar)
+            ocultar.forEach(element => {
+                element.style.display = "none";
+            })
+
+        break;
+    }
+        
+
+}
+
+
 const cargarDeudas = async () => {
 
     try{
@@ -27,11 +63,12 @@ const cargarDeudas = async () => {
                 html += `
                     <td>${deuda.id_compra}</td>
                     <td>${deuda.compra["proveedor"]["nombre"]}</td>
-                    <td>${deuda.fecha_vencimiento}</td>
+                    <td>${deuda.fecha}</td>
                     <td>${deuda.monto_total}</td>
                     <td>${deuda.monto_pagado}</td>
                     <td>${estado}</td>
-                    <td>${col}</td>
+                    <td class="rol">${col}</td>
+
                 `
 
                 fila.innerHTML = html;
@@ -39,8 +76,12 @@ const cargarDeudas = async () => {
 
             })
 
+            new loaderComponent().stopLoading();
+            cargarRol();
+
         }else{
-            consulta.log(consulta.message);
+            console.log(consulta.message);
+
         }
 
     }catch(e){
@@ -49,4 +90,7 @@ const cargarDeudas = async () => {
 
 }
 
-document.addEventListener("DOMContentLoaded", cargarDeudas)
+
+document.addEventListener("DOMContentLoaded", () => {cargarRol(); cargarDeudas()})
+
+
