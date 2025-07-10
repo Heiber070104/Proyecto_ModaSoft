@@ -7,7 +7,7 @@
     <link rel="icon" href="../public/logo_modasoft.png">
     <link rel="stylesheet" href="../css/topbar_menu.css">
     <link rel="stylesheet" href="../css/tablas.css">
-    <script src="../js/sesiones.js"></script>}
+    <script src="../js/sesiones.js"></script>
     <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
     <script src="../js/componentes/loader.js" defer></script>
     <script src="../js/componentes/menu.js" defer></script>
@@ -24,6 +24,7 @@
 
         <section class="welcome">
           <h1>Abonar a deuda</h1>
+
             <div class="botones-acciones">
                 <a href="cuentas_pagar.html"><button>⏪ Regresar</button></a>
             </div>
@@ -37,9 +38,16 @@
           </div><br>
 
             <label>Monto a abonar</label><br>
-            <input type="number" id="monto_abono" value="0" placeholder="Ingrese el monto a abonar" required><br><br>
+            <input type="number" id="monto_abono" value="0" placeholder="Ingrese el monto a abonar" min="0" required><br><br>
+
+            <label>Seleccione método de pago/abono</label><br>
+            <select id="metodo_pago">
+              <option value="EFECTIVO">Efectivo</option>
+              <option value="BANCARIO">Bancario (transacción/cheque)</option>
+            </select><br><br>
 
             <input type="submit" value="Abonar" class="btn blue">
+
 
          </form>
 

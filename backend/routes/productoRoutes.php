@@ -11,6 +11,7 @@ Route::prefix("productos")->group(function () {
     Route::get("/", [Producto::class, "consultarTodo"]);
     Route::get("/agregarStock/{id}", [Inventario::class, "sumarStock"]);
     Route::get("/restarStock/{id}", [Inventario::class, "restarStock"]);
+    Route::get('/filtrar', [inventarioController::class, 'filtrarInventario']);
     Route::get("/{id}", [Producto::class, "buscarProducto"]);
    
     Route::post("/", [Producto::class, "crearProducto"]);

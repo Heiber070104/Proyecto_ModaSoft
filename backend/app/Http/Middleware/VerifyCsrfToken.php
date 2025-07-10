@@ -22,5 +22,7 @@ class VerifyCsrfToken extends Middleware
         '/clientes*',
         'devoluciones',
         'devoluciones/estado/*',
+        '/contabilidad*'
+
     ];
 }

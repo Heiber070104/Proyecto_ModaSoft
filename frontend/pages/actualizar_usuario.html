@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Actualizar usuario</title>
+    
+  <link rel="stylesheet" href="../css/tablas.css">
+  <link rel="icon" href="../public/logo_modasoft.png">
+  <link rel="stylesheet" href="../css/topbar_menu.css">
+  <script src="../js/sesiones.js"></script>
+  <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
+  <script src="../js/componentes/loader.js" defer></script>
+  <script src="../js/componentes/menu.js" defer></script>
+  <script src="../js/componentes/topbar.js"defer></script>
+  <script src="../js/actualizar_usuario.js"defer></script>
+</head>
+<body>
+
+  <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+      <main class="main-content">
+        <header class="topbar"></header>
+
+        <section class="welcome">
+        <h1>Actualizar Usuario</h1>
+        <form id="formulario">
+
+        <label for="nombre">Contraseña del usuario actual <br> <strong>SEGURIDAD</strong></label>
+        <input type="password" id="conAdmin" name="conAdmin" required /><br><br>    
+
+        <label for="nombre">Nombre Personal</label>
+        <input type="text" id="nombre_personal" name="nombre_personal" required /><br><br>
+
+        <label for="correo">Correo</label>
+        <input type="email" id="correo" name="correo" required /><br><br>
+
+        <label for="usuario">Nombre de usuario</label>
+        <input type="text" id="nombre_usuario" name="nombre_usuario" required /><br><br>
+
+        <label for="contraseña">Nueva contraseña de usuario</label>
+        <input type="password" id="contraseña" name="contraseña" /><br><br>
+
+        <label for="contraseña">Repita la nueva contraseña de usuario</label>
+        <input type="password" id="conRepetida" name="conRepetida" /><br>
+
+        <label style="color: red" id="aviso" hidden>Las contraseñas no son iguales</label><br><br>
+
+        <input type="submit" class="btn blue" value="Registrar">
+      </form>
+
+        </section>
+
+      </main>
+
+  </div>
+
+</body>
+</html>

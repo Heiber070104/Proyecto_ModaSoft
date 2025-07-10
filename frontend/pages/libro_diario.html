@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+      <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario de Ropa</title>
+    <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/tablas.css">
+    <link rel="icon" href="../public/logo_modasoft.png">
+    <script src="../js/sesiones.js"></script>
+    <script src="../js/componentes/menu.js" defer></script>
+    <script src="../js/componentes/topbar.js" defer></script>
+
+    <script src="../js/libro_diario.js"></script>
+
+</head>
+<body>
+        <div class="container">
+      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+
+      <main class="main-content">
+        <header class="topbar"></header>
+
+        <section class="welcome">
+    <h1>Libro Diario</h1>
+    <table id="libroDiario">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+
+                <th>Factura</th>
+                <th>Descripcion</th>
+                <th>Referencia</th>
+                <th>Debe</th>
+                <th>Haber</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Las filas se llenarán dinámicamente -->
+        </tbody>
+    </table>
+    </section>
+    </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+</body>
+</html>

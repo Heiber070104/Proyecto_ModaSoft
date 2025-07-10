@@ -1,3 +1,5 @@
+
+
 const cargarRol = () => {
 
     const sesion = new Sesiones().obtenerSesion();
@@ -31,6 +33,7 @@ const cargarRol = () => {
 
 }
 
+
 const cargarDeudas = async () => {
 
     try{
@@ -60,11 +63,12 @@ const cargarDeudas = async () => {
                 html += `
                     <td>${deuda.id_compra}</td>
                     <td>${deuda.compra["proveedor"]["nombre"]}</td>
-                    <td>${deuda.fecha_vencimiento}</td>
+                    <td>${deuda.fecha}</td>
                     <td>${deuda.monto_total}</td>
                     <td>${deuda.monto_pagado}</td>
                     <td>${estado}</td>
                     <td class="rol">${col}</td>
+
                 `
 
                 fila.innerHTML = html;
@@ -76,7 +80,8 @@ const cargarDeudas = async () => {
             cargarRol();
 
         }else{
-            consulta.log(consulta.message);
+            console.log(consulta.message);
+
         }
 
     }catch(e){
@@ -85,4 +90,7 @@ const cargarDeudas = async () => {
 
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {cargarRol(); cargarDeudas()})
+
+

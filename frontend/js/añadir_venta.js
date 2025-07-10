@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
+    const tipoPago = document.getElementById("tipo_pago"); 
     const btnAgregar = document.getElementById('agregar-producto');
     var opcionesProductos;
     var total;
@@ -183,10 +184,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("btn-registrar").addEventListener("click", async () =>{
 
-        const factura = document.getElementById("factura").value;
         const id_cliente = document.getElementById("clientes").value;
+        const tipo_pago = document.getElementById("tipo_pago").value;
 
-        if(!factura || factura=="" || !id_cliente || id_cliente=="" || !total || total===0){
+        if(!tipo_pago || tipo_pago=="" || !id_cliente || id_cliente==""){
             Swal.fire("Rellene los campos vacios")
             return false;
         }
@@ -216,8 +217,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    factura: factura,
                     id_cliente: id_cliente,
+                    tipo_pago: tipo_pago,
                     productos: productos
                 })
             })
@@ -227,7 +228,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if(res.ok){
                 await Swal.fire({
                     title: "Exito",
-                    text: consulta.message,
+                    text: "Venta se registró con factura "+consulta.factura,
                     icon: "success"
                 });
                 window.location.href = "ventas.html"
@@ -248,6 +249,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 icon: "warning"
             });
         }
+
+    })
+
+    tipoPago.addEventListener("change", () => {
+
+        const aviso = document.getElementById("aviso");
+
+        if(tipoPago.value === "CONTADO"){
+            aviso.hidden = true;
+        }else{
+            aviso.hidden = false;
+        } 
 
     })
     

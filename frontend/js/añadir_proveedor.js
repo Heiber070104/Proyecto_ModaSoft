@@ -13,7 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 🔹 2. Validar que ningún campo esté vacío
         if (!rif || !nombre || !direccion || !telefono || !correo) {
+
             Swal.fire("Debe rellenar todos los campos.");
+
             return false;
         }
 
@@ -23,17 +25,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const telefonoVal = /^\d{11}$/;
 
         if (!rifVal.test(rif)) {
+
             Swal.fire("El RIF debe tener el formato correcto, como J-12345678-9.");
+
             return false;
         }
 
         if (!emailVal.test(correo)) {
             Swal.fire("El correo debe tener un formato válido (ej. usuario@correo.com).");
+f
             return false;
         }
 
         if (!telefonoVal.test(telefono)) {
             Swal.fire("El teléfono debe tener entre 11 dígitos, sin letras ni espacios.");
+
             return false;
         }
 
@@ -56,11 +62,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const consulta = await res.json();
 
     if (res.ok) {
+
         await Swal.fire({
             title: "Exito",
             text: consulta.message,
             icon: "success"
         });
+
         window.location.href = "proveedores.html";
         return;
     }
@@ -68,12 +76,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // 🔴 Si no fue ok, revisar posibles errores
     if (res.status === 422 && consulta.errors) {
         if (consulta.errors.rif) {
+
             Swal.fire("⚠️ El RIF ya está registrado.");
+
             return;
         }
 
         if (consulta.errors.correo) {
+
             Swal.fire("⚠️ El correo ya está registrado.");
+
             return;
         }
 
@@ -90,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 } catch (error) {
     console.error(error);
     Swal.fire("💥 Error de red o del servidor. Verifica tu conexión o intenta más tarde.");
+
 }
 })
 })

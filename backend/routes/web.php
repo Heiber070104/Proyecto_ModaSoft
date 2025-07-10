@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\compraController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,4 +31,4 @@ require __DIR__.'/proveedorRoutes.php';
 require __DIR__.'/ventaRoutes.php';
 require __DIR__.'/clienteRoutes.php';
 require __DIR__.'/devolucionRoutes.php';
-
+require __DIR__.'/contabilidadRoutes.php';

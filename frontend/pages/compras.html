@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compras</title>
     <link rel="stylesheet" href="../css/topbar_menu.css">
+    <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/tablas.css">
+
+    <link rel="stylesheet" href="../css/acciones.css">
+
     <link rel="icon" href="../public/logo_modasoft.png">
     <script src="../js/sesiones.js"></script>
     <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.js"></script>
@@ -13,44 +17,65 @@
     <script src="../js/componentes/menu.js" defer></script>
     <script src="../js/componentes/topbar.js" defer></script>
     <script src="../js/compras.js" defer></script>
+
 </head>
 <body>
 
-     <div class="container">
-      <aside class="sidebar"></aside> <!-- Aquí va el menú -->
+  <div class="container">
+    <aside class="sidebar"></aside>
 
-      <main class="main-content">
-        <header class="topbar"></header>
+    <main class="main-content">
+      <header class="topbar"></header>
 
-        <section class="welcome">
-          <h1>Gestión de Compras</h1>
-          <div class="botones-acciones">
-            <a href="añadir_compra.html" class="rol"><button>➕ Nueva compra</button></a>
+      <section class="welcome">
+        <h1>Gestión de Compras</h1>
+
+        <div class="filtro-contenedor">
+         <div class="filtro-horizontal">
+          <label for="tipoBusqueda">Buscar por:</label>
+          <select id="tipoBusqueda">
+             <option value="" hidden selected>Seleccione una opción</option>
+             <option value="factura">Factura</option>
+             <option value="fecha">Rango de fecha</option>
+             <option value="estado">Estado</option>
+             <option value="proveedor">Proveedor</option>
+          </select>
+        </div>
+
+        <div id="inputsDinamicos" class="filtro-dinamico"></div>
+
+          <div class="botones-filtro">
+            <button id="btnBuscar">🔍 Buscar</button>
+             <button id="btnLimpiar">🧹 Limpiar</button>
           </div>
+        </div>
 
-          <table id="tabla">
+        <div class="botones-acciones">
+          <a href="añadir_compra.html"><button>➕ Nueva compra</button></a>
+        </div>
 
-            <thead>
-                <th>N° compra</th>
-                <th>Fecha creación</th>
-                <th>Fecha Despacho</th>
-                <th>Proveedor</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th>Detalle de orden</th>
-                <th class="rol">Acciones</th>
-            </thead>
-
-            <tbody class="cont-compras">
-
-            </tbody>
-
-           </table>
-
-        </section>
-      </main>
-
+        <table id="tabla">
+          <thead>
+            <tr>
+              <th>N° factura</th>
+              <th>Fecha creación</th>
+              <th>Fecha Despacho</th>
+              <th>Proveedor</th>
+              <th>Total</th>
+              <th>Pagado a: </th>
+              <th>Estado</th>
+              <th>Estado Despacho</th>
+              <th>Detalle de orden</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="cont-compras"></tbody>
+        </table>
+      </section>
+    </main>
   </div>
-    
+
+  <!-- ✅ JS al final -->
+  <script src="../js/compras.js"></script>
 </body>
 </html>

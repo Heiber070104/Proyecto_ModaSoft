@@ -7,10 +7,11 @@ use App\Http\Controllers\sesionController as Sesion;
 Route::prefix("usuarios")->group(function () {
     // Rutas para el controlador de usuarios
     Route::get("/", [Usuario::class, "consultarTodo"]);
-    Route::get("/{id}", [Usuario::class, "buscarUsuario"]);
+    Route::get("/{id}", [Usuario::class, "consultarUsuario"]);
 
     Route::post("/login", [Sesion::class, "iniciarSesion"]);
     Route::post("/logout", [Sesion::class, "cerrarSesion"]);
+    Route::post("/comprobar", [Sesion::class, "comprobarContraseña"]); // Para consultar por nombre de usuario
     Route::post("/", [Usuario::class, "crearUsuario"]);
 
     Route::put("/{id}", [Usuario::class, "actualizarUsuario"]);
