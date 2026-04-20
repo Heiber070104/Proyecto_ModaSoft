@@ -1,6 +1,0 @@
-{
-    "require": {
-        "monolog/monolog": "1.0.*",
-        "codedge/laravel-fpdf": "^1.12"
-    }
-}
