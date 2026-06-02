@@ -6,10 +6,10 @@ class loaderComponent{
 
   mount() {
     const container = document.querySelector(".welcome");
-    if (!this.sesion) {
-      window.location.href = '../pages/login.html';
-      return;
-    }
+    // if (!this.sesion) {
+    //   window.location.href = '../pages/login.html';
+    //   return;
+    // }
 
     if (container) {
       container.insertAdjacentHTML("beforebegin", this.render());

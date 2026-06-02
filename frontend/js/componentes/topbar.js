@@ -5,10 +5,10 @@ class TopbarComponent {
 
   mount() {
     const container = document.querySelector(".topbar");
-    if (!this.sesion) {
-      window.location.href = '../pages/login.html';
-      return;
-    }
+    // if (!this.sesion) {
+    //   window.location.href = '../pages/login.html';
+    //   return;
+    // }
 
     if (container) {
       container.innerHTML = this.render();

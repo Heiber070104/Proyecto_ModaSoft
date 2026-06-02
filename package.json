@@ -15,5 +15,10 @@
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"svelte": "^5.55.2",
 		"vite": "^8.0.7"
+	},
+	"dependencies": {
+		"axios": "^1.16.0",
+		"bootstrap": "^5.3.8",
+		"bootstrap-icons": "^1.13.1"
 	}
 }

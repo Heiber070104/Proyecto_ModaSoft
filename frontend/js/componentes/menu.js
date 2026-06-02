@@ -2,11 +2,11 @@ class MenuComponent {
     constructor() {
         // 1. Al crear instancia, verifica la sesión inmediatamente
         this.sesion = new Sesiones().obtenerSesion();
-        if (!this.sesion || !this.sesion.id || !this.sesion.usuario || !this.sesion.rol) {
-            window.location.href = '../pages/login.html';
-            alert("Error de Sesión");
-            return
-        }
+        // if (!this.sesion || !this.sesion.id || !this.sesion.usuario || !this.sesion.rol) {
+        //     window.location.href = '../pages/login.html';
+        //     alert("Error de Sesión");
+        //     return
+        // }
     }
 
     sessions(){

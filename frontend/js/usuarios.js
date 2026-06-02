@@ -2,28 +2,28 @@
 
 const cargarRol = () => {
 
-    if(!sesion || !sesion.rol || !sesion.usuario) {
-        alert("No tiene autorización.");
-        sesion.cerrarSesion();
-        window.location.href = "../pages/login.html";
-    }
+    // if(!sesion || !sesion.rol || !sesion.usuario) {
+    //     alert("No tiene autorización.");
+    //     sesion.cerrarSesion();
+    //     window.location.href = "../pages/login.html";
+    // }
 
-    switch(sesion.rol){
+    // switch(sesion.rol){
         
-        case "Gerente":
-            document.querySelectorAll(".rol").forEach(item => {
-                item.style.display = "none"
-            })
-        case "Administrador":
-            cargarUsuarios();
-        break;
-        default:
-            document.querySelectorAll(".rol").forEach(item => {
-                item.style.display = "none"
-            })
-            cargarUsuarios(sesion.id);
-        break;
-    }
+    //     case "Gerente":
+    //         document.querySelectorAll(".rol").forEach(item => {
+    //             item.style.display = "none"
+    //         })
+    //     case "Administrador":
+    //         cargarUsuarios();
+    //     break;
+    //     default:
+    //         document.querySelectorAll(".rol").forEach(item => {
+    //             item.style.display = "none"
+    //         })
+    //         cargarUsuarios(sesion.id);
+    //     break;
+    // }
         
 }
 
