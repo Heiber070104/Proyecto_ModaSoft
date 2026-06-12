@@ -1,9 +1,9 @@
 <script>
     // Recibimos las funciones para cambiar los estados allá arriba en el Layout
-    let { toggleSidebar, toggleDarkMode, toggleUserInfo, isDarkMode } = $props();
+    let { toggleSidebar, toggleDarkMode, toggleUserInfo, isDarkMode, isSidebarOpen } = $props();
 </script>
 
-<nav class="navbar bg-body border-bottom px-3">
+<nav class="navbar bg-body border-bottom px-3 app-header {isSidebarOpen ? '' : 'collapsed'}">
     <div class="d-flex align-items-center">
         <button class="btn btn-outline-secondary me-2" style="border: none;" onclick={toggleSidebar} aria-label="Toggle sidebar">
             <i class="bi bi-list"></i>
@@ -20,3 +20,19 @@
         </button>
     </div>
 </nav>
+
+<style>
+    .app-header {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 250px;
+        z-index: 1030;
+        min-height: 57px;
+        transition: left 0.25s ease;
+    }
+
+    .app-header.collapsed {
+        left: 64px;
+    }
+</style>

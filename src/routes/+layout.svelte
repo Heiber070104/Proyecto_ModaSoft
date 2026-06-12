@@ -1,12 +1,14 @@
 <script>
-	import 'bootstrap/dist/css/bootstrap.min.css';
+	// import 'bootstrap/dist/css/bootstrap.min.css';
 	import 'bootstrap-icons/font/bootstrap-icons.css';
+	import '$lib/styles/custom-bootstrap.scss';
     import Sidebar from '$lib/components/layout/Sidebar.svelte';
     import Header from '$lib/components/layout/Header.svelte';
     import Footer from '$lib/components/layout/Footer.svelte';
     import PersonalInformation from '$lib/components/layout/PersonalInformation.svelte';
+	import ToastContainer from '$lib/components/global/ToastContainer.svelte';
 	import { onMount } from 'svelte';
-	import { isAuthenticated, refreshSession, destroySession } from '$lib/stores/session.js';
+	import { isAuthenticated, refreshSession, destroySession, user } from '$lib/stores/session.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { authApi } from '$lib/api/auth.js';
@@ -66,6 +68,12 @@
 
 {#if isPublic }
 	{@render children()}
+{:else if !$user}
+	<div class="page-loader-modern d-flex flex-column align-items-center justify-content-center">
+		<div class="spinner-border text-info" role="status">
+			<span class="visually-hidden">Cargando...</span>
+		</div>
+	</div>
 {:else}
 	<div class="layout-wrapper bg-body text-body">
 		<div class="container-fluid p-0">
@@ -74,12 +82,14 @@
 					<Sidebar isOpen={isSidebarOpen} />
 				</div>
 
-				<div class="col main-column pb-0">
+				<div class="col main-column pb-0 {isSidebarOpen ? '' : 'main-collapsed'}">
+
 					<Header 
 						toggleSidebar={toggleSidebar} 
 						toggleDarkMode={toggleDarkMode} 
 						toggleUserInfo={toggleUserInfo} 
 						{isDarkMode}
+						{isSidebarOpen}
 					/>
 
 					<div class="position-relative">
@@ -87,7 +97,9 @@
 					</div>
 
 					<main class="page-content container-fluid py-4 bg-body-tertiary">
-						{@render children()}
+						<div class='px-2'>
+							{@render children()}
+						</div>
 					</main>
 
 					<Footer />
@@ -96,6 +108,8 @@
 		</div>
 	</div>
 {/if}
+
+<ToastContainer />
 
 <style>
     /* Estructura general de flexbox pa' poner el sidebar al lado del contenido */
@@ -112,7 +126,15 @@
 	}
 
 	.layout-wrapper { min-height: 100vh; }
-	.main-column { display: flex; flex-direction: column; min-height: 100vh; }
-	.page-content { flex: 1; overflow-y: auto; }
+	.main-column {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+		margin-left: 250px;
+		padding-top: 57px;
+		transition: margin-left 0.25s ease;
+	}
+	.main-collapsed { margin-left: 64px; }
+	.page-content { flex: 1; overflow-y: auto;}
 	
 </style>

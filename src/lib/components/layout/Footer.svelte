@@ -4,5 +4,5 @@
 </script>
 
 <footer class="bg-body border-top text-center py-3">
-    <p class="mb-0 text-body-secondary">&copy; {currentYear} ModaSoft. All rights reserved.</p>
+    <p class="mb-0 text-body-secondary">&copy; {currentYear} ModaSoft. Todos los derechos reservados.</p>
 </footer>

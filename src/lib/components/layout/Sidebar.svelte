@@ -1,38 +1,46 @@
 <script>
     import { navigationModules } from '$lib/data/navigation.js';
+    import { user } from '$lib/stores/session.js'
+    import can from '$lib/services/guard.js'
     import logoModaSoft from '$lib/assets/logo_modasoft.png'; // Asegúrate de tener esta ruta
-    
+
+    const CURRENT_PERMISSIONS = $derived($user?.permissions ?? []);
+
     // Recibimos si el menú está abierto o cerrado desde el Layout principal
     let { isOpen } = $props();
 </script>
 
-<aside class="sidebar d-flex flex-column bg-dark text-white {isOpen ? 'open' : 'collapsed'}">
+<aside class="sidebar d-flex flex-column bg-dark {isOpen ? 'open' : 'collapsed'}">
     <div class="sidebar-logo text-center">
         <img src={logoModaSoft} alt="ModaSoft Logo" class="img-fluid logo-image" />
     </div>
 
     <nav class="nav nav-pills flex-column sidebar-nav">
         {#each navigationModules as navItem}
-            <a
-                href={navItem.ref}
-                class="nav-link sidebar-link text-white rounded"
-                title={isOpen ? undefined : navItem.name}
-                aria-label={navItem.name}
-            >
-                <i class="bi {navItem.icon} sidebar-icon" aria-hidden="true"></i>
-                {#if isOpen}
-                    <span class="sidebar-label">{navItem.name}</span>
-                {/if}
-            </a>
+            {#if can(CURRENT_PERMISSIONS, navItem.permission)}
+                <a
+                    href={navItem.ref}
+                    class="nav-link sidebar-link text-white rounded"
+                    title={isOpen ? undefined : navItem.name}
+                    aria-label={navItem.name}
+                >
+                    <i class="bi {navItem.icon} sidebar-icon" aria-hidden="true"></i>
+                    {#if isOpen}
+                        <span class="sidebar-label">{navItem.name}</span>
+                    {/if}
+                </a>
+            {/if}
         {/each}
     </nav>
 </aside>
 
 <style>
+
     .sidebar {
         width: 250px;
         height: 100vh;
         overflow: hidden;
+        position: fixed;
         transition: width 0.25s ease;
     }
 
@@ -47,6 +55,7 @@
     .logo-image {
         max-height: 92px;
         transition: max-height 0.25s ease;
+        color: #333;
     }
 
     .collapsed .sidebar-logo {
