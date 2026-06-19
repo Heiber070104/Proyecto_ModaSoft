@@ -62,7 +62,7 @@
 
 <style>
 	.toast-stack {
-		z-index: 1080;
+		z-index: 5000;
 		max-width: min(100vw, 420px);
 		pointer-events: none;
 	}

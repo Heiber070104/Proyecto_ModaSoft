@@ -1,8 +1,8 @@
 import api from './api.js';
 
-const ENDPOINT = '/users';
+const ENDPOINT = '/sizes';
 
-export const usersApi = {
+export const sizesApi = {
     getAll: async (params = {}) => {
         const response = await api.get(ENDPOINT, { params });
         return response.data;
@@ -11,12 +11,12 @@ export const usersApi = {
         const response = await api.get(`${ENDPOINT}/${id}`);
         return response.data;
     }, 
-    store: async (userData) => {
-        const response = await api.post(ENDPOINT, userData);
+    store: async (data) => {
+        const response = await api.post(ENDPOINT, data);
         return response.data;
     },
-    update: async (id, userData) => {
-        const response = await api.put(`${ENDPOINT}/${id}`, userData);
+    update: async (id, data) => {
+        const response = await api.put(`${ENDPOINT}/${id}`, data);
         return response.data;
     },
     toggleStatus: async (id) => {

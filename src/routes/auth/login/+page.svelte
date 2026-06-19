@@ -2,6 +2,7 @@
     import { setSession } from '$lib/stores/session.js';
     import { authApi } from '$lib/api/auth.js';
     import { goto } from '$app/navigation';
+    import TabHead from '$lib/components/global/TabHead.svelte';
     import logoModaSoft from '$lib/assets/logo_modasoft_N.png'; // Nos traemos el logo
 
     // ... nuestra lógica de Svelte 5 al día
@@ -34,6 +35,8 @@
         }
     }
 </script>
+
+<TabHead title='Iniciar sesión'/>
 
 <!-- 
    Aquí está la estructura para el diseño:

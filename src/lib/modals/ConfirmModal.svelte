@@ -13,6 +13,7 @@
         largeIconColor = 'info',
         buttonMessage = 'Confirmar',
         buttonIcon = 'bi bi-check-lg',
+        buttonColor = 'primary',
         onConfirm = () => {},
         onClose = () => {},
     } = $props();
@@ -57,7 +58,7 @@
                 </button>
                 <button
                     disabled={isSubmitting}
-                    class='btn btn-primary'
+                    class={ 'btn btn-'+buttonColor }
                     onclick={handleConfirm}
                 >
                     <i class={buttonIcon}></i>

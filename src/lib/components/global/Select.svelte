@@ -5,6 +5,7 @@
         label = 'Selector',
         placeholder = 'Seleccione...',
         value = $bindable(''),
+        emptyPlaceholder = 'No hay opciones disponibles...',
         disabled = false,
         required = true,
         options = [],
@@ -49,12 +50,16 @@
         bind:value 
         onchange={() => {touched = true}}
     >
-        <option value="" hidden selected>{placeholder}</option>
-        {#each options as option}
-            <option value={option?.value}>
-                {option?.label ?? option.value}
-            </option>
-        {/each}
+        {#if options}
+            <option value='' hidden selected>{placeholder}</option>
+            {#each options as option}
+                <option value={option?.value}>
+                    {option?.label ?? option.value}
+                </option>
+            {/each}
+        {:else}
+            <option value="" hidden selected>{emptyPlaceholder}</option>
+        {/if}
     </select>   
 
     {#if errorMessage && !disabled }

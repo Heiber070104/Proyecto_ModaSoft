@@ -22,6 +22,7 @@
         {key: 'username', label: 'Nombre de usuario', sortable: true},
         {key: 'personal_name', label: 'Nombre personal', sortable: true},
         {key: 'email', label: 'Correo', sortable: true},
+        {key: 'is_active', label: 'Estado', align: 'center'},
         {key: 'actions', label: 'Acciones', align: 'end'}
     ];
 
@@ -42,6 +43,15 @@
         password: Boolean(data?.password ?? true),
         confirm_password: Boolean(data?.confirm_password ?? true),
     })
+
+    const setConfirm = (data = {}) => ({
+       title: String(data?.title ?? ''),
+       message: String(data?.message ?? ''),
+       largeMessage: String(data?.largeMessage ?? ''), 
+       largeIcon: String(data?.largeIcon ?? ''),
+       largeIconColor: String(data?.largeIconColor ?? ''),
+       buttonColor: String(data?.buttonColor ?? '')
+    });
 
     let error = $state('');
     let success = $state('');
@@ -66,8 +76,11 @@
     let editUserId = $state(null);
 
     let openConfirmModal = $state(false);
-    let deleteUserName = $state('');
     let deleteUserId = $state(null);
+
+    let isToggleModal = $state(null);
+    let toggleUserId = $state(null);
+    let confirmFields = $state(setConfirm());
 
     const tableController = createServerTableController({
         getCurrentPage: () => currentPage,
@@ -158,7 +171,7 @@
             loadTableItems();
         }catch(err){
             if (err.response && err.response.data && err.response.data.message) {
-                notify.error(`El usuario no pudo ser ${message} debido a un error, intente de nuevo.`);
+                notify.error(`El usuario no pudo ser ${message} debido a un error: ${err.response.data.message}`);
             } else {
                 notify.error(`Error al comunicarce con el servidor.`);
             }
@@ -168,20 +181,26 @@
         }
     }
 
-    async function handleDelete(){
-        if(!deleteUserId){
+    async function handleConfirm(){
+        if(!deleteUserId && !isToggleModal || !toggleUserId && isToggleModal){
             notify.error('Ha ocurrido un error, intente de nuevo')
             return;
         }
+        let message = isToggleModal ? 'Estado cambido exitosamente.' : 'Usuario eliminado exitosamente.';
+        let errorMessage = isToggleModal ? 'Error al cambiar el estado, intente nuevamente.' : 'El usuario no pudo ser eliminado debido a un error, intente de nuevo.'
         modalLoading = true;
         try{
-            const response = await usersApi.delete(deleteUserId);
-            notify.success('Usuario eliminado exitosamente.');
-            closeDeleteModal();
+            if(isToggleModal){
+                const response = await usersApi.toggleStatus(toggleUserId)
+            }else{
+                const response = await usersApi.delete(deleteUserId);
+            }
+            notify.success(message);
+            closeConfirmModal();
             loadTableItems();
         }catch(err){
             if (err.response && err.response.data && err.response.data.message) {
-                notify.error(`El usuario no pudo ser eliminado debido a un error, intente de nuevo.`);
+                notify.error(errorMessage);
             } else {
                 notify.error(`Error al comunicarce con el servidor.`);
             }
@@ -215,14 +234,40 @@
 
     function openDeleteModal(id, username){
         deleteUserId = Number(id);
-        deleteUserName = String(username);
         openConfirmModal = true;
+        confirmFields = setConfirm({
+            title: 'Confirmar eliminar',
+            largeMessage: 'Eliminar Usuario',
+            message: `El usuario ${username} será eliminado al confirmar ¿Desea continuar?`,
+            largeIcon: 'bi bi-trash',
+            largeIconColor: 'danger',
+            buttonColor: 'danger'
+        })
     }
 
-    function closeDeleteModal(){
+    function openToggleModal(id, username, status){
+        toggleUserId = Number(id);
+        openConfirmModal = true;
+        isToggleModal = true;
+        confirmFields = setConfirm({
+            title: status ? 'Confirmar desactivar' : 'Confirmar activar',
+            largeMessage: status ? 'Desactivar usuario' : 'Activar usuario',
+            message: status ? 
+                `El usuario ${username} será desactivado y no podrá iniciar sesíon ¿Desea continuar?` :
+                `El usuario ${username} será activado y podrá iniciar sesíon de nuevo ¿Desea continuar?`
+            ,
+            largeIcon: status ? 'bi bi-person-lock' : 'bi bi-person-check',
+            largeIconColor: 'info',
+            buttonColor: 'info'
+        })
+    }
+
+    function closeConfirmModal(){
         deleteUserId = null;
-        deleteUserName = '';
+        toggleUserId = null;
+        confirmFields = setConfirm();
         openConfirmModal = false;
+        isToggleModal = false;
     }
 
     function closeUserModal(){
@@ -277,7 +322,27 @@
             onSortChange={handleSort}
         >
             {#snippet cell({row, column, value })}
-                {#if column.key === 'actions'}
+                {#if column.key === 'is_active'}
+                    <div class={`bg-${row.is_active ? 'success' : 'danger'} rounded-5 text-center mt-2 w-5`}>
+                        <p><strong>{row.is_active ? 'Activo' : 'Inactivo'}</strong></p>
+                    </div>
+                {:else if column.key === 'actions'}
+                    {#if can(CURRENT_PERMISSIONS, PERMISSIONS.TOGGLE_STATUS_USERS)}
+                        <button
+                            title={row.is_active ? 'Desactivar usuario' : 'Activar usuario'}
+                            class="btn btn-sm btn-info rounded-3"
+                            type="button"
+                            onclick={() =>
+                                openToggleModal(
+                                    row.id,
+                                    row.username,
+                                    row.is_active,
+                                )
+                            }
+                        >
+                            <i class={row.is_active ? 'bi bi-person-lock' : 'bi bi-person-check'}></i>
+                        </button>
+                    {/if}
                     {#if can(CURRENT_PERMISSIONS, PERMISSIONS.EDIT_USERS)}
                         <button
                             title="Editar"
@@ -293,7 +358,7 @@
                                 })
                             }
                         >
-                            <i class="bi bi-pencil"></i>
+                            <i class="bi bi-pencil-fill"></i>
                         </button>
                     {/if}
                     {#if can(CURRENT_PERMISSIONS, PERMISSIONS.DELETE_USERS)}
@@ -303,7 +368,7 @@
                             type="button"
                             onclick={() => openDeleteModal(row.id, row.username)}
                         >
-                            <i class="bi bi-trash"></i>
+                            <i class="bi bi-trash-fill"></i>
                         </button>
                     {/if}
                 {:else}
@@ -337,13 +402,14 @@
     <ConfirmModal 
         isOpen={openConfirmModal}
         isSubmitting={modalLoading}
-        largeMessage='Eliminar Usuario'
-        message={`El usuario ${deleteUserName} será eliminado al confirmar ¿Desea continuar?`}
-        title='Confirmar eliminar'
-        largeIcon='bi bi-trash'
-        largeIconColor='danger'
-        onClose={closeDeleteModal}
-        onConfirm={handleDelete}
+        largeMessage={confirmFields.largeMessage}
+        message={confirmFields.message}
+        title={confirmFields.title}
+        largeIcon={confirmFields.largeIcon}
+        largeIconColor={confirmFields.largeIconColor}
+        buttonColor={confirmFields.buttonColor}
+        onClose={closeConfirmModal}
+        onConfirm={handleConfirm}
     />
 
 {:else}

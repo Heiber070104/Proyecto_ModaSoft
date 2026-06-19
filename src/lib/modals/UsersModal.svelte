@@ -1,21 +1,28 @@
 <script>
 
-    import { ROLES } from "$lib/constants/roles";
     import Input from "$lib/components/global/Input.svelte";
     import Select from "$lib/components/global/Select.svelte"
     import { fade, scale } from "svelte/transition";
     import { backOut } from "svelte/easing";
-    import { form } from "$app/server";
-    import { onMount } from "svelte";
-    import { usersApi } from "$lib/api/users";
+    import { ROLES } from "$lib/constants/roles";
+    import { user } from "$lib/stores/session";
 
-    const SELECT_ROLES = [
-        {value: ROLES.ADMIN, label: 'Administrador'},
-        {value: ROLES.MANAGER, label: 'Gerente'},
-        {value: ROLES.SELLER, label: 'Vendedor'},
-        {value: ROLES.BUYER, label: 'Comprador'},
-        {value: ROLES.ACCOUNTANT, label: 'Contador'}
-    ]
+    let canCreateManagerAndAdmin = $derived($user?.roles[0] === ROLES.ADMIN)
+
+    const SELECT_ROLES = $derived.by(() => {
+        let roles = [
+            {value: ROLES.SELLER, label: 'Vendedor'},
+            {value: ROLES.BUYER, label: 'Comprador'},
+            {value: ROLES.ACCOUNTANT, label: 'Contador'}
+        ];
+
+        if(canCreateManagerAndAdmin){
+            roles.push({value: ROLES.ADMIN, label: 'Administrador'});
+            roles.push({value: ROLES.MANAGER, label: 'Gerente'});
+        }
+
+        return roles;
+    })
 
     const RULES = {
 		required: (v) => !!v || 'Este campo no puede estar vacio',

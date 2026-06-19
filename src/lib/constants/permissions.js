@@ -4,6 +4,7 @@ export const PERMISSIONS = Object.freeze({
     VIEW_USERS: 'view_users',
     CREATE_USERS: 'create_users',
     EDIT_USERS: 'edit_users',
+    TOGGLE_STATUS_USERS: 'toggle_status_users',
     DELETE_USERS: 'delete_users',
 
     // Roles
@@ -22,6 +23,7 @@ export const PERMISSIONS = Object.freeze({
     VIEW_CATEGORIES: 'view_categories',
     CREATE_CATEGORIES: 'create_categories',
     EDIT_CATEGORIES: 'edit_categories',
+    TOGGLE_STATUS_CATEGORIES: 'toggle_status_categories',
     DELETE_CATEGORIES: 'delete_categories',
 
     // Tallas
@@ -34,6 +36,7 @@ export const PERMISSIONS = Object.freeze({
     VIEW_PRODUCTS: 'view_products',
     CREATE_PRODUCTS: 'create_products',
     EDIT_PRODUCTS: 'edit_products',
+    TOGGLE_STATUS_PRODUCTS: 'toggle_status_products',
     DELETE_PRODUCTS: 'delete_products',
 
     // Proveedores 
